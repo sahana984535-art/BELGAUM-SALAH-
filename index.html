@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belgaum Salah</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f7f5;
+  color: #222;
+}
+
+header {
+  background: #075e54;
+  color: white;
+  text-align: center;
+  padding: 28px 15px;
+}
+
+header h1 {
+  margin: 0 0 8px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
+
+.datebox, .masjid {
+  background: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #00000010;
+}
+
+.datebox {
+  text-align: center;
+}
+
+.datebox h2, .masjid h2 {
+  color: #075e54;
+}
+
+#search {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.times {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.time {
+  background: #eaf5f1;
+  border-radius: 8px;
+  padding: 12px 5px;
+  text-align: center;
+}
+
+.time strong {
+  display: block;
+  color: #075e54;
+  margin-bottom: 7px;
+}
+
+.extras {
+  margin-top: 15px;
+  line-height: 2;
+}
+
+.note {
+  color: #666;
+  font-size: 13px;
+}
+
+footer {
+  background: #075e54;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+@media (max-width: 500px) {
+  header h1 {
+    font-size: 25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🕌 Belgaum Salah</h1>
+  <p>Belagavi Masjid Namaz Timings</p>
+</header>
+
+<main class="container">
+
+  <section class="datebox">
+    <h2>Today's Prayer Timings</h2>
+    <p id="today"></p>
+  </section>
+
+  <input
+    id="search"
+    type="search"
+    placeholder="Search masjid name or location..."
+    oninput="searchMasjids()"
+  >
+
+  <section id="masjidList">
+
+    <article class="masjid">
+      <h2>Sample Masjid</h2>
+      <p>📍 Belagavi, Karnataka</p>
+
+      <div class="times">
+        <div class="time"><strong>Fajr</strong>--:--</div>
+        <div class="time"><strong>Zuhr</strong>--:--</div>
+        <div class="time"><strong>Asr</strong>--:--</div>
+        <div class="time"><strong>Maghrib</strong>--:--</div>
+        <div class="time"><strong>Isha</strong>--:--</div>
+      </div>
+
+      <div class="extras">
+        🌅 Ishraq: --:--<br>
+        📖 Khatma: --:--
+      </div>
+
+      <p class="note">
+        Sample entry only. Official timings will be added after verification.
+      </p>
+    </article>
+
+  </section>
+
+</main>
+
+<footer>
+  <p>Belgaum Salah | Belagavi, Karnataka</p>
+</footer>
+
+<script>
+const now = new Date();
+
+document.getElementById("today").textContent =
+  now.toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+
+function searchMasjids() {
+  const query = document.getElementById("search").value.toLowerCase();
+  const cards = document.querySelectorAll(".masjid");
+
+  cards.forEach(function(card) {
+    card.style.display =
+      card.textContent.toLowerCase().includes(query) ? "" : "none";
+  });
+}
+</script>
+
+</body>
+</html>
