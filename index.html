@@ -62,6 +62,36 @@ footer{background:#073e37;color:#d7e8e3;padding:25px 18px;font-size:12px}
 footer p{margin:4px 0 0}
 @media(max-width:700px){#masjidList{grid-template-columns:1fr}.hero-inner{padding-top:32px}.container{padding-left:13px;padding-right:13px}.masjid{padding:17px}}
 @media(max-width:380px){.tag{display:none}.times{gap:6px}.time{padding:8px 7px}.section-head h2{font-size:20px}}
+/* Belgaum Salah: Bigger and cleaner layout */
+#masjidList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+#masjidList .prayer-grid,
+#masjidList .times,
+#masjidList .special-times,
+#masjidList .extra-times {
+  font-size: 18px;
+}
+
+#masjidList h2,
+#masjidList h3 {
+  font-size: 26px;
+}
+
+#masjidList .prayer-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 700px) {
+  #masjidList .prayer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 </style>
 </head>
 <body>
