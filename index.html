@@ -4,77 +4,91 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#075b4b">
 <title>Belgaum Salah — Closer to Allah</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--green:#064b40;--deep:#032f29;--mint:#e7f3ed;--gold:#dca849;--ink:#102c26;--muted:#697b74;--line:#e0e9e3;--bg:#f5f6f1;--white:#fff}
+:root{--green:#075b4b;--deep:#063d34;--mint:#e9f5ef;--gold:#c69a43;--ink:#18332b;--muted:#718078;--line:#e4ebe5;--bg:#f5f7f4;--white:#fff;--shadow:0 5px 24px #1237270d}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px Manrope,Arial,sans-serif}
-button,input{font:inherit}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px Manrope,Arial,sans-serif;line-height:1.6}
+button,input,textarea,select{font:inherit}
 button{cursor:pointer}
-header{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px max(20px,calc((100% - 1500px)/2));border-bottom:1px solid var(--line);flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;color:var(--green)}
-.brand small{display:block;font-size:12px;font-weight:500;color:#9b742e;text-align:center}
-nav{display:flex;gap:8px;flex-wrap:wrap}
-nav a{padding:10px 15px;border-radius:25px;text-decoration:none;color:var(--ink);background:#f3f4ef;font-weight:700;font-size:12px}
-nav a:first-child{background:var(--green);color:white}
-.date{font-size:12px;line-height:1.8}
-.hero{background:linear-gradient(90deg,#072f29dd,#0c5043aa),url("https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=1800&q=85") center 45%/cover;color:#fff;text-align:center;padding:24px 15px}
-.hero .arabic{font:30px Amiri,serif}
-.hero p{margin:5px}
-main{max-width:1500px;margin:auto;padding:18px}
-.layout{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(310px,.9fr);gap:14px;align-items:start}
-.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:14px;box-shadow:0 5px 22px #173b2b08}
-.panelhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-h2{font-size:19px;margin:0;color:#102e28}
-.sub{font-size:11px;color:var(--muted);margin-top:4px}
-.tag{background:var(--mint);color:var(--green);padding:7px 10px;border-radius:25px;font-size:11px;font-weight:800}
-.prayers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
-.prayer{background:#fbfcf9;border:1px solid #e9eee7;border-radius:12px;padding:12px 8px;text-align:center;min-width:0}
-.symbol{font-size:24px;margin-bottom:5px}
-.prayer h3{font-size:13px;margin:0 0 10px}
-.times{display:grid;grid-template-columns:1fr 1fr;gap:5px;border-top:1px solid var(--line);padding-top:8px}
+header{background:white;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px max(20px,calc((100% - 1440px)/2));border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:800;color:var(--green)}
+.brand small{display:block;font-size:11px;font-weight:700;color:var(--gold);text-align:center}
+nav{display:flex;gap:7px;flex-wrap:wrap}
+nav a{padding:9px 14px;border-radius:25px;text-decoration:none;color:var(--ink);background:#f3f6f2;font-weight:700;font-size:12px}
+nav a:first-child,nav a:hover{background:var(--green);color:white}
+.date{font-size:12px;line-height:1.8;color:var(--muted)}
+.date b{color:var(--ink)}
+.hero{background:linear-gradient(110deg,#032f29ed,#0c6552b8),url("https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=1800&q=85") center/cover;color:white;text-align:center;padding:32px 15px}
+.hero .arabic{font:clamp(28px,4vw,38px) Amiri,serif;line-height:1.8}
+.hero p{margin:5px;font-size:15px}
+.hero small{color:#f4dca4}
+main{max-width:1440px;margin:auto;padding:22px}
+.layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(300px,.88fr);gap:18px;align-items:start}
+.panel{background:white;border:1px solid var(--line);border-radius:17px;padding:20px;margin-bottom:17px;box-shadow:var(--shadow);min-width:0}
+.panelhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+h2{font-size:19px;line-height:1.4;margin:0;color:var(--ink);letter-spacing:-.3px}
+.sub{font-size:11px;color:var(--muted);margin-top:5px}
+.tag{background:var(--mint);color:var(--green);padding:7px 10px;border-radius:25px;font-size:10px;font-weight:800}
+.prayers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.prayer{background:#fbfcfa;border:1px solid var(--line);border-radius:13px;padding:15px 9px;text-align:center;min-width:0}
+.prayer:hover{border-color:#b8d7c7}
+.symbol{font-size:25px;margin-bottom:5px}
+.prayer h3{font-size:13px;margin:0 0 10px;color:var(--deep)}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:6px;border-top:1px solid var(--line);padding-top:9px}
 .times span{display:block;color:var(--muted);font-size:10px}
-.times b{display:block;font-size:11px;margin-top:3px}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
-.tile{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff}
+.times b{display:block;font-size:11px;margin-top:3px;overflow-wrap:anywhere}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:11px}
+.tile{border:1px solid var(--line);border-radius:11px;padding:12px;background:white;min-width:0}
 .tile span{font-size:11px;color:var(--muted);display:block}
-.tile b{display:block;margin-top:5px;font-size:13px}
-.searchrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.searchrow input{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px;background:white}
-.btn{background:var(--green);color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:800;font-size:12px}
-.btn.light{background:white;color:var(--green);border:1px solid var(--line)}
-.masjids{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.masjid{border:1px solid var(--line);border-radius:13px;padding:12px;min-width:0}
-.masjid h3{margin:0 0 5px;font-size:14px}
-.masjid p{font-size:11px;color:var(--muted);margin:5px 0}
-.map{display:inline-block;color:var(--green);font-size:11px;font-weight:800;margin-top:8px}
-.clockrow{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center}
-.clock{width:145px;height:145px;border:6px solid var(--gold);border-radius:50%;background:var(--deep);color:white;position:relative;margin:auto;box-shadow:inset 0 0 0 2px #fff6}
+.tile b{display:block;margin-top:5px;font-size:13px;color:var(--deep);overflow-wrap:anywhere}
+.searchrow{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0 18px}
+.searchrow input{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px;background:white;outline:none}
+.searchrow input:focus{border-color:var(--green);box-shadow:0 0 0 3px #075b4b12}
+.btn{background:var(--green);color:white;border:1px solid var(--green);border-radius:10px;padding:11px 14px;font-weight:800;font-size:12px}
+.btn:hover{background:var(--deep)}
+.btn.light{background:white;color:var(--green);border-color:var(--line)}
+.masjids{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.masjid{border:1px solid var(--line);border-radius:13px;padding:14px;min-width:0;background:white}
+.masjid h3{margin:4px 0;font-size:14px;color:var(--deep);overflow-wrap:anywhere}
+.masjid p{font-size:11px;color:var(--muted);margin:5px 0;overflow-wrap:anywhere}
+.masjid .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.masjid .tile{padding:8px;background:#f8faf7}
+.masjid .tile b{font-size:12px}
+.map{display:inline-block;color:var(--green);font-size:11px;font-weight:800;margin-top:10px;text-decoration:none}
+.map:hover{text-decoration:underline}
+.clockrow{display:grid;grid-template-columns:140px minmax(0,1fr);gap:14px;align-items:center}
+.clock{width:135px;height:135px;border:5px solid var(--gold);border-radius:50%;background:linear-gradient(145deg,#075b4b,#032f29);color:white;position:relative;margin:auto;box-shadow:inset 0 0 0 2px #fff3}
 .clock .num{position:absolute;font-size:11px;font-weight:800;transform:translate(-50%,-50%)}
 .clock .hand{position:absolute;left:50%;bottom:50%;transform-origin:bottom;border-radius:5px}
-.clock .hour{width:4px;height:35px;background:white}
-.clock .minute{width:3px;height:48px;background:#f4d16c}
-.clock .second{width:2px;height:53px;background:#e9a747}
+.clock .hour{width:4px;height:32px;background:white}
+.clock .minute{width:3px;height:43px;background:#f4d16c}
+.clock .second{width:2px;height:48px;background:#e9a747}
 .clock .dot{position:absolute;left:50%;top:50%;width:9px;height:9px;border-radius:50%;background:var(--gold);transform:translate(-50%,-50%)}
-.location{font-size:12px;line-height:1.9}
-.sunbox{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.sunbox div{background:#f8f8f2;border-radius:10px;padding:10px;font-size:11px}
-.hadith{background:linear-gradient(145deg,#032f29,#105c4b);color:white;position:relative;overflow:hidden}
+.location{font-size:12px;line-height:1.9;overflow-wrap:anywhere}
+.location b{color:var(--deep)}
+.sunbox{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
+.sunbox div{background:#f8faf7;border:1px solid var(--line);border-radius:10px;padding:11px;font-size:11px;color:var(--muted)}
+.sunbox b{display:block;color:var(--ink);margin-top:4px;font-size:14px}
+.hadith{background:linear-gradient(145deg,#032f29,#105c4b);color:white;overflow:hidden}
 .hadith h2{color:white}
-.hadith .arabic{font:25px/1.9 Amiri,serif;text-align:center;margin:20px 0 10px}
-.hadith .translation{text-align:center;line-height:1.8;font-size:13px}
+.hadith .arabic{font:26px/1.9 Amiri,serif;text-align:center;margin:20px 0 12px;color:#f8e6b9}
+.hadith .translation{text-align:center;line-height:1.9;font-size:13px}
 .hadith .source{text-align:center;color:#f3d38c;font-size:11px;margin-top:12px}
-.hadithcontrols{display:flex;justify-content:center;gap:10px;margin-top:14px;align-items:center}
+.hadithcontrols{display:flex;justify-content:center;gap:12px;margin-top:15px;align-items:center}
 .hadithcontrols button{border:1px solid #ffffff50;background:#ffffff16;color:white;border-radius:25px;padding:7px 12px}
 .hadithform{display:none;margin-top:14px}
 .hadithform.show{display:block}
 .hadithform input,.hadithform textarea{width:100%;padding:10px;border-radius:9px;border:1px solid var(--line);margin:5px 0}
-.banner{min-height:170px;border-radius:14px;background:linear-gradient(90deg,#082e27aa,#082e2730),url("https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=900&q=80") center/cover;display:flex;align-items:end;justify-content:end;padding:20px;color:#fff;font-size:25px;font-style:italic;font-weight:800}
-footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-size:11px}
-.state{padding:20px;text-align:center;color:var(--muted);background:#f8faf7;border-radius:12px}
-@media(max-width:1050px){.layout{grid-template-columns:1fr}.clockrow{grid-template-columns:150px 1fr}}
-@media(max-width:700px){header{padding:12px}.date{width:100%}.hero .arabic{font-size:25px}main{padding:10px}.prayers{grid-template-columns:repeat(2,minmax(0,1fr))}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.masjids{grid-template-columns:1fr}.clockrow{grid-template-columns:120px 1fr}.clock{width:115px;height:115px}.clock .hour{height:28px}.clock .minute{height:38px}.clock .second{height:43px}.panel{padding:12px}}
+.banner{min-height:170px;border-radius:14px;background:linear-gradient(90deg,#082e27aa,#082e2730),url("https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=900&q=80") center/cover;display:flex;align-items:end;justify-content:end;padding:20px;color:white;font-size:25px;font-style:italic;font-weight:800;text-shadow:0 2px 8px #0008}
+footer{background:var(--deep);color:#dce9df;padding:20px;text-align:center;font-size:11px}
+.state{padding:20px;text-align:center;color:var(--muted);background:#f8faf7;border:1px dashed var(--line);border-radius:12px;grid-column:1/-1}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}.clockrow{grid-template-columns:140px 1fr}}
+@media(max-width:700px){header{padding:12px}.date{width:100%}.hero .arabic{font-size:27px}main{padding:10px}.panel{padding:13px}.prayers{grid-template-columns:repeat(2,minmax(0,1fr))}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.masjids{grid-template-columns:1fr}.clockrow{grid-template-columns:115px 1fr}.clock{width:110px;height:110px}.clock .hour{height:26px}.clock .minute{height:36px}.clock .second{height:40px}.searchrow{flex-direction:column}.searchrow .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -85,9 +99,9 @@ footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-
 </header>
 
 <section class="hero" id="home">
-  <div class="arabic">وَأَقِمِ الصَّلَاةَ لِذِكْرِي</div>
-  <p>“Establish prayer for My remembrance.”</p>
-  <small>Surah Taha 20:14</small>
+  <div class="arabic" dir="rtl">وَأَقِمِ الصَّلَاةَ لِذِكْرِي</div>
+  <p>Closer to Allah</p>
+  <small>“Establish prayer for My remembrance.” — Surah Taha 20:14</small>
 </section>
 
 <main>
@@ -95,19 +109,21 @@ footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-
 <div>
 <section class="panel">
   <div class="panelhead">
-    <div><h2>🕌 Prayer Times — Belgaum (Hanafi)</h2><div class="sub">Daily seasonal timings · 12-hour format</div></div>
+    <div><h2>🕌 Prayer Times — Belagavi</h2><div class="sub">Daily calculated timings · Karachi method · Hanafi Asr</div></div>
     <span class="tag" id="timingStatus">● Loading timings</span>
   </div>
   <div class="prayers" id="prayerGrid"><div class="state">Loading prayer times...</div></div>
+  <div class="panelhead" style="margin-top:20px"><div><h2>Special Prayer Times</h2><div class="sub">Approximate timings; confirm with your local imam</div></div></div>
   <div class="tiles" id="specialGrid"></div>
+  <div class="panelhead" style="margin-top:20px"><div><h2>Sehri & Iftar</h2><div class="sub">Daily calculation for Belagavi</div></div></div>
   <div class="tiles" id="fastingGrid"></div>
 </section>
 
 <section class="panel" id="masjids">
-  <div class="panelhead"><div><h2>🕌 Find Your Nearby Masjid</h2><div class="sub">Search by masjid name or area</div></div><span class="tag" id="count">Loading</span></div>
+  <div class="panelhead"><div><h2>🕌 Find a Masjid</h2><div class="sub">Search by masjid name, area or address</div></div><span class="tag" id="count">Loading</span></div>
   <div class="searchrow">
-    <input id="search" type="search" placeholder="Search masjid, area or address...">
-    <button class="btn" id="nearbyBtn">📍 Nearby Masjids</button>
+    <input id="search" type="search" placeholder="Search masjid or area..." autocomplete="off">
+    <button class="btn" id="nearbyBtn" type="button">📍 Nearby Masjids</button>
   </div>
   <div class="masjids" id="masjidList"><div class="state">Loading masjids...</div></div>
 </section>
@@ -122,9 +138,9 @@ footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-
       <span class="hand second" id="secondHand"></span>
       <span class="dot"></span>
     </div>
-    <div class="location"><b>📍 Belgaum, Karnataka</b><br>India Standard Time<br><b id="digitalClock">--:--:-- PM</b><br><span id="hijriNote">Daily local date</span></div>
+    <div class="location"><b>📍 Belagavi, Karnataka</b><br>India Standard Time<br><b id="digitalClock">--:--:-- PM</b><br><span id="hijriNote">Indian Standard Time (IST)</span></div>
   </div>
-  <div class="sunbox"><div>🌅 Sunrise<br><b id="sunrise">—</b></div><div>🌇 Sunset<br><b id="sunset">—</b></div></div>
+  <div class="sunbox"><div>🌅 Sunrise<b id="sunrise">—</b></div><div>🌇 Sunset<b id="sunset">—</b></div></div>
 </section>
 
 <section class="panel hadith" id="hadith">
@@ -132,21 +148,16 @@ footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-
   <div class="arabic" id="hadithArabic" dir="rtl">مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ</div>
   <div class="translation" id="hadithTranslation">“Whoever guides someone to goodness will have a reward like the one who did it.”</div>
   <div class="source" id="hadithSource">Sahih Muslim 1893</div>
-  <div class="hadithcontrols">
-    <button id="prevHadith" aria-label="Previous hadith">‹</button>
-    <span id="hadithIndex">1 / 3</span>
-    <button id="nextHadith" aria-label="Next hadith">›</button>
-  </div>
-  <button class="btn light" id="addHadithBtn" style="margin-top:12px;width:100%">＋ Add Hadith</button>
+  <div class="hadithcontrols"><button id="prevHadith" type="button" aria-label="Previous hadith">‹</button><span id="hadithIndex">1 / 3</span><button id="nextHadith" type="button" aria-label="Next hadith">›</button></div>
+  <button class="btn light" id="addHadithBtn" type="button" style="margin-top:12px;width:100%">＋ Add Hadith</button>
   <form class="hadithform" id="hadithForm">
     <input id="newArabic" placeholder="Arabic text (optional)">
     <textarea id="newTranslation" placeholder="Hadith translation" rows="3" required></textarea>
     <input id="newSource" placeholder="Hadith source/reference" required>
     <button class="btn" type="submit">Save Hadith on this device</button>
   </form>
-  <div class="sub" style="color:#e5d9b6;margin-top:10px">Verify the Arabic text and reference before publishing.</div>
+  <div class="sub" style="color:#e5d9b6;margin-top:10px">Check the wording and source before adding a Hadith.</div>
 </section>
-
 <div class="banner">Closer to Allah ♥</div>
 </aside>
 </div>
@@ -157,7 +168,7 @@ footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-
 
 "use strict";
 
-// Existing Supabase project settings — unchanged.
+// Keep these project settings unchanged.
 const SUPABASE_URL = "https://ziewfvsoktvawskimwqb.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
 const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
@@ -184,19 +195,14 @@ function formatTime(t) {
   return `${h % 12 || 12}:${String(m).padStart(2,"0")} ${h >= 12 ? "PM" : "AM"}`;
 }
 
-function clean(t) {
-  const m = String(t || "").match(/\d{1,2}:\d{2}/);
-  return m ? m[0] : "";
-}
-
 function apiDate(offset = 0) {
-  const p = Object.fromEntries(
-    new Intl.DateTimeFormat("en-CA", {
-      timeZone:"Asia/Kolkata", year:"numeric",
-      month:"2-digit", day:"2-digit"
-    }).formatToParts(new Date()).map(x => [x.type,x.value])
-  );
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone:"Asia/Kolkata", year:"numeric", month:"2-digit", day:"2-digit"
+  }).formatToParts(new Date());
+
+  const p = Object.fromEntries(parts.map(x => [x.type,x.value]));
   const d = new Date(Date.UTC(+p.year,+p.month-1,+p.day+offset));
+
   return `${String(d.getUTCDate()).padStart(2,"0")}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${d.getUTCFullYear()}`;
 }
 
@@ -204,12 +210,13 @@ async function getTimes(offset = 0) {
   const url = new URL(`https://api.aladhan.com/v1/timings/${apiDate(offset)}`);
   url.searchParams.set("latitude",BELAGAVI_LAT);
   url.searchParams.set("longitude",BELAGAVI_LNG);
-  url.searchParams.set("method","1"); // Karachi method
-  url.searchParams.set("school","1"); // Hanafi Asr
+  url.searchParams.set("method","1");
+  url.searchParams.set("school","1");
   url.searchParams.set("timezonestring","Asia/Kolkata");
 
-  const response = await fetch(url,{cache:"no-store"});
+  const response = await fetch(url.toString(),{cache:"no-store"});
   if (!response.ok) throw new Error("Prayer API unavailable");
+
   const json = await response.json();
   if (json.code !== 200 || !json.data?.timings) {
     throw new Error("Prayer timings unavailable");
@@ -220,17 +227,21 @@ async function getTimes(offset = 0) {
 function tile(label,time) {
   const el = document.createElement("div");
   el.className = "tile";
-  const a = document.createElement("span");
-  a.textContent = label;
-  const b = document.createElement("b");
-  b.textContent = time || "—";
-  el.append(a,b);
+
+  const labelEl = document.createElement("span");
+  labelEl.textContent = label;
+
+  const valueEl = document.createElement("b");
+  valueEl.textContent = time || "—";
+
+  el.append(labelEl,valueEl);
   return el;
 }
 
 async function updatePrayerTimes() {
   const status = $("timingStatus");
-  status.textContent = "● Updating...";
+  status.textContent = "● Updating timings";
+
   const t = await getTimes();
   const tomorrow = await getTimes(1).catch(() => ({}));
 
@@ -249,61 +260,67 @@ async function updatePrayerTimes() {
   prayers.forEach(([name,icon,time]) => {
     const card = document.createElement("div");
     card.className = "prayer";
+
     const symbol = document.createElement("div");
     symbol.className = "symbol";
     symbol.textContent = icon;
+
     const heading = document.createElement("h3");
     heading.textContent = name;
-    card.append(symbol,heading);
 
     const times = document.createElement("div");
     times.className = "times";
+
     const a = document.createElement("div");
-    a.innerHTML = "<span>Calculated time</span>";
-    const ab = document.createElement("b");
-    ab.textContent = formatTime(minutes(time));
-    a.appendChild(ab);
+    a.appendChild(Object.assign(document.createElement("span"),{textContent:"Calculated time"}));
+    a.appendChild(Object.assign(document.createElement("b"),{textContent:formatTime(minutes(time))}));
+
     const b = document.createElement("div");
-    b.innerHTML = "<span>Reference</span>";
-    const bb = document.createElement("b");
-    bb.textContent = name === "Sunrise" ? "Sunrise" : "Daily";
-    b.appendChild(bb);
+    b.appendChild(Object.assign(document.createElement("span"),{textContent:"Calculation"}));
+    b.appendChild(Object.assign(document.createElement("b"),{textContent:"Daily"}));
+
     times.append(a,b);
-    card.appendChild(times);
+    card.append(symbol,heading,times);
     grid.appendChild(card);
   });
 
+  const sunrise = minutes(t.Sunrise);
+  const dhuhr = minutes(t.Dhuhr);
+  const maghrib = minutes(t.Maghrib);
+  const isha = minutes(t.Isha);
+  const nextFajr = minutes(tomorrow.Fajr);
+
+  const nightLength = nextFajr == null || isha == null
+    ? null : (nextFajr - isha + 1440) % 1440;
+
   $("specialGrid").replaceChildren(
-    tile("Ishraq (approx.)",formatTime(minutes(t.Sunrise)+15)),
-    tile("Chasht (approx.)",formatTime(minutes(t.Sunrise)+20)),
-    tile("Awwabin (approx.)",formatTime(minutes(t.Maghrib)+5)),
-    tile("Tahajjud (approx.)",formatTime(
-      minutes(t.Isha) + (
-        ((minutes(tomorrow.Fajr) || minutes(t.Fajr)) -
-          minutes(t.Isha) + 1440) % 1440
-      ) * 2 / 3
-    ))
+    tile("Ishraq start (approx.)",formatTime(sunrise == null ? null : sunrise + 15)),
+    tile("Chasht start (approx.)",formatTime(sunrise == null ? null : sunrise + 20)),
+    tile("Awwabin start (approx.)",formatTime(maghrib == null ? null : maghrib + 5)),
+    tile("Tahajjud (approx.)",formatTime(nightLength == null ? null : isha + nightLength * 2 / 3))
   );
 
   $("fastingGrid").replaceChildren(
-    tile("Sehri starts (approx.)",formatTime(minutes(t.Imsak) ?? minutes(t.Fajr))),
+    tile("Sehri start (approx.)",formatTime(minutes(t.Imsak) ?? minutes(t.Fajr))),
     tile("Sehri ends",formatTime(minutes(t.Fajr))),
-    tile("Iftar",formatTime(minutes(t.Maghrib))),
-    tile("Calculation", "Karachi · Hanafi")
+    tile("Iftar",formatTime(maghrib)),
+    tile("Calculation method","Karachi · Hanafi")
   );
 
-  $("sunrise").textContent = formatTime(minutes(t.Sunrise));
+  $("sunrise").textContent = formatTime(sunrise);
   $("sunset").textContent = formatTime(minutes(t.Sunset));
   status.textContent = "● Daily timings loaded";
 }
 
-// Live analogue clock and 12-hour AM/PM digital clock.
+// 12-hour AM/PM clock with 12-number analogue dial.
 function updateClock() {
   const now = new Date();
+
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",
     second:"2-digit",hourCycle:"h23"
   }).formatToParts(now);
+
   const p = Object.fromEntries(parts.map(x => [x.type,x.value]));
   const h = +p.hour, m = +p.minute, s = +p.second;
 
@@ -316,6 +333,7 @@ function updateClock() {
   $("minuteHand").style.transform = `translateX(-50%) rotate(${m*6+s*.1}deg)`;
   $("secondHand").style.transform = `translateX(-50%) rotate(${s*6}deg)`;
 }
+
 for (let i=1;i<=12;i++) {
   const n = document.createElement("span");
   n.className = "num";
@@ -325,11 +343,11 @@ for (let i=1;i<=12;i++) {
   n.style.top = `${50-38*Math.cos(angle)}%`;
   $("clock").appendChild(n);
 }
+
 updateClock();
 setInterval(updateClock,1000);
 
-// Hadith rotates automatically every 24 hours.
-// Custom additions are saved locally in this browser.
+// Daily Hadith rotation. Custom additions are stored in this browser.
 const defaultHadiths = [
   {
     ar:"مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
@@ -352,7 +370,9 @@ let customHadiths = [];
 try {
   customHadiths = JSON.parse(localStorage.getItem("belgaumSalahHadiths") || "[]");
   if (!Array.isArray(customHadiths)) customHadiths = [];
-} catch (_) { customHadiths = []; }
+} catch (_) {
+  customHadiths = [];
+}
 
 let hadiths = [...defaultHadiths,...customHadiths];
 let hadithIndex = Math.floor(Date.now() / 86400000) % hadiths.length;
@@ -372,30 +392,36 @@ $("prevHadith").addEventListener("click",() => {
   hadithIndex--;
   showHadith();
 });
+
 $("nextHadith").addEventListener("click",() => {
   hadithIndex++;
   showHadith();
 });
+
 $("addHadithBtn").addEventListener("click",() => {
   $("hadithForm").classList.toggle("show");
 });
+
 $("hadithForm").addEventListener("submit",e => {
   e.preventDefault();
+
   const item = {
     ar:$("newArabic").value.trim(),
     en:$("newTranslation").value.trim(),
     src:$("newSource").value.trim()
   };
+
   customHadiths.push(item);
   localStorage.setItem("belgaumSalahHadiths",JSON.stringify(customHadiths));
   hadithIndex = hadiths.length;
+
   $("hadithForm").reset();
   $("hadithForm").classList.remove("show");
   showHadith();
 });
 showHadith();
 
-function textElement(tag, className, text) {
+function textElement(tag,className,text) {
   const el = document.createElement(tag);
   el.className = className || "";
   el.textContent = text == null || text === "" ? "—" : String(text);
@@ -420,11 +446,9 @@ function makeMasjidCard(m) {
 
   card.appendChild(textElement("div","","🕌"));
   card.appendChild(textElement("h3","",m.name));
-  card.appendChild(textElement("p","", "📍 " + (m.area || "Belagavi")));
+  card.appendChild(textElement("p","","📍 " + (m.area || "Belagavi")));
 
-  if (m.address) {
-    card.appendChild(textElement("p","",m.address));
-  }
+  if (m.address) card.appendChild(textElement("p","",m.address));
 
   const prayerRows = [
     ["Fajr","fajr_azaan","fajr_jamaat"],
@@ -438,12 +462,14 @@ function makeMasjidCard(m) {
   times.className = "tiles";
 
   prayerRows.forEach(([name,azaan,jamaat]) => {
-    const tile = document.createElement("div");
-    tile.className = "tile";
-    tile.appendChild(textElement("span","",name));
-    tile.appendChild(textElement("b","",m[jamaat] || "—"));
-    tile.appendChild(textElement("span","", "Azaan: " + (m[azaan] || "—")));
-    times.appendChild(tile);
+    const box = document.createElement("div");
+    box.className = "tile";
+
+    box.appendChild(textElement("span","",name));
+    box.appendChild(textElement("b","",m[jamaat] || "—"));
+    box.appendChild(textElement("span","","Azaan: " + (m[azaan] || "—")));
+
+    times.appendChild(box);
   });
 
   card.appendChild(times);
@@ -463,8 +489,8 @@ function renderMasjids() {
   const query = $("search").value.trim().toLocaleLowerCase("en-IN");
 
   const filtered = masjids.filter(m =>
-    [m.name,m.area,m.address].some(value =>
-      String(value || "").toLocaleLowerCase("en-IN").includes(query)
+    [m.name,m.area,m.address].some(v =>
+      String(v || "").toLocaleLowerCase("en-IN").includes(query)
     )
   );
 
@@ -500,10 +526,12 @@ async function loadMasjids() {
     renderMasjids();
   } catch (error) {
     console.error("Supabase error:",error);
+
     list.replaceChildren(textElement(
       "div","state",
-      "Masjids could not load. Check the Supabase connection and SELECT permissions."
+      "Masjids could not load. Check Supabase connection and SELECT permissions."
     ));
+
     $("count").textContent = "Connection error";
   }
 }
@@ -518,7 +546,6 @@ $("nearbyBtn").addEventListener("click",() => {
   );
 });
 
-// Load the directory and automatic timings.
 (async function start() {
   await Promise.allSettled([
     loadMasjids(),
@@ -526,7 +553,7 @@ $("nearbyBtn").addEventListener("click",() => {
   ]);
 })();
 
-// Refresh calculated timings while the page remains open.
+// Refresh prayer timings every six hours while the page is open.
 setInterval(() => {
   updatePrayerTimes().catch(error => {
     console.error("Prayer-time refresh failed:",error);
@@ -534,7 +561,7 @@ setInterval(() => {
   });
 },6 * 60 * 60 * 1000);
 
-// If the browser tab was closed overnight, refresh when reopened.
+// Refresh timings when a previously hidden tab becomes visible.
 document.addEventListener("visibilitychange",() => {
   if (!document.hidden) {
     updateClock();
