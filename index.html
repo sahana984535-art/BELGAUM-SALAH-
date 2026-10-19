@@ -1,104 +1,78 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#064b40">
-<meta name="description" content="Belgaum Salah — masjid directory and prayer timings for Belagavi, Karnataka.">
-<title>Belgaum Salah | Closer to Allah</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>Belgaum Salah</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-
 <style>
-:root{--green:#064b40;--deep:#032f29;--mint:#e7f3ed;--gold:#dca849;--ink:#102c26;--muted:#697b74;--line:#e0e9e3;--bg:#f5f6f1;--white:#fff;--red:#a92e2e}
+:root{--green:#064b40;--deep:#032f29;--gold:#dca849;--bg:#f5f6f1;--line:#e0e9e3;--muted:#697b74}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px Manrope,Arial,sans-serif;line-height:1.55}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-a{color:inherit}
-[hidden]{display:none!important}
-header{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px max(16px,calc((100% - 1500px)/2));border-bottom:1px solid var(--line);flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:800;color:var(--green)}
-.brand small{display:block;font-size:11px;font-weight:600;color:#9b742e}
+body{margin:0;background:var(--bg);color:#102c26;font:14px Manrope,Arial,sans-serif;line-height:1.55}
+header{background:white;padding:14px 5%;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.brand{font-size:20px;font-weight:800;color:var(--green)}
+.brand small{display:block;font-size:11px;color:#9b742e}
 nav{display:flex;gap:7px;flex-wrap:wrap}
-nav a{padding:9px 13px;border-radius:25px;text-decoration:none;color:var(--ink);background:#f3f4ef;font-weight:800;font-size:12px}
-nav a:hover{background:var(--mint)}
-.date{font-size:12px;line-height:1.8}
-.hero{background:linear-gradient(90deg,rgba(3,34,29,.88),rgba(3,47,41,.55)),url("https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=2000&q=85") center 48%/cover;color:#fff;text-align:center;padding:45px 18px 52px}
+nav a{padding:9px 12px;background:#f3f4ef;border-radius:24px;text-decoration:none;font-size:12px;font-weight:800}
+.hero{background:linear-gradient(90deg,#032f29dc,#032f2966),url("https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=2000&q=85") center/cover;color:white;text-align:center;padding:42px 15px}
 .hero .arabic{font:34px Amiri,serif}
-.hero p{margin:5px 0}
-.hero small{color:#f3d38c}
-.hero h1{margin:8px 0;font-size:clamp(27px,5vw,43px);letter-spacing:-1px}
-.hero .intro{max-width:650px;margin:10px auto;color:#edf6f0}
-main{max-width:1500px;margin:auto;padding:18px}
-.layout{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(290px,.9fr);gap:14px;align-items:start}
-.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:14px;box-shadow:0 5px 22px #173b2b08}
-.panelhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-h2{font-size:19px;margin:0;color:#102e28}
-h3{line-height:1.4}
+.hero h1{font-size:clamp(27px,5vw,42px);margin:10px 0}
+.hero p{max-width:650px;margin:8px auto}
+main{max-width:1450px;margin:auto;padding:18px}
+.layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,.85fr);gap:14px;align-items:start}
+.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 18px #173b2b08}
+.panelhead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+h2{font-size:19px;margin:0}
 .sub{font-size:11px;color:var(--muted);margin-top:4px}
-.tag{background:var(--mint);color:var(--green);padding:7px 10px;border-radius:25px;font-size:11px;font-weight:800}
-.prayers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.prayer{background:#fbfcf9;border:1px solid #e9eee7;border-radius:12px;padding:12px 9px;text-align:center;min-width:0}
-.symbol{font-size:23px;margin-bottom:5px}
-.prayer h3{font-size:13px;margin:0 0 9px}
-.times{display:grid;grid-template-columns:1fr 1fr;gap:5px;border-top:1px solid var(--line);padding-top:8px}
-.times span{display:block;color:var(--muted);font-size:10px}
-.times b{display:block;font-size:11px;margin-top:3px;overflow-wrap:anywhere}
+.tag{background:#e7f3ed;color:var(--green);padding:7px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.prayers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.prayer{background:#fbfcf9;border:1px solid #e0e9e3;border-radius:13px;padding:14px 10px;text-align:center;min-width:0}
+.symbol{font-size:24px}
+.prayer h3{font-size:14px;margin:5px 0 12px}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:5px;border-top:1px solid var(--line);padding-top:10px}
+.times span{display:block;font-size:10px;color:var(--muted)}
+.times b{display:block;font-size:12px;margin-top:4px;overflow-wrap:anywhere}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
-.tile{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;min-width:0}
+.tile{border:1px solid var(--line);border-radius:11px;padding:11px;min-width:0}
 .tile span{font-size:11px;color:var(--muted);display:block}
-.tile b{display:block;margin-top:5px;font-size:13px;overflow-wrap:anywhere}
-.searchrow,.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.searchrow input{flex:1;min-width:180px}
-.field,input,select,textarea{width:100%;border:1px solid #d8e3dc;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink)}
-input:focus,select:focus,textarea:focus{outline:2px solid #dca84966;border-color:var(--gold)}
-.btn{display:inline-flex;justify-content:center;align-items:center;gap:6px;background:var(--green);color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:800;font-size:12px;text-decoration:none}
-.btn:hover{filter:brightness(1.08)}
-.btn.light{background:white;color:var(--green);border:1px solid var(--line)}
-.btn.gold{background:var(--gold);color:#2b2413}
-.btn.danger{background:var(--red);color:white}
-.btn:disabled{opacity:.5;cursor:not-allowed}
+.tile b{display:block;margin-top:4px;font-size:13px;overflow-wrap:anywhere}
+.notice{background:#fff8e8;border:1px solid #eedfb7;border-radius:10px;padding:11px;font-size:11px;color:#755d2b;margin-top:12px}
+.searchrow{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+input{flex:1;min-width:150px;width:100%;padding:11px;border:1px solid #d8e3dc;border-radius:10px;font:inherit}
+.btn{display:inline-block;background:var(--green);color:white;border:0;border-radius:10px;padding:11px 14px;font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}
 .masjids{display:grid;grid-template-columns:1fr;gap:10px}
 .masjid{border:1px solid var(--line);border-radius:13px;padding:13px;min-width:0}
-.masjid h3{margin:0 0 5px;font-size:15px}
+.masjid h3{font-size:15px;margin:3px 0}
 .masjid p{font-size:11px;color:var(--muted);margin:5px 0}
-.masjid .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
 .map{display:inline-block;color:var(--green);font-size:11px;font-weight:800;margin-top:9px}
-.clockrow{display:grid;grid-template-columns:130px 1fr;gap:12px;align-items:center}
-.clock{width:125px;height:125px;border:6px solid var(--gold);border-radius:50%;background:var(--deep);color:white;position:relative;margin:auto;box-shadow:inset 0 0 0 2px #fff6}
-.clock .num{position:absolute;font-size:10px;font-weight:800;transform:translate(-50%,-50%)}
-.clock .hand{position:absolute;left:50%;bottom:50%;transform-origin:bottom;border-radius:5px}
-.clock .hour{width:4px;height:29px;background:white}
-.clock .minute{width:3px;height:39px;background:#f4d16c}
-.clock .second{width:2px;height:44px;background:#e9a747}
-.clock .dot{position:absolute;left:50%;top:50%;width:9px;height:9px;border-radius:50%;background:var(--gold);transform:translate(-50%,-50%)}
+.clockrow{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center}
+.clock{width:115px;height:115px;border:5px solid var(--gold);border-radius:50%;background:var(--deep);position:relative;color:white;margin:auto}
+.clock .num{position:absolute;font-size:9px;font-weight:bold;transform:translate(-50%,-50%)}
+.hand{position:absolute;left:50%;bottom:50%;transform-origin:bottom;border-radius:4px}
+.hour{width:4px;height:26px;background:white}
+.minute{width:3px;height:35px;background:#f4d16c}
+.second{width:2px;height:41px;background:#e9a747}
+.dot{position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:var(--gold);transform:translate(-50%,-50%)}
 .location{font-size:12px;line-height:1.9}
-.sunbox{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.sunbox div{background:#f8f8f2;border-radius:10px;padding:10px;font-size:11px}
 .hadith{background:linear-gradient(145deg,#032f29,#105c4b);color:white}
 .hadith h2{color:white}
-.hadith .arabic{font:25px/1.9 Amiri,serif;text-align:center;margin:18px 0 10px}
-.hadith .translation{text-align:center;line-height:1.8;font-size:13px}
-.hadith .source{text-align:center;color:#f3d38c;font-size:11px;margin-top:12px}
-.hadithcontrols{display:flex;justify-content:center;gap:10px;margin-top:14px;align-items:center}
-.hadithcontrols button{border:1px solid #ffffff50;background:#ffffff16;color:white;border-radius:25px;padding:7px 12px}
-.banner{min-height:160px;border-radius:14px;background:linear-gradient(90deg,#082e27bb,#082e2730),url("https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=900&q=80") center/cover;display:flex;align-items:end;justify-content:end;padding:20px;color:#fff;font-size:22px;font-style:italic;font-weight:800}
-.state{padding:18px;text-align:center;color:var(--muted);background:#f8faf7;border-radius:12px}
-.notice{background:#fff8e8;border:1px solid #eedfb7;border-radius:12px;padding:12px;font-size:11px;color:#755d2b;margin-top:12px}
+.hadith .arabic{font:25px/1.9 Amiri,serif;text-align:center;margin:15px 0}
+.hadith .translation{text-align:center;font-size:13px;line-height:1.8}
+.hadith .source{text-align:center;color:#f3d38c;font-size:11px;margin-top:10px}
+.hadithcontrols{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:14px}
+.hadithcontrols button{background:#ffffff16;color:white;border:1px solid #ffffff50;border-radius:20px;padding:7px 12px}
+.banner{min-height:150px;border-radius:13px;background:linear-gradient(90deg,#082e27bb,#082e2730),url("https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=900&q=80") center/cover;display:flex;align-items:end;justify-content:end;padding:20px;color:white;font-size:22px;font-weight:800}
+.state{padding:16px;text-align:center;color:var(--muted);background:#f8faf7;border-radius:10px}
 footer{background:var(--deep);color:#dce9df;padding:20px;text-align:center;font-size:11px}
-@media(max-width:1050px){.layout{grid-template-columns:1fr}.clockrow{grid-template-columns:130px 1fr}}
-@media(max-width:650px){header{padding:12px}.date{width:100%}.hero{padding:32px 14px}.hero .arabic{font-size:27px}main{padding:10px}.prayers{grid-template-columns:repeat(2,minmax(0,1fr))}.masjid .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.clockrow{grid-template-columns:110px 1fr}.clock{width:105px;height:105px}.clock .hour{height:25px}.clock .minute{height:32px}.clock .second{height:37px}.panel{padding:12px}}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}}
+@media(max-width:650px){header{padding:12px}.hero{padding:30px 14px}.hero .arabic{font-size:27px}main{padding:10px}.prayers{grid-template-columns:repeat(2,minmax(0,1fr))}.clockrow{grid-template-columns:105px 1fr}.clock{width:100px;height:100px}.panel{padding:12px}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="brand">
-    <span style="font-size:29px">🕌</span>
-    <div>BELGAUM SALAH<small>— Closer to Allah —</small></div>
-  </div>
+  <div class="brand">🕌 BELGAUM SALAH<small>— Closer to Allah —</small></div>
   <nav>
     <a href="#home">⌂ Home</a>
     <a href="#prayerTimes">Prayer Times</a>
@@ -106,10 +80,7 @@ footer{background:var(--deep);color:#dce9df;padding:20px;text-align:center;font-
     <a href="#hadith">Hadith</a>
     <a href="imam.html">🔐 Imam Login</a>
   </nav>
-  <div class="date">
-    <b id="today">Loading date...</b><br>
-    <span>Belagavi, Karnataka · India</span>
-  </div>
+  <div><b id="today">Loading date...</b><br><small>Belagavi, Karnataka · India</small></div>
 </header>
 
 <section class="hero" id="home">
@@ -117,440 +88,316 @@ footer{background:var(--deep);color:#dce9df;padding:20px;text-align:center;font-
   <p>“Establish prayer for My remembrance.”</p>
   <small>Surah Taha 20:14</small>
   <h1>Every prayer. Closer to home.</h1>
-  <p class="intro">Find masjids, view daily prayer timings and check Azaan and Jamaat schedules across Belagavi.</p>
+  <p>Find masjids and daily prayer times across Belagavi.</p>
 </section>
 
 <main>
 <div class="layout">
 <div>
-  <section class="panel" id="prayerTimes">
-    <div class="panelhead">
-      <div>
-        <h2>🕌 Prayer Times — Belagavi (Hanafi)</h2>
-        <div class="sub">Daily calculated timings · India Standard Time</div>
-      </div>
-      <span class="tag" id="timingStatus">● Loading timings</span>
-    </div>
-    <div class="prayers" id="prayerGrid">
-      <div class="state">Loading prayer times...</div>
-    </div>
-    <div class="tiles" id="specialGrid"></div>
-    <div class="tiles" id="fastingGrid"></div>
-    <div class="notice">Prayer windows are reference calculations. Please confirm local religious timetables with your trusted local scholar or masjid.</div>
-  </section>
+<section class="panel" id="prayerTimes">
+  <div class="panelhead">
+    <div><h2>🕌 Prayer Times — Belagavi (Hanafi)</h2><div class="sub">Daily calculated timings · India Standard Time</div></div>
+    <span class="tag" id="timingStatus">● Loading timings</span>
+  </div>
+  <div class="prayers" id="prayerGrid"><div class="state">Loading prayer times...</div></div>
+  <div class="notice">Fajr ends at sunrise. Zuhr ends when Asr begins. Asr ends at Maghrib. Maghrib ends at Isha. Isha's end time requires a separate local fiqh rule.</div>
+</section>
 
-  <section class="panel" id="karachi">
-    <div class="panelhead">
-      <div>
-        <h2>📿 Karachi Hanafi Method</h2>
-        <div class="sub">Calculation method used for the displayed prayer times</div>
-      </div>
-      <span class="tag">Karachi · Hanafi</span>
-    </div>
-    <div class="tiles">
-      <div class="tile"><span>Fajr angle</span><b>18°</b></div>
-      <div class="tile"><span>Isha angle</span><b>18°</b></div>
-      <div class="tile"><span>Asr calculation</span><b>Hanafi · Shadow factor 2</b></div>
-      <div class="tile"><span>Location</span><b>Belagavi, Karnataka</b></div>
-    </div>
-    <div class="notice">These are method details, not separate verified masjid timings. Please confirm the local timetable with your masjid.</div>
-  </section>
+<section class="panel">
+  <div class="panelhead"><div><h2>📿 Karachi Hanafi Method</h2><div class="sub">Prayer time calculation settings</div></div><span class="tag">Karachi · Hanafi</span></div>
+  <div class="tiles">
+    <div class="tile"><span>Fajr angle</span><b>18°</b></div>
+    <div class="tile"><span>Isha angle</span><b>18°</b></div>
+    <div class="tile"><span>Asr calculation</span><b>Hanafi · Shadow factor 2</b></div>
+    <div class="tile"><span>Location</span><b>Belagavi, Karnataka</b></div>
+  </div>
+</section>
 
-  <section class="panel" id="masjids">
-    <div class="panelhead">
-      <div>
-        <h2>🕌 Masjid Directory</h2>
-        <div class="sub">Search by masjid name or area in Belagavi</div>
-      </div>
-      <span class="tag" id="count">Loading...</span>
-    </div>
-    <div class="searchrow">
-      <input id="search" type="search" placeholder="Search masjid name or area..." autocomplete="off" aria-label="Search masjid name or area">
-      <button class="btn" id="nearbyBtn" type="button">📍 Nearby Masjids</button>
-    </div>
-    <div class="masjids" id="masjidList">
-      <div class="state">Loading masjids...</div>
-    </div>
-  </section>
+<section class="panel" id="masjids">
+  <div class="panelhead"><div><h2>🕌 Masjid Directory</h2><div class="sub">Search by masjid name or area</div></div><span class="tag" id="count">Loading...</span></div>
+  <div class="searchrow">
+    <input id="search" type="search" placeholder="Search masjid name or area..." aria-label="Search masjid">
+    <button class="btn" id="nearbyBtn" type="button">📍 Nearby Masjids</button>
+  </div>
+  <div class="masjids" id="masjidList"><div class="state">Loading masjids...</div></div>
+</section>
 </div>
 
 <aside>
-  <section class="panel">
-    <div class="clockrow">
-      <div class="clock" id="clock">
-        <span class="hand hour" id="hourHand"></span>
-        <span class="hand minute" id="minuteHand"></span>
-        <span class="hand second" id="secondHand"></span>
-        <span class="dot"></span>
-      </div>
-      <div class="location">
-        <b>📍 Belagavi, Karnataka</b><br>
-        India Standard Time<br>
-        <b id="digitalClock">--:--:--</b><br>
-        <span id="hijriNote">Daily local date</span>
-      </div>
+<section class="panel">
+  <div class="clockrow">
+    <div class="clock" id="clock">
+      <span class="hand hour" id="hourHand"></span>
+      <span class="hand minute" id="minuteHand"></span>
+      <span class="hand second" id="secondHand"></span>
+      <span class="dot"></span>
     </div>
-    <div class="sunbox">
-      <div>🌅 Sunrise<br><b id="sunrise">—</b></div>
-      <div>🌇 Sunset<br><b id="sunset">—</b></div>
+    <div class="location">
+      <b>📍 Belagavi, Karnataka</b><br>
+      India Standard Time<br>
+      <b id="digitalClock">--:--:--</b><br>
+      <span id="localDate">Local date</span>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="panel hadith" id="hadith">
-    <div class="panelhead">
-      <h2>📜 Hadith of the Day</h2>
-      <span class="sub" style="color:#e5d9b6">Daily rotation</span>
-    </div>
-    <div class="arabic" id="hadithArabic" dir="rtl">مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ</div>
-    <div class="translation" id="hadithTranslation">Whoever guides someone to goodness will have a reward like the one who did it.</div>
-    <div class="source" id="hadithSource">Sahih Muslim 1893</div>
-    <div class="hadithcontrols">
-      <button id="prevHadith" type="button" aria-label="Previous hadith">‹</button>
-      <span id="hadithIndex">1 / 3</span>
-      <button id="nextHadith" type="button" aria-label="Next hadith">›</button>
-    </div>
-  </section>
-
-  <div class="banner">Closer to Allah ♥</div>
+<section class="panel hadith" id="hadith">
+  <div class="panelhead"><h2>📜 Hadith of the Day</h2></div>
+  <div class="arabic" id="hadithArabic" dir="rtl">مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ</div>
+  <div class="translation" id="hadithTranslation">Whoever guides someone to goodness will have a reward like the one who did it.</div>
+  <div class="source" id="hadithSource">Sahih Muslim 1893</div>
+  <div class="hadithcontrols">
+    <button id="prevHadith" type="button">‹</button>
+    <span id="hadithIndex">1 / 3</span>
+    <button id="nextHadith" type="button">›</button>
+  </div>
+</section>
+<div class="banner">Closer to Allah ♥</div>
 </aside>
 </div>
 </main>
-
-<footer>🕌 BELGAUM SALAH — Closer to Allah · Belagavi, Karnataka, India</footer>
+<footer>🕌 BELGAUM SALAH — Belagavi, Karnataka, India</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  "use strict";
+"use strict";
 
-const SUPABASE_URL = "https://ziewfvsoktvawskimwqb.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
-const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-const $ = id => document.getElementById(id);
+const SUPABASE_URL="https://ziewfvsoktvawskimwqb.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id);
+const LAT=15.8497,LNG=74.4977;
+let masjids=[];
 
-const BELAGAVI_LAT = 15.8497;
-const BELAGAVI_LNG = 74.4977;
-let masjids = [];
-
-function textElement(tag, className, text) {
-  const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== undefined) el.textContent = text;
-  return el;
+function textElement(tag,cls,text){
+  const e=document.createElement(tag);
+  if(cls)e.className=cls;
+  if(text!==undefined)e.textContent=text;
+  return e;
 }
-function showValue(value) {
-  return value == null || String(value).trim() === "" ? "—" : String(value);
+function showValue(v){return v==null||String(v).trim()===""?"—":String(v);}
+function getMinutes(v){
+  const m=String(v||"").match(/(\d{1,2}):(\d{2})/);
+  return m?Number(m[1])*60+Number(m[2]):null;
 }
-function makeTile(label, value) {
-  const el = textElement("div", "tile");
-  el.append(textElement("span", "", label), textElement("b", "", value || "—"));
-  return el;
+function formatTime(v){
+  if(v==null||!Number.isFinite(v))return "—";
+  const n=((Math.round(v)%1440)+1440)%1440;
+  const h=Math.floor(n/60),m=n%60;
+  return `${h%12||12}:${String(m).padStart(2,"0")} ${h>=12?"PM":"AM"}`;
 }
-function getMinutes(value) {
-  const match = String(value || "").match(/(\d{1,2}):(\d{2})/);
-  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+function localParts(date=new Date()){
+  return Object.fromEntries(new Intl.DateTimeFormat("en-GB",{
+    timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"
+  }).formatToParts(date).map(p=>[p.type,p.value]));
 }
-function formatTime(value) {
-  if (value == null || !Number.isFinite(value)) return "—";
-  const total = ((Math.round(value) % 1440) + 1440) % 1440;
-  const hour = Math.floor(total / 60);
-  const minute = total % 60;
-  return `${hour % 12 || 12}:${String(minute).padStart(2, "0")} ${hour >= 12 ? "PM" : "AM"}`;
-}
-
-/* Date and live analogue clock */
-function updateDateAndClock() {
-  const now = new Date();
-  $("today").textContent = now.toLocaleDateString("en-IN", {
-    weekday:"long", day:"numeric", month:"long", year:"numeric",
-    timeZone:"Asia/Kolkata"
+function updateClock(){
+  const now=new Date();
+  $("today").textContent=now.toLocaleDateString("en-IN",{
+    weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Kolkata"
   });
-  $("hijriNote").textContent = now.toLocaleDateString("en-IN", {
-    day:"numeric", month:"short", year:"numeric", timeZone:"Asia/Kolkata"
+  $("localDate").textContent=now.toLocaleDateString("en-IN",{
+    day:"numeric",month:"short",year:"numeric",timeZone:"Asia/Kolkata"
   });
-
-  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", {
-    timeZone:"Asia/Kolkata", hour:"2-digit", minute:"2-digit",
-    second:"2-digit", hourCycle:"h23"
-  }).formatToParts(now).map(x => [x.type,x.value]));
-
-  const h = Number(parts.hour), m = Number(parts.minute), s = Number(parts.second);
-  $("digitalClock").textContent = now.toLocaleTimeString("en-IN", {
-    timeZone:"Asia/Kolkata", hour:"numeric", minute:"2-digit",
-    second:"2-digit", hour12:true
+  const p=localParts(now),h=+p.hour,m=+p.minute,s=+p.second;
+  $("digitalClock").textContent=now.toLocaleTimeString("en-IN",{
+    timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true
   });
-  $("hourHand").style.transform = `translateX(-50%) rotate(${(h%12)*30+m*.5}deg)`;
-  $("minuteHand").style.transform = `translateX(-50%) rotate(${m*6+s*.1}deg)`;
-  $("secondHand").style.transform = `translateX(-50%) rotate(${s*6}deg)`;
+  $("hourHand").style.transform=`translateX(-50%) rotate(${(h%12)*30+m*.5}deg)`;
+  $("minuteHand").style.transform=`translateX(-50%) rotate(${m*6+s*.1}deg)`;
+  $("secondHand").style.transform=`translateX(-50%) rotate(${s*6}deg)`;
 }
-for (let i=1;i<=12;i++) {
-  const n = textElement("span","num",String(i));
-  const angle = i*Math.PI/6;
-  n.style.left = `${50+38*Math.sin(angle)}%`;
-  n.style.top = `${50-38*Math.cos(angle)}%`;
+for(let i=1;i<=12;i++){
+  const n=textElement("span","num",String(i)),a=i*Math.PI/6;
+  n.style.left=`${50+38*Math.sin(a)}%`;
+  n.style.top=`${50-38*Math.cos(a)}%`;
   $("clock").appendChild(n);
 }
-updateDateAndClock();
-setInterval(updateDateAndClock,1000);
+updateClock();
+setInterval(updateClock,1000);
 
-/* Prayer times: AlAdhan Karachi method, Hanafi school */
-function apiDate(offset=0) {
-  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-CA", {
+function apiDate(offset=0){
+  const p=Object.fromEntries(new Intl.DateTimeFormat("en-CA",{
     timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"
   }).formatToParts(new Date()).map(x=>[x.type,x.value]));
-  const d = new Date(Date.UTC(
-    Number(parts.year),Number(parts.month)-1,Number(parts.day)+offset
-  ));
+  const d=new Date(Date.UTC(+p.year,+p.month-1,+p.day+offset));
   return `${String(d.getUTCDate()).padStart(2,"0")}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${d.getUTCFullYear()}`;
 }
-async function getPrayerTimes(offset=0) {
-  const url = new URL(`https://api.aladhan.com/v1/timings/${apiDate(offset)}`);
-  url.searchParams.set("latitude",BELAGAVI_LAT);
-  url.searchParams.set("longitude",BELAGAVI_LNG);
+async function getPrayerTimes(offset=0){
+  const url=new URL(`https://api.aladhan.com/v1/timings/${apiDate(offset)}`);
+  url.searchParams.set("latitude",LAT);
+  url.searchParams.set("longitude",LNG);
   url.searchParams.set("method","1");
   url.searchParams.set("school","1");
-  const response = await fetch(url,{cache:"no-store"});
-  if (!response.ok) throw new Error("Prayer-time service unavailable.");
-  const json = await response.json();
-  if (json.code!==200 || !json.data || !json.data.timings) {
-    throw new Error("Prayer timings could not be loaded.");
-  }
-  return json.data.timings;
+  const r=await fetch(url,{cache:"no-store"});
+  if(!r.ok)throw Error("Prayer-time service unavailable.");
+  const j=await r.json();
+  if(j.code!==200||!j.data?.timings)throw Error("Prayer timings unavailable.");
+  return j.data.timings;
 }
-async function updatePrayerTimes() {
-  $("timingStatus").textContent = "● Updating timings";
-  const t = await getPrayerTimes();
-  const next = await getPrayerTimes(1).catch(()=>({}));
 
-  const prayers = [
-    ["Fajr","🌄",t.Fajr],
-    ["Sunrise","🌅",t.Sunrise],
-    ["Zuhr","☀️",t.Dhuhr],
-    ["Asr (Hanafi)","🌤️",t.Asr],
-    ["Maghrib","🌇",t.Maghrib],
-    ["Isha","🌙",t.Isha]
+/* One card per prayer; both Start and End are inside that same card. */
+async function updatePrayerTimes(){
+  $("timingStatus").textContent="● Updating timings";
+  const [t,next]=await Promise.all([getPrayerTimes(),getPrayerTimes(1).catch(()=>({}))]);
+
+  const fajr=getMinutes(t.Fajr);
+  const sunrise=getMinutes(t.Sunrise);
+  const zuhr=getMinutes(t.Dhuhr);
+  const asr=getMinutes(t.Asr);
+  const maghrib=getMinutes(t.Maghrib);
+  const isha=getMinutes(t.Isha);
+  const nextFajr=getMinutes(next.Fajr);
+
+  const prayers=[
+    {name:"Fajr",icon:"🌄",start:fajr,end:sunrise},
+    {name:"Zuhr",icon:"☀️",start:zuhr,end:asr},
+    {name:"Asr (Hanafi)",icon:"🌤️",start:asr,end:maghrib},
+    {name:"Maghrib",icon:"🌇",start:maghrib,end:isha},
+    {name:"Isha",icon:"🌙",start:isha,end:nextFajr}
   ];
-  const grid = $("prayerGrid");
+
+  const grid=$("prayerGrid");
   grid.replaceChildren();
 
-  prayers.forEach(([name,icon,value])=>{
-    const card = textElement("div","prayer");
-    card.append(textElement("div","symbol",icon),textElement("h3","",name));
-    const times = textElement("div","times");
-    const left = textElement("div","");
-    left.append(textElement("span","","Time"),
-      textElement("b","",formatTime(getMinutes(value))));
-    const right = textElement("div","");
-    right.append(textElement("span","","Location"),
-      textElement("b","","Belagavi"));
-    times.append(left,right);
+  prayers.forEach(p=>{
+    const card=textElement("div","prayer");
+    card.append(
+      textElement("div","symbol",p.icon),
+      textElement("h3","",p.name)
+    );
+    const times=textElement("div","times");
+    const start=textElement("div","");
+    start.append(
+      textElement("span","","Start Time"),
+      textElement("b","",formatTime(p.start))
+    );
+    const end=textElement("div","");
+    end.append(
+      textElement("span","","End Time"),
+      textElement("b","",formatTime(p.end))
+    );
+    times.append(start,end);
     card.appendChild(times);
     grid.appendChild(card);
   });
 
-  const sunrise = getMinutes(t.Sunrise);
-  const zuhr = getMinutes(t.Dhuhr);
-  const maghrib = getMinutes(t.Maghrib);
-  const isha = getMinutes(t.Isha);
-  const fajr = getMinutes(t.Fajr);
-  const nextFajr = getMinutes(next.Fajr) ?? fajr;
-
-  $("specialGrid").replaceChildren(
-    makeTile("Ishraq start",formatTime(sunrise==null?null:sunrise+15)),
-    makeTile("Ishraq end",formatTime(zuhr==null?null:zuhr-10)),
-    makeTile("Chasht / Duha start",formatTime(sunrise==null?null:sunrise+20)),
-    makeTile("Chasht / Duha end",formatTime(zuhr==null?null:zuhr-10)),
-    makeTile("Awwabin start",formatTime(maghrib==null?null:maghrib+5)),
-    makeTile("Awwabin end",formatTime(isha)),
-    makeTile("Tahajjud start",formatTime(
-      isha==null||nextFajr==null?null:isha+(((nextFajr-isha+1440)%1440)*2/3)
-    )),
-    makeTile("Tahajjud end",formatTime(nextFajr))
-  );
-
-  $("fastingGrid").replaceChildren(
-    makeTile("Sehri start",formatTime(getMinutes(t.Imsak)??fajr)),
-    makeTile("Sehri end",formatTime(fajr)),
-    makeTile("Iftar",formatTime(maghrib)),
-    makeTile("Calculation","Karachi · Hanafi")
-  );
-  $("sunrise").textContent = formatTime(sunrise);
-  $("sunset").textContent = formatTime(getMinutes(t.Sunset));
-  $("timingStatus").textContent = "● Timings loaded";
+  $("timingStatus").textContent="● Timings loaded";
 }
-  /* MASJID DIRECTORY — only Azaan and Jamaat */
-function safeMapURL(m) {
-  const saved = m.map_link || m.google_maps_link || "";
-  if (saved) {
-    try {
-      const url = new URL(saved);
-      if (url.protocol === "https:") return url.href;
-    } catch (_) {}
+
+/* Masjid directory: Azaan and Jamaat times only */
+function mapURL(m){
+  const saved=m.map_link||m.google_maps_link||"";
+  if(saved){
+    try{
+      const u=new URL(saved);
+      if(u.protocol==="https:")return u.href;
+    }catch(_){}
   }
-  const query = [m.name,m.area,m.address,"Belagavi"].filter(Boolean).join(", ");
-  return "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent(query);
+  return "https://www.google.com/maps/search/?api=1&query="+
+    encodeURIComponent([m.name,m.area,m.address,"Belagavi"].filter(Boolean).join(", "));
 }
-
-function makeMasjidCard(m) {
-  const card = textElement("article","masjid");
+function makeMasjidCard(m){
+  const card=textElement("article","masjid");
   card.append(
     textElement("div","","🕌"),
-    textElement("h3","",m.name || "Masjid"),
-    textElement("p","","📍 " + (m.area || "Belagavi"))
+    textElement("h3","",m.name||"Masjid"),
+    textElement("p","","📍 "+(m.area||"Belagavi"))
   );
-  if (m.address) card.appendChild(textElement("p","",m.address));
+  if(m.address)card.appendChild(textElement("p","",m.address));
 
-  const tiles = textElement("div","tiles");
-  const prayers = [
+  const tiles=textElement("div","tiles");
+  const rows=[
     ["Fajr","fajr_azaan","fajr_jamaat"],
     ["Zuhr","zuhr_azaan","zuhr_jamaat"],
-    ["Asr (Hanafi)","asr_azaan","asr_jamaat"],
+    ["Asr","asr_azaan","asr_jamaat"],
     ["Maghrib","maghrib_azaan","maghrib_jamaat"],
     ["Isha","isha_azaan","isha_jamaat"]
   ];
-
-  prayers.forEach(([name,azaanKey,jamaatKey])=>{
-    const tile = textElement("div","tile");
+  rows.forEach(([name,a,j])=>{
+    const tile=textElement("div","tile");
     tile.append(
       textElement("span","",name),
       textElement("span","","Azaan"),
-      textElement("b","",showValue(m[azaanKey])),
+      textElement("b","",showValue(m[a])),
       textElement("span","","Jamaat"),
-      textElement("b","",showValue(m[jamaatKey]))
+      textElement("b","",showValue(m[j]))
     );
     tiles.appendChild(tile);
   });
-
   card.appendChild(tiles);
-
-  const map = document.createElement("a");
-  map.className = "map";
-  map.href = safeMapURL(m);
-  map.target = "_blank";
-  map.rel = "noopener noreferrer";
-  map.textContent = "📍 Open Google Maps ↗";
-  card.appendChild(map);
-
+  const link=document.createElement("a");
+  link.className="map";
+  link.href=mapURL(m);
+  link.target="_blank";
+  link.rel="noopener noreferrer";
+  link.textContent="📍 Open Google Maps ↗";
+  card.appendChild(link);
   return card;
 }
-
-function renderMasjids() {
-  const query = $("search").value.trim().toLocaleLowerCase("en-IN");
-  const filtered = masjids.filter(m =>
-    [m.name,m.area,m.address].some(v =>
-      String(v||"").toLocaleLowerCase("en-IN").includes(query)
-    )
+function renderMasjids(){
+  const q=$("search").value.trim().toLowerCase();
+  const filtered=masjids.filter(m=>
+    [m.name,m.area,m.address].some(v=>String(v||"").toLowerCase().includes(q))
   );
-
-  $("count").textContent = `${filtered.length} masjids`;
-  const list = $("masjidList");
+  $("count").textContent=`${filtered.length} masjids`;
+  const list=$("masjidList");
   list.replaceChildren();
-
-  if (!filtered.length) {
+  if(!filtered.length){
     list.appendChild(textElement("div","state",
-      masjids.length ? "No matching masjid found." : "No masjids found in the database yet."));
+      masjids.length?"No matching masjid found.":"No masjids found in database."));
     return;
   }
   filtered.forEach(m=>list.appendChild(makeMasjidCard(m)));
 }
-
-async function loadMasjids() {
-  const {data,error} = await client
-    .from("Masjids")
-    .select("*")
-    .order("name",{ascending:true});
-
-  if (error) throw error;
-  masjids = Array.isArray(data) ? data : [];
+async function loadMasjids(){
+  const {data,error}=await client.from("Masjids").select("*").order("name",{ascending:true});
+  if(error)throw error;
+  masjids=data||[];
   renderMasjids();
 }
-
 $("search").addEventListener("input",renderMasjids);
 $("nearbyBtn").addEventListener("click",()=>{
-  window.open(
-    "https://www.google.com/maps/search/masjid+near+me/",
-    "_blank",
-    "noopener,noreferrer"
-  );
+  window.open("https://www.google.com/maps/search/masjid+near+me/","_blank","noopener,noreferrer");
 });
 
-/* HADITH OF THE DAY */
-const hadiths = [
-  {
-    ar:"مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
-    en:"Whoever guides someone to goodness will have a reward like the one who did it.",
-    src:"Sahih Muslim 1893"
-  },
-  {
-    ar:"الدِّينُ النَّصِيحَةُ",
-    en:"The religion is sincere advice.",
-    src:"Sahih Muslim 55"
-  },
-  {
-    ar:"مَنْ لَا يَرْحَمْ لَا يُرْحَمْ",
-    en:"Whoever does not show mercy will not be shown mercy.",
-    src:"Sahih al-Bukhari 6013"
-  }
+/* Hadith panel */
+const hadiths=[
+  {ar:"مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",en:"Whoever guides someone to goodness will have a reward like the one who did it.",src:"Sahih Muslim 1893"},
+  {ar:"الدِّينُ النَّصِيحَةُ",en:"The religion is sincere advice.",src:"Sahih Muslim 55"},
+  {ar:"مَنْ لَا يَرْحَمْ لَا يُرْحَمْ",en:"Whoever does not show mercy will not be shown mercy.",src:"Sahih al-Bukhari 6013"}
 ];
-
-let hadithIndex = Math.floor(Date.now()/86400000) % hadiths.length;
-
-function showHadith() {
-  hadithIndex = ((hadithIndex % hadiths.length)+hadiths.length)%hadiths.length;
-  const h = hadiths[hadithIndex];
-  $("hadithArabic").textContent = h.ar;
-  $("hadithTranslation").textContent = "“" + h.en + "”";
-  $("hadithSource").textContent = h.src;
-  $("hadithIndex").textContent = `${hadithIndex+1} / ${hadiths.length}`;
+let hadithIndex=Math.floor(Date.now()/86400000)%hadiths.length;
+function showHadith(){
+  hadithIndex=(hadithIndex%hadiths.length+hadiths.length)%hadiths.length;
+  const h=hadiths[hadithIndex];
+  $("hadithArabic").textContent=h.ar;
+  $("hadithTranslation").textContent="“"+h.en+"”";
+  $("hadithSource").textContent=h.src;
+  $("hadithIndex").textContent=`${hadithIndex+1} / ${hadiths.length}`;
 }
-
-$("prevHadith").addEventListener("click",()=>{
-  hadithIndex--;
-  showHadith();
-});
-$("nextHadith").addEventListener("click",()=>{
-  hadithIndex++;
-  showHadith();
-});
+$("prevHadith").addEventListener("click",()=>{hadithIndex--;showHadith();});
+$("nextHadith").addEventListener("click",()=>{hadithIndex++;showHadith();});
 showHadith();
 
-/* STARTUP */
-(async function startWebsite(){
-  try {
-    await loadMasjids();
-  } catch(error) {
-    console.error("Masjid directory error:",error);
-    $("count").textContent = "Connection error";
-    $("masjidList").replaceChildren(
-      textElement("div","state",
-        "Masjid directory could not load. Check the Supabase connection and SELECT policy.")
-    );
+/* Start website */
+(async()=>{
+  try{await loadMasjids();}
+  catch(e){
+    console.error(e);
+    $("count").textContent="Connection error";
+    $("masjidList").replaceChildren(textElement("div","state","Masjid directory could not load. Check Supabase connection and SELECT policy."));
   }
-
-  try {
-    await updatePrayerTimes();
-  } catch(error) {
-    console.error("Prayer timings error:",error);
-    $("timingStatus").textContent = "● Timings unavailable";
-    $("prayerGrid").replaceChildren(
-      textElement("div","state",
-        "Prayer timings could not load. Please try again later.")
-    );
+  try{await updatePrayerTimes();}
+  catch(e){
+    console.error(e);
+    $("timingStatus").textContent="● Timings unavailable";
+    $("prayerGrid").replaceChildren(textElement("div","state","Prayer timings could not load. Try again later."));
   }
 })();
-
-setInterval(()=>{
-  updatePrayerTimes().catch(error=>{
-    console.error("Prayer refresh error:",error);
-    $("timingStatus").textContent = "● Timings unavailable";
-  });
-},6*60*60*1000);
-
+setInterval(()=>updatePrayerTimes().catch(console.error),6*60*60*1000);
 document.addEventListener("visibilitychange",()=>{
-  if (!document.hidden) {
-    updateDateAndClock();
-    updatePrayerTimes().catch(console.error);
-  }
+  if(!document.hidden){updateClock();updatePrayerTimes().catch(console.error);}
 });
 </script>
 </body>
