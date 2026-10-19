@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#063f38">
+<title>Imam Login | Belgaum Salah</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#075e54;--deep:#063f38;--gold:#d7b56d;--ink:#15332c;--muted:#6a8078;--line:#dcebe3;--bg:#f3f7f4}
+*{box-sizing:border-box}
+body{margin:0;font-family:Manrope,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+button,input,select{font:inherit}
+a{color:inherit}
+.hero{padding:18px;background:linear-gradient(90deg,#032a25d9,#063f38a8),url("https://commons.wikimedia.org/wiki/Special:FilePath/Al-Masjid_An-Nabawi.jpg") center/cover;min-height:310px;color:white}
+.nav{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-size:20px;font-weight:800}
+.nav a{color:white;text-decoration:none;border:1px solid #ffffff66;border-radius:30px;padding:9px 14px;font-size:12px;font-weight:800}
+.hero-text{max-width:850px;margin:60px auto 35px;text-align:center}
+.eyebrow{font-size:11px;letter-spacing:2px;color:#f0d89c;font-weight:800}
+h1{font:700 clamp(35px,6vw,55px)/1.1 "Playfair Display",Georgia,serif;margin:12px 0}
+.hero-text p{color:#e1eee9}
+.wrap{max-width:1000px;margin:-25px auto 45px;padding:0 16px;position:relative}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 12px 35px #063f3810;margin-bottom:18px}
+.panel h2{margin:0 0 6px;font-size:22px}
+.muted{font-size:12px;color:var(--muted)}
+.fieldwrap{margin:13px 0}
+label{display:block;font-size:12px;font-weight:800;margin-bottom:5px}
+input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:11px;background:var(--green);color:white;padding:12px 16px;font-size:12px;font-weight:800;cursor:pointer;text-decoration:none}
+.btn.secondary{background:white;color:var(--green);border:1px solid var(--line)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.error{color:#a33;font-size:12px;margin-top:10px;overflow-wrap:anywhere}
+.success{color:#08724f;font-size:12px;margin-top:10px;overflow-wrap:anywhere}
+#dashboard{display:none}
+#dashboard.show{display:block}
+#loginPanel.hidden{display:none}
+.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.group-title{margin:22px 0 8px;padding-bottom:7px;border-bottom:1px solid var(--line);color:var(--green);font-weight:800}
+footer{background:#052f2a;color:#d4e8e0;padding:25px 18px;font-size:12px;text-align:center}
+footer a{color:#f0d89c;text-decoration:none}
+@media(max-width:650px){.formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-text{margin-top:42px}}
+@media(max-width:430px){.formgrid{grid-template-columns:1fr}.panel{padding:16px}.brand{font-size:17px}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <nav class="nav">
+    <div class="brand">🕌 Belgaum Salah</div>
+    <a href="index.html">← Home</a>
+  </nav>
+  <div class="hero-text">
+    <div class="eyebrow">BELAGAVI · MASJID MANAGEMENT</div>
+    <h1>Imam Login</h1>
+    <p>Authorized access to update your masjid's saved prayer timings.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel" id="loginPanel">
+    <h2>🔐 Sign in</h2>
+    <p class="muted">Use the authorized account provided for your masjid. Access requires an approved profile.</p>
+
+    <form id="loginForm">
+      <div class="fieldwrap">
+        <label for="email">Email address</label>
+        <input id="email" type="email" autocomplete="username" required>
+      </div>
+      <div class="fieldwrap">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">Sign in</button>
+        <a class="btn secondary" href="index.html">Home Page</a>
+      </div>
+      <div id="loginMessage" class="error" role="status"></div>
+    </form>
+  </section>
+
+  <section id="dashboard">
+    <div class="panel">
+      <h2>🕌 Prayer Timings Dashboard</h2>
+      <p id="accountInfo" class="muted"></p>
+      <div class="fieldwrap">
+        <label for="masjidSelect">Select your masjid</label>
+        <select id="masjidSelect" required></select>
+      </div>
+      <p class="muted">Existing values are loaded from the database. Update only after confirming timings with your masjid.</p>
+      <div id="loadMessage" class="error" role="status"></div>
+    </div>
+
+    <form id="timingForm" class="panel">
+      <h2 id="formTitle">Edit saved timings</h2>
+      <p class="muted">Start, End, Azaan and Jamaat values are kept in their existing database fields.</p>
+      <div id="timingFields"></div>
+      <div class="actions">
+        <button class="btn" type="submit">💾 Save timings</button>
+        <button class="btn secondary" id="reloadBtn" type="button">Reload saved values</button>
+        <button class="btn secondary" id="logoutBtn" type="button">Sign out</button>
+        <a class="btn secondary" href="index.html">Home Page</a>
+      </div>
+      <div id="saveMessage" role="status"></div>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <strong>🕌 Belgaum Salah</strong>
+  <p>Serving the Belagavi community.</p>
+  <a href="index.html">Return to Home</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+"use strict";
+
+const SUPABASE_URL = "https://ziewfvsoktvawskimwqb.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+const $ = id => document.getElementById(id);
+
+let user = null;
+let profile = null;
+let masjids = [];
+let selectedMasjid = null;
+
+const fields = [
+  ["Prayer Start & End","fajr_start_time","Fajr Start"],
+  ["Prayer Start & End","fajr_end_time","Fajr End"],
+  ["Prayer Start & End","zuhr_start_time","Zuhr Start"],
+  ["Prayer Start & End","zuhr_end_time","Zuhr End"],
+  ["Prayer Start & End","asr_start_time","Asr Start (Hanafi)"],
+  ["Prayer Start & End","asr_end_time","Asr End"],
+  ["Prayer Start & End","maghrib_start_time","Maghrib Start"],
+  ["Prayer Start & End","maghrib_end_time","Maghrib End"],
+  ["Prayer Start & End","isha_start_time","Isha Start"],
+  ["Prayer Start & End","isha_end_time","Isha End"],
+
+  ["Azaan & Jamaat","fajr_azaan","Fajr Azaan"],
+  ["Azaan & Jamaat","fajr_jamaat","Fajr Jamaat"],
+  ["Azaan & Jamaat","zuhr_azaan","Zuhr Azaan"],
+  ["Azaan & Jamaat","zuhr_jamaat","Zuhr Jamaat"],
+  ["Azaan & Jamaat","asr_azaan","Asr Azaan"],
+  ["Azaan & Jamaat","asr_jamaat","Asr Jamaat"],
+  ["Azaan & Jamaat","maghrib_azaan","Maghrib Azaan"],
+  ["Azaan & Jamaat","maghrib_jamaat","Maghrib Jamaat"],
+  ["Azaan & Jamaat","isha_azaan","Isha Azaan"],
+  ["Azaan & Jamaat","isha_jamaat","Isha Jamaat"],
+
+  ["Special & Ramadan Times","ishraq_time","Ishraq"],
+  ["Special & Ramadan Times","tahajjud_time","Tahajjud"],
+  ["Special & Ramadan Times","awabin_time","Awwabin"],
+  ["Special & Ramadan Times","chasht_time","Chasht"],
+  ["Special & Ramadan Times","sehri_start_time","Sehri Start"],
+  ["Special & Ramadan Times","sehri_last_time","Sehri Last Time"],
+  ["Special & Ramadan Times","sehri_end_time","Sehri End"],
+  ["Special & Ramadan Times","iftar_time","Iftar"]
+];
+
+function safeText(v) {
+  return v == null ? "" : String(v);
+}
+
+function showMessage(id,message,isSuccess=false) {
+  const node = $(id);
+  node.className = isSuccess ? "success" : "error";
+  node.textContent = message;
+}
+
+function buildFields() {
+  const root = $("timingFields");
+  root.replaceChildren();
+  let group = "";
+
+  fields.forEach(([section,key,label]) => {
+    if (section !== group) {
+      group = section;
+      const title = document.createElement("div");
+      title.className = "group-title";
+      title.textContent = section;
+      root.appendChild(title);
+
+      const grid = document.createElement("div");
+      grid.className = "formgrid";
+      grid.id = "group-" + section.replace(/\W+/g,"-");
+      root.appendChild(grid);
+    }
+
+    const grid = $("group-" + section.replace(/\W+/g,"-"));
+    const wrap = document.createElement("div");
+    wrap.className = "fieldwrap";
+
+    const labelNode = document.createElement("label");
+    labelNode.htmlFor = key;
+    labelNode.textContent = label;
+
+    const input = document.createElement("input");
+    input.id = key;
+    input.name = key;
+    input.type = "text";
+    input.autocomplete = "off";
+    input.placeholder = "Enter saved time";
+
+    wrap.append(labelNode,input);
+    grid.appendChild(wrap);
+  });
+}
+
+async function loadAccount() {
+  const {data:sessionData,error:sessionError} = await db.auth.getSession();
+  if (sessionError || !sessionData.session) {
+    showLogin();
+    return;
+  }
+
+  user = sessionData.session.user;
+
+  const {data:profileData,error:profileError} = await db
+    .from("profiles")
+    .select("id,email,role,approved")
+    .eq("id",user.id)
+    .maybeSingle();
+
+  if (profileError || !profileData || !profileData.approved) {
+    showLogin();
+    showMessage("loginMessage",
+      "This account has no approved profile. Please contact the site administrator.");
+    return;
+  }
+
+  if (!["admin","imam"].includes(profileData.role)) {
+    showLogin();
+    showMessage("loginMessage","This account does not have an authorized role.");
+    return;
+  }
+
+  profile = profileData;
+  $("loginPanel").classList.add("hidden");
+  $("dashboard").classList.add("show");
+  $("accountInfo").textContent =
+    "Signed in: " + (profile.email || user.email) +
+    " · Role: " + profile.role;
+
+  await loadAssignedMasjids();
+}
+
+function showLogin() {
+  $("loginPanel").classList.remove("hidden");
+  $("dashboard").classList.remove("show");
+}
+
+async function loadAssignedMasjids() {
+  $("masjidSelect").replaceChildren();
+  $("loadMessage").textContent = "Loading assigned masjids…";
+
+  let query = db.from("Masjids").select("*").order("name");
+
+  // Admin sees rows allowed by the database policy.
+  // Imam only sees the row assigned to their auth user ID.
+  if (profile.role === "imam") {
+    query = query.eq("imam_id",user.id);
+  }
+
+  const {data,error} = await query;
+
+  if (error) {
+    console.error(error);
+    showMessage("loadMessage",
+      "Could not load masjids. Check the Masjids SELECT policy and imam_id assignment.");
+    return;
+  }
+
+  masjids = data || [];
+
+  if (!masjids.length) {
+    showMessage("loadMessage",
+      profile.role === "imam"
+        ? "No masjid is assigned to this Imam account yet."
+        : "No masjid records were found. Add a masjid first.");
+    return;
+  }
+
+  masjids.forEach(m => {
+    const option = document.createElement("option");
+    option.value = String(m.id);
+    option.textContent = m.name || ("Masjid " + m.id);
+    $("masjidSelect").appendChild(option);
+  });
+
+  $("loadMessage").textContent = "";
+  loadSelectedMasjid();
+}
+
+function loadSelectedMasjid() {
+  const id = $("masjidSelect").value;
+  selectedMasjid = masjids.find(m => String(m.id) === String(id));
+
+  if (!selectedMasjid) return;
+
+  $("formTitle").textContent =
+    "Edit: " + (selectedMasjid.name || "Selected masjid");
+
+  fields.forEach(([,key]) => {
+    const input = $(key);
+    if (input) input.value = safeText(selectedMasjid[key]);
+  });
+
+  $("saveMessage").textContent = "";
+}
+
+$("masjidSelect").addEventListener("change",loadSelectedMasjid);
+$("reloadBtn").addEventListener("click",loadSelectedMasjid);
+
+$("loginForm").addEventListener("submit",async event => {
+  event.preventDefault();
+  showMessage("loginMessage","Signing in…");
+
+  const {error} = await db.auth.signInWithPassword({
+    email:$("email").value.trim(),
+    password:$("password").value
+  });
+
+  if (error) {
+    showMessage("loginMessage","Sign-in failed: " + error.message);
+    return;
+  }
+
+  await loadAccount();
+});
+
+$("timingForm").addEventListener("submit",async event => {
+  event.preventDefault();
+
+  if (!user || !profile || !selectedMasjid) {
+    showMessage("saveMessage","Sign in and select an assigned masjid first.");
+    return;
+  }
+
+  // Update only timing columns, not name, address or imam assignment.
+  const payload = {};
+  fields.forEach(([,key]) => {
+    payload[key] = $(key).value.trim() || null;
+  });
+
+  showMessage("saveMessage","Saving timings…",true);
+
+  let query = db.from("Masjids")
+    .update(payload)
+    .eq("id",selectedMasjid.id);
+
+  if (profile.role === "imam") {
+    query = query.eq("imam_id",user.id);
+  }
+
+  const {data,error} = await query.select("id");
+
+  if (error) {
+    console.error(error);
+    showMessage("saveMessage",
+      "Save failed. Check that the database has these timing columns and that UPDATE RLS permissions allow this account.");
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    showMessage("saveMessage",
+      "No row was updated. Check Imam assignment and database UPDATE permissions.");
+    return;
+  }
+
+  // Refresh from the database so the form reflects saved values.
+  const {data:updated,error:readError} = await db
+    .from("Masjids")
+    .select("*")
+    .eq("id",selectedMasjid.id)
+    .maybeSingle();
+
+  if (!readError && updated) {
+    selectedMasjid = updated;
+    masjids = masjids.map(m =>
+      String(m.id) === String(updated.id) ? updated : m
+    );
+    loadSelectedMasjid();
+  }
+
+  showMessage("saveMessage","Saved successfully. Prayer timings were not recalculated.",true);
+});
+
+$("logoutBtn").addEventListener("click",async () => {
+  await db.auth.signOut();
+  user = null;
+  profile = null;
+  masjids = [];
+  selectedMasjid = null;
+  $("loginForm").reset();
+  $("timingForm").reset();
+  $("masjidSelect").replaceChildren();
+  showLogin();
+  showMessage("loginMessage","You have signed out.",true);
+});
+
+buildFields();
+
+db.auth.onAuthStateChange((event) => {
+  if (event === "SIGNED_OUT") showLogin();
+});
+
+loadAccount();
+</script>
+</body>
+</html>
