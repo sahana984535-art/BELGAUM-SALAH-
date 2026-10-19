@@ -10,7 +10,7 @@
 :root{--green:#064b40;--deep:#032f29;--mint:#e7f3ed;--gold:#dca849;--ink:#102c26;--muted:#697b74;--line:#e0e9e3;--bg:#f5f6f1;--white:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px Manrope,Arial,sans-serif}
-button,input{font:inherit}
+button,input,textarea{font:inherit}
 button{cursor:pointer}
 header{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px max(20px,calc((100% - 1500px)/2));border-bottom:1px solid var(--line);flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;color:var(--green)}
@@ -30,14 +30,14 @@ h2{font-size:19px;margin:0;color:#102e28}
 .sub{font-size:11px;color:var(--muted);margin-top:4px}
 .tag{background:var(--mint);color:var(--green);padding:7px 10px;border-radius:25px;font-size:11px;font-weight:800}
 .prayers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
-.prayer{background:#fbfcf9;border:1px solid #e9eee7;border-radius:12px;padding:12px 8px;text-align:center;min-width:0}
+.prayer{background:#fbfcf9;border:1px solid #e3ebe4;border-radius:13px;padding:14px 9px;text-align:center;min-width:0}
 .symbol{font-size:24px;margin-bottom:5px}
 .prayer h3{font-size:13px;margin:0 0 10px}
-.times{display:grid;grid-template-columns:1fr 1fr;gap:5px;border-top:1px solid var(--line);padding-top:8px}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:6px;border-top:1px solid var(--line);padding-top:9px;margin-top:8px}
 .times span{display:block;color:var(--muted);font-size:10px}
-.times b{display:block;font-size:11px;margin-top:3px}
+.times b{display:block;font-size:11px;margin-top:4px;color:var(--green)}
 .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
-.tile{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff}
+.tile{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;min-width:0}
 .tile span{font-size:11px;color:var(--muted);display:block}
 .tile b{display:block;margin-top:5px;font-size:13px}
 .searchrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
@@ -95,7 +95,7 @@ footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-
 <div>
 <section class="panel">
   <div class="panelhead">
-    <div><h2>🕌 Prayer Times — Belgaum (Hanafi)</h2><div class="sub">Daily seasonal timings · 12-hour format</div></div>
+    <div><h2>🕌 Prayer Times — Belgaum (Hanafi)</h2><div class="sub">Prayer start and end times · 12-hour format</div></div>
     <span class="tag" id="timingStatus">● Loading timings</span>
   </div>
   <div class="prayers" id="prayerGrid"><div class="state">Loading prayer times...</div></div>
@@ -122,7 +122,7 @@ footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-
       <span class="hand second" id="secondHand"></span>
       <span class="dot"></span>
     </div>
-    <div class="location"><b>📍 Belgaum, Karnataka</b><br>India Standard Time<br><b id="digitalClock">--:--:-- PM</b><br><span id="hijriNote">Daily local date</span></div>
+    <div class="location"><b>📍 Belgaum, Karnataka</b><br>India Standard Time<br><b id="digitalClock">--:--:--</b><br><span id="hijriNote">Daily local date</span></div>
   </div>
   <div class="sunbox"><div>🌅 Sunrise<br><b id="sunrise">—</b></div><div>🌇 Sunset<br><b id="sunset">—</b></div></div>
 </section>
@@ -157,10 +157,12 @@ footer{background:var(--deep);color:#dce9df;padding:18px;text-align:center;font-
 
 "use strict";
 
-// Existing Supabase project settings — unchanged.
 const SUPABASE_URL = "https://ziewfvsoktvawskimwqb.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
-const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const client = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 const $ = id => document.getElementById(id);
 const BELAGAVI_LAT = 15.8497;
@@ -168,8 +170,11 @@ const BELAGAVI_LNG = 74.4977;
 let masjids = [];
 
 $("today").textContent = new Date().toLocaleDateString("en-IN", {
-  weekday:"long", day:"numeric", month:"long", year:"numeric",
-  timeZone:"Asia/Kolkata"
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "Asia/Kolkata"
 });
 
 function minutes(t) {
@@ -180,115 +185,146 @@ function minutes(t) {
 function formatTime(t) {
   if (t == null || !Number.isFinite(t)) return "—";
   t = ((Math.round(t) % 1440) + 1440) % 1440;
-  const h = Math.floor(t / 60), m = t % 60;
-  return `${h % 12 || 12}:${String(m).padStart(2,"0")} ${h >= 12 ? "PM" : "AM"}`;
-}
-
-function clean(t) {
-  const m = String(t || "").match(/\d{1,2}:\d{2}/);
-  return m ? m[0] : "";
+  const h = Math.floor(t / 60);
+  const m = t % 60;
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h >= 12 ? "PM" : "AM"}`;
 }
 
 function apiDate(offset = 0) {
   const p = Object.fromEntries(
     new Intl.DateTimeFormat("en-CA", {
-      timeZone:"Asia/Kolkata", year:"numeric",
-      month:"2-digit", day:"2-digit"
-    }).formatToParts(new Date()).map(x => [x.type,x.value])
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).formatToParts(new Date()).map(x => [x.type, x.value])
   );
-  const d = new Date(Date.UTC(+p.year,+p.month-1,+p.day+offset));
-  return `${String(d.getUTCDate()).padStart(2,"0")}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${d.getUTCFullYear()}`;
+
+  const d = new Date(Date.UTC(+p.year, +p.month - 1, +p.day + offset));
+  return `${String(d.getUTCDate()).padStart(2, "0")}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${d.getUTCFullYear()}`;
 }
 
 async function getTimes(offset = 0) {
-  const url = new URL(`https://api.aladhan.com/v1/timings/${apiDate(offset)}`);
-  url.searchParams.set("latitude",BELAGAVI_LAT);
-  url.searchParams.set("longitude",BELAGAVI_LNG);
-  url.searchParams.set("method","1"); // Karachi method
-  url.searchParams.set("school","1"); // Hanafi Asr
-  url.searchParams.set("timezonestring","Asia/Kolkata");
+  const url = new URL(
+    `https://api.aladhan.com/v1/timings/${apiDate(offset)}`
+  );
 
-  const response = await fetch(url,{cache:"no-store"});
+  url.searchParams.set("latitude", BELAGAVI_LAT);
+  url.searchParams.set("longitude", BELAGAVI_LNG);
+  url.searchParams.set("method", "1");
+  url.searchParams.set("school", "1");
+  url.searchParams.set("timezonestring", "Asia/Kolkata");
+
+  const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) throw new Error("Prayer API unavailable");
+
   const json = await response.json();
   if (json.code !== 200 || !json.data?.timings) {
     throw new Error("Prayer timings unavailable");
   }
+
   return json.data.timings;
 }
 
-function tile(label,time) {
+function tile(label, time) {
   const el = document.createElement("div");
   el.className = "tile";
+
   const a = document.createElement("span");
   a.textContent = label;
+
   const b = document.createElement("b");
   b.textContent = time || "—";
-  el.append(a,b);
+
+  el.append(a, b);
   return el;
 }
 
 async function updatePrayerTimes() {
   const status = $("timingStatus");
-  status.textContent = "● Updating...";
+  status.textContent = "● Updating timings...";
+
   const t = await getTimes();
   const tomorrow = await getTimes(1).catch(() => ({}));
 
+  /*
+    Display convention:
+    Fajr ends at Sunrise.
+    Sunrise is shown separately and is not a salah.
+    Zuhr, Asr and Maghrib show the next listed time as a reference.
+    Isha displays tomorrow's Fajr as the next listed time.
+    These are display boundaries, not a ruling on every prayer's
+    final valid time according to fiqh.
+  */
   const prayers = [
-    ["Fajr","🌄",t.Fajr],
-    ["Sunrise","🌅",t.Sunrise],
-    ["Zuhr","☀️",t.Dhuhr],
-    ["Asr (Hanafi)","🌤️",t.Asr],
-    ["Maghrib","🌇",t.Maghrib],
-    ["Isha","🌙",t.Isha]
+    ["Fajr", "🌄", t.Fajr, t.Sunrise],
+    ["Sunrise", "🌅", t.Sunrise, t.Dhuhr],
+    ["Zuhr", "☀️", t.Dhuhr, t.Asr],
+    ["Asr (Hanafi)", "🌤️", t.Asr, t.Maghrib],
+    ["Maghrib", "🌇", t.Maghrib, t.Isha],
+    ["Isha", "🌙", t.Isha, tomorrow.Fajr || t.Fajr]
   ];
 
   const grid = $("prayerGrid");
   grid.replaceChildren();
 
-  prayers.forEach(([name,icon,time]) => {
+  prayers.forEach(([name, icon, start, end]) => {
     const card = document.createElement("div");
     card.className = "prayer";
+
     const symbol = document.createElement("div");
     symbol.className = "symbol";
     symbol.textContent = icon;
+
     const heading = document.createElement("h3");
     heading.textContent = name;
-    card.append(symbol,heading);
 
     const times = document.createElement("div");
     times.className = "times";
-    const a = document.createElement("div");
-    a.innerHTML = "<span>Calculated time</span>";
-    const ab = document.createElement("b");
-    ab.textContent = formatTime(minutes(time));
-    a.appendChild(ab);
-    const b = document.createElement("div");
-    b.innerHTML = "<span>Reference</span>";
-    const bb = document.createElement("b");
-    bb.textContent = name === "Sunrise" ? "Sunrise" : "Daily";
-    b.appendChild(bb);
-    times.append(a,b);
-    card.appendChild(times);
+
+    const startBox = document.createElement("div");
+    const startLabel = document.createElement("span");
+    startLabel.textContent = "Start Time";
+
+    const startValue = document.createElement("b");
+    startValue.textContent = formatTime(minutes(start));
+
+    startBox.append(startLabel, startValue);
+
+    const endBox = document.createElement("div");
+    const endLabel = document.createElement("span");
+    endLabel.textContent = "End Time";
+
+    const endValue = document.createElement("b");
+    endValue.textContent = formatTime(minutes(end));
+
+    endBox.append(endLabel, endValue);
+    times.append(startBox, endBox);
+    card.append(symbol, heading, times);
     grid.appendChild(card);
   });
 
   $("specialGrid").replaceChildren(
-    tile("Ishraq (approx.)",formatTime(minutes(t.Sunrise)+15)),
-    tile("Chasht (approx.)",formatTime(minutes(t.Sunrise)+20)),
-    tile("Awwabin (approx.)",formatTime(minutes(t.Maghrib)+5)),
-    tile("Tahajjud (approx.)",formatTime(
-      minutes(t.Isha) + (
-        ((minutes(tomorrow.Fajr) || minutes(t.Fajr)) -
-          minutes(t.Isha) + 1440) % 1440
-      ) * 2 / 3
-    ))
+    tile("Ishraq (approx.)", formatTime(minutes(t.Sunrise) + 15)),
+    tile("Chasht (approx.)", formatTime(minutes(t.Sunrise) + 20)),
+    tile("Awwabin (approx.)", formatTime(minutes(t.Maghrib) + 5)),
+    tile(
+      "Tahajjud (approx.)",
+      formatTime(
+        minutes(t.Isha) +
+        (((minutes(tomorrow.Fajr) || minutes(t.Fajr))
+          - minutes(t.Isha) + 1440) % 1440) * 2 / 3
+      )
+    )
   );
 
   $("fastingGrid").replaceChildren(
-    tile("Sehri starts (approx.)",formatTime(minutes(t.Imsak) ?? minutes(t.Fajr))),
-    tile("Sehri ends",formatTime(minutes(t.Fajr))),
-    tile("Iftar",formatTime(minutes(t.Maghrib))),
+    tile(
+      "Sehri starts (approx.)",
+      formatTime(minutes(t.Imsak) ?? minutes(t.Fajr))
+    ),
+    tile("Sehri ends", formatTime(minutes(t.Fajr))),
+    tile("Iftar", formatTime(minutes(t.Maghrib))),
     tile("Calculation", "Karachi · Hanafi")
   );
 
@@ -297,104 +333,135 @@ async function updatePrayerTimes() {
   status.textContent = "● Daily timings loaded";
 }
 
-// Live analogue clock and 12-hour AM/PM digital clock.
+// Live Belagavi clock
 function updateClock() {
   const now = new Date();
+
   const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",
-    second:"2-digit",hourCycle:"h23"
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
   }).formatToParts(now);
-  const p = Object.fromEntries(parts.map(x => [x.type,x.value]));
-  const h = +p.hour, m = +p.minute, s = +p.second;
+
+  const p = Object.fromEntries(parts.map(x => [x.type, x.value]));
+  const h = +p.hour;
+  const m = +p.minute;
+  const s = +p.second;
 
   $("digitalClock").textContent = now.toLocaleTimeString("en-IN", {
-    timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",
-    second:"2-digit",hour12:true
+    timeZone: "Asia/Kolkata",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
   });
 
-  $("hourHand").style.transform = `translateX(-50%) rotate(${(h%12)*30+m*.5}deg)`;
-  $("minuteHand").style.transform = `translateX(-50%) rotate(${m*6+s*.1}deg)`;
-  $("secondHand").style.transform = `translateX(-50%) rotate(${s*6}deg)`;
+  $("hourHand").style.transform =
+    `translateX(-50%) rotate(${(h % 12) * 30 + m * .5}deg)`;
+  $("minuteHand").style.transform =
+    `translateX(-50%) rotate(${m * 6 + s * .1}deg)`;
+  $("secondHand").style.transform =
+    `translateX(-50%) rotate(${s * 6}deg)`;
 }
-for (let i=1;i<=12;i++) {
+
+for (let i = 1; i <= 12; i++) {
   const n = document.createElement("span");
   n.className = "num";
   n.textContent = i;
+
   const angle = i * Math.PI / 6;
-  n.style.left = `${50+38*Math.sin(angle)}%`;
-  n.style.top = `${50-38*Math.cos(angle)}%`;
+  n.style.left = `${50 + 38 * Math.sin(angle)}%`;
+  n.style.top = `${50 - 38 * Math.cos(angle)}%`;
   $("clock").appendChild(n);
 }
-updateClock();
-setInterval(updateClock,1000);
 
-// Hadith rotates automatically every 24 hours.
-// Custom additions are saved locally in this browser.
+updateClock();
+setInterval(updateClock, 1000);
+
 const defaultHadiths = [
   {
-    ar:"مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
-    en:"Whoever guides someone to goodness will have a reward like the one who did it.",
-    src:"Sahih Muslim 1893"
+    ar: "مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
+    en: "Whoever guides someone to goodness will have a reward like the one who did it.",
+    src: "Sahih Muslim 1893"
   },
   {
-    ar:"الدِّينُ النَّصِيحَةُ",
-    en:"The religion is sincere advice.",
-    src:"Sahih Muslim 55"
+    ar: "الدِّينُ النَّصِيحَةُ",
+    en: "The religion is sincere advice.",
+    src: "Sahih Muslim 55"
   },
   {
-    ar:"مَنْ لَا يَرْحَمْ لَا يُرْحَمْ",
-    en:"Whoever does not show mercy will not be shown mercy.",
-    src:"Sahih al-Bukhari 6013"
+    ar: "مَنْ لَا يَرْحَمْ لَا يُرْحَمْ",
+    en: "Whoever does not show mercy will not be shown mercy.",
+    src: "Sahih al-Bukhari 6013"
   }
 ];
 
 let customHadiths = [];
-try {
-  customHadiths = JSON.parse(localStorage.getItem("belgaumSalahHadiths") || "[]");
-  if (!Array.isArray(customHadiths)) customHadiths = [];
-} catch (_) { customHadiths = []; }
 
-let hadiths = [...defaultHadiths,...customHadiths];
+try {
+  customHadiths = JSON.parse(
+    localStorage.getItem("belgaumSalahHadiths") || "[]"
+  );
+  if (!Array.isArray(customHadiths)) customHadiths = [];
+} catch (_) {
+  customHadiths = [];
+}
+
+let hadiths = [...defaultHadiths, ...customHadiths];
 let hadithIndex = Math.floor(Date.now() / 86400000) % hadiths.length;
 
 function showHadith() {
-  hadiths = [...defaultHadiths,...customHadiths];
-  hadithIndex = ((hadithIndex % hadiths.length) + hadiths.length) % hadiths.length;
-  const h = hadiths[hadithIndex];
+  hadiths = [...defaultHadiths, ...customHadiths];
+  hadithIndex =
+    ((hadithIndex % hadiths.length) + hadiths.length) % hadiths.length;
 
+  const h = hadiths[hadithIndex];
   $("hadithArabic").textContent = h.ar || "";
   $("hadithTranslation").textContent = "“" + h.en + "”";
   $("hadithSource").textContent = h.src;
-  $("hadithIndex").textContent = `${hadithIndex+1} / ${hadiths.length}`;
+  $("hadithIndex").textContent = `${hadithIndex + 1} / ${hadiths.length}`;
 }
 
-$("prevHadith").addEventListener("click",() => {
+$("prevHadith").addEventListener("click", () => {
   hadithIndex--;
   showHadith();
 });
-$("nextHadith").addEventListener("click",() => {
+
+$("nextHadith").addEventListener("click", () => {
   hadithIndex++;
   showHadith();
 });
-$("addHadithBtn").addEventListener("click",() => {
+
+$("addHadithBtn").addEventListener("click", () => {
   $("hadithForm").classList.toggle("show");
 });
-$("hadithForm").addEventListener("submit",e => {
+
+$("hadithForm").addEventListener("submit", e => {
   e.preventDefault();
+
   const item = {
-    ar:$("newArabic").value.trim(),
-    en:$("newTranslation").value.trim(),
-    src:$("newSource").value.trim()
+    ar: $("newArabic").value.trim(),
+    en: $("newTranslation").value.trim(),
+    src: $("newSource").value.trim()
   };
+
   customHadiths.push(item);
-  localStorage.setItem("belgaumSalahHadiths",JSON.stringify(customHadiths));
+  localStorage.setItem(
+    "belgaumSalahHadiths",
+    JSON.stringify(customHadiths)
+  );
+
   hadithIndex = hadiths.length;
   $("hadithForm").reset();
   $("hadithForm").classList.remove("show");
   showHadith();
 });
+
 showHadith();
 
+// Masjid directory
 function textElement(tag, className, text) {
   const el = document.createElement(tag);
   el.className = className || "";
@@ -411,39 +478,51 @@ function mapURL(m) {
   }
 
   return "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent([m.name,m.area,m.address,"Belagavi"].filter(Boolean).join(", "));
+    encodeURIComponent(
+      [m.name, m.area, m.address, "Belagavi"]
+        .filter(Boolean)
+        .join(", ")
+    );
 }
 
 function makeMasjidCard(m) {
   const card = document.createElement("article");
   card.className = "masjid";
 
-  card.appendChild(textElement("div","","🕌"));
-  card.appendChild(textElement("h3","",m.name));
-  card.appendChild(textElement("p","", "📍 " + (m.area || "Belagavi")));
+  card.appendChild(textElement("div", "", "🕌"));
+  card.appendChild(textElement("h3", "", m.name));
+  card.appendChild(
+    textElement("p", "", "📍 " + (m.area || "Belagavi"))
+  );
 
   if (m.address) {
-    card.appendChild(textElement("p","",m.address));
+    card.appendChild(textElement("p", "", m.address));
   }
 
   const prayerRows = [
-    ["Fajr","fajr_azaan","fajr_jamaat"],
-    ["Zuhr","zuhr_azaan","zuhr_jamaat"],
-    ["Asr","asr_azaan","asr_jamaat"],
-    ["Maghrib","maghrib_azaan","maghrib_jamaat"],
-    ["Isha","isha_azaan","isha_jamaat"]
+    ["Fajr", "fajr_azaan", "fajr_jamaat"],
+    ["Zuhr", "zuhr_azaan", "zuhr_jamaat"],
+    ["Asr", "asr_azaan", "asr_jamaat"],
+    ["Maghrib", "maghrib_azaan", "maghrib_jamaat"],
+    ["Isha", "isha_azaan", "isha_jamaat"]
   ];
 
   const times = document.createElement("div");
   times.className = "tiles";
 
-  prayerRows.forEach(([name,azaan,jamaat]) => {
-    const tile = document.createElement("div");
-    tile.className = "tile";
-    tile.appendChild(textElement("span","",name));
-    tile.appendChild(textElement("b","",m[jamaat] || "—"));
-    tile.appendChild(textElement("span","", "Azaan: " + (m[azaan] || "—")));
-    times.appendChild(tile);
+  prayerRows.forEach(([name, azaan, jamaat]) => {
+    const item = document.createElement("div");
+    item.className = "tile";
+
+    item.appendChild(textElement("span", "", name));
+    item.appendChild(
+      textElement("b", "", m[jamaat] || "—")
+    );
+    item.appendChild(
+      textElement("span", "", "Azaan: " + (m[azaan] || "—"))
+    );
+
+    times.appendChild(item);
   });
 
   card.appendChild(times);
@@ -454,8 +533,8 @@ function makeMasjidCard(m) {
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.textContent = "📍 View on Google Maps ↗";
-  card.appendChild(link);
 
+  card.appendChild(link);
   return card;
 }
 
@@ -463,8 +542,10 @@ function renderMasjids() {
   const query = $("search").value.trim().toLocaleLowerCase("en-IN");
 
   const filtered = masjids.filter(m =>
-    [m.name,m.area,m.address].some(value =>
-      String(value || "").toLocaleLowerCase("en-IN").includes(query)
+    [m.name, m.area, m.address].some(value =>
+      String(value || "")
+        .toLocaleLowerCase("en-IN")
+        .includes(query)
     )
   );
 
@@ -474,10 +555,15 @@ function renderMasjids() {
   list.replaceChildren();
 
   if (!filtered.length) {
-    list.appendChild(textElement(
-      "div","state",
-      masjids.length ? "No matching masjid found." : "No masjids found in the database."
-    ));
+    list.appendChild(
+      textElement(
+        "div",
+        "state",
+        masjids.length
+          ? "No matching masjid found."
+          : "No masjids found in the database."
+      )
+    );
     return;
   }
 
@@ -486,31 +572,38 @@ function renderMasjids() {
 
 async function loadMasjids() {
   const list = $("masjidList");
-  list.replaceChildren(textElement("div","state","Loading masjids..."));
+  list.replaceChildren(
+    textElement("div", "state", "Loading masjids...")
+  );
 
   try {
-    const {data,error} = await client
+    const { data, error } = await client
       .from("Masjids")
       .select("*")
-      .order("name",{ascending:true});
+      .order("name", { ascending: true });
 
     if (error) throw error;
 
     masjids = Array.isArray(data) ? data : [];
     renderMasjids();
   } catch (error) {
-    console.error("Supabase error:",error);
-    list.replaceChildren(textElement(
-      "div","state",
-      "Masjids could not load. Check the Supabase connection and SELECT permissions."
-    ));
+    console.error("Supabase error:", error);
+
+    list.replaceChildren(
+      textElement(
+        "div",
+        "state",
+        "Masjids could not load. Check the Supabase connection and SELECT permissions."
+      )
+    );
+
     $("count").textContent = "Connection error";
   }
 }
 
-$("search").addEventListener("input",renderMasjids);
+$("search").addEventListener("input", renderMasjids);
 
-$("nearbyBtn").addEventListener("click",() => {
+$("nearbyBtn").addEventListener("click", () => {
   window.open(
     "https://www.google.com/maps/search/masjid+near+me/",
     "_blank",
@@ -518,24 +611,29 @@ $("nearbyBtn").addEventListener("click",() => {
   );
 });
 
-// Load the directory and automatic timings.
+// Load masjids and prayer times
 (async function start() {
-  await Promise.allSettled([
+  const results = await Promise.allSettled([
     loadMasjids(),
     updatePrayerTimes()
   ]);
+
+  if (results[1].status === "rejected") {
+    console.error("Prayer timings error:", results[1].reason);
+    $("timingStatus").textContent = "● Timings unavailable";
+  }
 })();
 
-// Refresh calculated timings while the page remains open.
+// Refresh timings every six hours
 setInterval(() => {
   updatePrayerTimes().catch(error => {
-    console.error("Prayer-time refresh failed:",error);
+    console.error("Prayer-time refresh failed:", error);
     $("timingStatus").textContent = "● Timings unavailable";
   });
-},6 * 60 * 60 * 1000);
+}, 6 * 60 * 60 * 1000);
 
-// If the browser tab was closed overnight, refresh when reopened.
-document.addEventListener("visibilitychange",() => {
+// Refresh timings when returning to the page
+document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
     updateClock();
     updatePrayerTimes().catch(console.error);
