@@ -1,1114 +1,369 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#064b40">
-<meta name="description" content="Belgaum Salah — masjid directory and prayer timings for Belagavi, Karnataka.">
-<title>Belgaum Salah | Closer to Allah</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-
+<meta name="theme-color" content="#063f38">
+<title>Belgaum Salah | Every prayer. Closer to Allah.</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green:#064b40; --deep:#032f29; --mint:#e7f3ed;
-  --gold:#dca849; --ink:#102c26; --muted:#697b74;
-  --line:#e0e9e3; --bg:#f5f6f1; --white:#fff; --red:#a92e2e;
+  --green:#075e54;
+  --deep:#063f38;
+  --gold:#d7b56d;
+  --mint:#e8f5ef;
+  --ink:#15332c;
+  --muted:#6a8078;
+  --line:#dcebe3;
+  --bg:#f3f7f4;
 }
-* { box-sizing:border-box }
-html { scroll-behavior:smooth }
-body { margin:0;background:var(--bg);color:var(--ink);font:14px Manrope,Arial,sans-serif;line-height:1.55 }
-button,input,select,textarea { font:inherit }
-button { cursor:pointer }
-a { color:inherit }
-[hidden] { display:none!important }
-header { background:#fff;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px max(16px,calc((100% - 1500px)/2));border-bottom:1px solid var(--line);flex-wrap:wrap }
-.brand { display:flex;align-items:center;gap:10px;font-size:21px;font-weight:800;color:var(--green) }
-.brand small { display:block;font-size:11px;font-weight:600;color:#9b742e }
-nav { display:flex;gap:7px;flex-wrap:wrap }
-nav a { padding:9px 13px;border-radius:25px;text-decoration:none;color:var(--ink);background:#f3f4ef;font-weight:800;font-size:12px }
-nav a:hover { background:var(--mint) }
-.date { font-size:12px;line-height:1.8 }
-.hero { position:relative;isolation:isolate;background:linear-gradient(90deg,rgba(3,34,29,.88),rgba(3,47,41,.55)),url("https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=2000&q=85") center 48%/cover;color:#fff;text-align:center;padding:45px 18px 52px }
-.hero .arabic { font:34px Amiri,serif }
-.hero p { margin:5px 0 }
-.hero small { color:#f3d38c }
-.hero h1 { margin:8px 0;font-size:clamp(27px,5vw,43px);letter-spacing:-1px }
-.hero .intro { max-width:650px;margin:10px auto;color:#edf6f0 }
-main { max-width:1500px;margin:auto;padding:18px }
-.layout { display:grid;grid-template-columns:minmax(0,2.1fr) minmax(290px,.9fr);gap:14px;align-items:start }
-.panel { background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:14px;box-shadow:0 5px 22px #173b2b08 }
-.panelhead { display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px }
-h2 { font-size:19px;margin:0;color:#102e28 }
-h3 { line-height:1.4 }
-.sub { font-size:11px;color:var(--muted);margin-top:4px }
-.tag { background:var(--mint);color:var(--green);padding:7px 10px;border-radius:25px;font-size:11px;font-weight:800 }
-.prayers { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px }
-.prayer { background:#fbfcf9;border:1px solid #e9eee7;border-radius:12px;padding:12px 9px;text-align:center;min-width:0 }
-.symbol { font-size:23px;margin-bottom:5px }
-.prayer h3 { font-size:13px;margin:0 0 9px }
-.times { display:grid;grid-template-columns:1fr 1fr;gap:5px;border-top:1px solid var(--line);padding-top:8px }
-.times span { display:block;color:var(--muted);font-size:10px }
-.times b { display:block;font-size:11px;margin-top:3px;overflow-wrap:anywhere }
-.tiles { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px }
-.tile { border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff }
-.tile span { font-size:11px;color:var(--muted);display:block }
-.tile b { display:block;margin-top:5px;font-size:13px }
-.searchrow,.actions { display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 }
-.searchrow input { flex:1;min-width:180px }
-.field,input,select,textarea { width:100%;border:1px solid #d8e3dc;border-radius:10px;padding:11px 12px;background:white;color:var(--ink) }
-input:focus,select:focus,textarea:focus { outline:2px solid #dca84966;border-color:var(--gold) }
-.btn { display:inline-flex;justify-content:center;align-items:center;gap:6px;background:var(--green);color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:800;font-size:12px;text-decoration:none }
-.btn:hover { filter:brightness(1.08) }
-.btn.light { background:white;color:var(--green);border:1px solid var(--line) }
-.btn.gold { background:var(--gold);color:#2b2413 }
-.btn.danger { background:var(--red);color:white }
-.btn:disabled { opacity:.5;cursor:not-allowed }
-.masjids { display:grid;grid-template-columns:1fr;gap:10px }
-.masjid { border:1px solid var(--line);border-radius:13px;padding:13px;min-width:0 }
-.masjid h3 { margin:0 0 5px;font-size:15px }
-.masjid p { font-size:11px;color:var(--muted);margin:5px 0 }
-.masjid .tiles { grid-template-columns:repeat(2,minmax(0,1fr)) }
-.map { display:inline-block;color:var(--green);font-size:11px;font-weight:800;margin-top:9px }
-.clockrow { display:grid;grid-template-columns:130px 1fr;gap:12px;align-items:center }
-.clock { width:125px;height:125px;border:6px solid var(--gold);border-radius:50%;background:var(--deep);color:white;position:relative;margin:auto;box-shadow:inset 0 0 0 2px #fff6 }
-.clock .num { position:absolute;font-size:10px;font-weight:800;transform:translate(-50%,-50%) }
-.clock .hand { position:absolute;left:50%;bottom:50%;transform-origin:bottom;border-radius:5px }
-.clock .hour { width:4px;height:29px;background:white }
-.clock .minute { width:3px;height:39px;background:#f4d16c }
-.clock .second { width:2px;height:44px;background:#e9a747 }
-.clock .dot { position:absolute;left:50%;top:50%;width:9px;height:9px;border-radius:50%;background:var(--gold);transform:translate(-50%,-50%) }
-.location { font-size:12px;line-height:1.9 }
-.sunbox { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px }
-.sunbox div { background:#f8f8f2;border-radius:10px;padding:10px;font-size:11px }
-.hadith { background:linear-gradient(145deg,#032f29,#105c4b);color:white }
-.hadith h2 { color:white }
-.hadith .arabic { font:25px/1.9 Amiri,serif;text-align:center;margin:18px 0 10px }
-.hadith .translation { text-align:center;line-height:1.8;font-size:13px }
-.hadith .source { text-align:center;color:#f3d38c;font-size:11px;margin-top:12px }
-.hadithcontrols { display:flex;justify-content:center;gap:10px;margin-top:14px;align-items:center }
-.hadithcontrols button { border:1px solid #ffffff50;background:#ffffff16;color:white;border-radius:25px;padding:7px 12px }
-.banner { min-height:160px;border-radius:14px;background:linear-gradient(90deg,#082e27bb,#082e2730),url("https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=900&q=80") center/cover;display:flex;align-items:end;justify-content:end;padding:20px;color:#fff;font-size:22px;font-style:italic;font-weight:800 }
-.state { padding:18px;text-align:center;color:var(--muted);background:#f8faf7;border-radius:12px }
-.notice { background:#fff8e8;border:1px solid #eedfb7;border-radius:12px;padding:12px;font-size:11px;color:#755d2b;margin-top:12px }
-.status-message { margin:10px 0;padding:10px;border-radius:9px;background:var(--mint);color:var(--green);font-size:12px }
-.status-error { background:#fff0f0;color:#8d2424 }
-.formgrid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px }
-.fieldwrap { min-width:0 }
-.fieldwrap label { display:block;font-size:11px;font-weight:800;margin-bottom:5px }
-.fieldwrap.full { grid-column:1/-1 }
-hr { border:0;border-top:1px solid var(--line);margin:16px 0 }
-.admin-table { width:100%;border-collapse:collapse;font-size:12px }
-.admin-table th,.admin-table td { padding:9px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top }
-.admin-table th { color:var(--muted);font-size:10px;text-transform:uppercase }
-.table-scroll { overflow-x:auto }
-.badge { display:inline-block;border-radius:20px;padding:4px 8px;background:#f0f1ed;font-size:10px;font-weight:800 }
-.badge.pending { background:#fff2d7;color:#79530a }
-.badge.approved { background:#dff4e5;color:#17683b }
-.badge.rejected { background:#ffe7e7;color:#9b2828 }
-footer { background:var(--deep);color:#dce9df;padding:20px;text-align:center;font-size:11px }
-@media(max-width:1050px) { .layout { grid-template-columns:1fr } .clockrow { grid-template-columns:130px 1fr } }
-@media(max-width:650px) {
-  header { padding:12px } .date { width:100% } .hero { padding:32px 14px }
-  .hero .arabic { font-size:27px } main { padding:10px }
-  .prayers { grid-template-columns:repeat(2,minmax(0,1fr)) }
-  .masjid .tiles { grid-template-columns:repeat(2,minmax(0,1fr)) }
-  .clockrow { grid-template-columns:110px 1fr } .clock { width:105px;height:105px }
-  .clock .hour { height:25px } .clock .minute { height:32px } .clock .second { height:37px }
-  .panel { padding:12px } .formgrid { grid-template-columns:1fr }
-  .fieldwrap.full { grid-column:auto } .admin-table { min-width:600px }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,Arial,sans-serif;line-height:1.6}
+a{color:inherit}
+button,input{font:inherit}
+.hero{
+  color:white;padding:20px 18px 74px;
+  background:
+    linear-gradient(90deg,rgba(3,30,26,.84),rgba(3,55,47,.58)),
+    url("https://commons.wikimedia.org/wiki/Special:FilePath/Great_Mosque_of_Mecca1.jpg") center 48%/cover,
+    linear-gradient(135deg,#052f2a,#087466);
 }
+.nav,.hero-inner,.wrap,.foot-inner{max-width:1160px;margin:auto}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:800}
+.logo{display:grid;place-items:center;width:43px;height:43px;border:1px solid #ffffff55;background:#ffffff16;border-radius:14px;font-size:24px}
+.navlinks{display:flex;gap:9px;flex-wrap:wrap}
+.navlinks a{color:white;text-decoration:none;border:1px solid #ffffff66;padding:9px 13px;border-radius:30px;font-size:12px;font-weight:800}
+.hero-inner{text-align:center;padding:48px 0 0}
+.eyebrow{color:#f0d89c;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h1{font:700 clamp(36px,6vw,62px)/1.1 "Playfair Display",Georgia,serif;margin:13px 0}
+.hero p{color:#e2f0eb;max-width:660px;margin:12px auto}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.wrap{padding:0 18px 45px}
+.datebar{margin:-27px auto 28px;padding:17px 19px;background:white;border:1px solid var(--line);border-radius:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 12px 30px #063f3810}
+.muted{color:var(--muted);font-size:12px}
+.datebar strong{display:block}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:27px 0 14px}
+.section-head h2{font-size:23px;margin:0}
+.section-head p{color:var(--muted);font-size:13px;margin:4px 0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
+.panel h3{margin:0 0 7px;font-size:14px}
+.time-value{font-size:23px;font-weight:800;color:var(--green);overflow-wrap:anywhere}
+.btn{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;border:0;border-radius:12px;background:var(--green);color:white;padding:11px 15px;font-size:12px;font-weight:800;cursor:pointer}
+.btn.secondary{background:white;color:var(--green);border:1px solid var(--line)}
+.callout{margin-top:18px;background:#fff8e8;border:1px solid #eedfb7;border-radius:14px;padding:14px;font-size:12px;color:#755d2b}
+.hadith{background:linear-gradient(135deg,#063f38,#087466);color:white;border-radius:18px;padding:22px;margin-top:22px}
+.hadith h2{margin:0;font-size:19px}
+.hadith small{color:#f0d89c}
+.foot{background:#052f2a;color:#d4e8e0;padding:26px 18px;font-size:12px}
+.footrow{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.foot a{color:#f0d89c;text-decoration:none}
+.state{background:white;border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--muted)}
+.search{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:white}
+.masjid-card{background:white;border:1px solid var(--line);border-radius:17px;padding:17px;margin:12px 0}
+.masjid-card h3{margin:0 0 4px}
+.small-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
+.small-time{background:#f5faf7;border:1px solid var(--line);border-radius:10px;padding:9px;min-width:0;font-size:11px}
+.small-time b{display:block;color:var(--green);overflow-wrap:anywhere}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.small-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.small-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-inner{padding-top:32px}.brand{font-size:17px}.wrap{padding-left:12px;padding-right:12px}}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="brand"><span style="font-size:29px">🕌</span><div>BELGAUM SALAH<small>— Closer to Allah —</small></div></div>
-  <nav>
-    <a href="#home">⌂ Home</a><a href="#masjids">Masjids</a><a href="#hadith">Hadith</a><a href="#account" id="accountNav">🔐 Imam / Admin</a>
+<header class="hero">
+  <nav class="nav">
+    <div class="brand"><span class="logo">🕌</span> Belgaum Salah</div>
+    <div class="navlinks">
+      <a href="#directory">Find Masjids</a>
+      <a href="imam.html">🔐 Imam Login</a>
+    </div>
   </nav>
-  <div class="date"><b id="today">Loading date...</b><br><span>Belagavi, Karnataka · India</span></div>
+  <div class="hero-inner">
+    <div class="eyebrow">Your trusted local masjid guide</div>
+    <h1>Every prayer.<br>Closer to Allah.</h1>
+    <p>Find masjids, check saved prayer schedules and explore Azaan and Jamaat timings across Belagavi.</p>
+    <div class="actions">
+      <a class="btn" href="#directory">🕌 Find a Masjid</a>
+      <a class="btn secondary" href="#prayerTimes">View Prayer Timings</a>
+    </div>
+  </div>
 </header>
 
-<section class="hero" id="home">
-  <div class="arabic">وَأَقِمِ الصَّلَاةَ لِذِكْرِي</div>
-  <p>“Establish prayer for My remembrance.”</p><small>Surah Taha 20:14</small>
-  <h1>Every prayer. Closer to home.</h1>
-  <p class="intro">Find masjids, view daily prayer timings and check Azaan and Jamaat schedules across Belagavi.</p>
-</section>
-
-<main><div class="layout"><div>
-<section class="panel">
-  <div class="panelhead"><div><h2>🕌 Prayer Times — Belagavi (Hanafi)</h2><div class="sub">Daily calculated timings · India Standard Time</div></div><span class="tag" id="timingStatus">● Loading timings</span></div>
-  <div class="prayers" id="prayerGrid"><div class="state">Loading prayer times...</div></div>
-  <div class="tiles" id="specialGrid"></div><div class="tiles" id="fastingGrid"></div>
-  <div class="notice">Prayer windows are reference calculations. Please confirm local religious timetables with your trusted local scholar or masjid.</div>
-</section>
-
-<section class="panel" id="masjids">
-  <div class="panelhead"><div><h2>🕌 Masjid Directory</h2><div class="sub">Search by masjid name or area in Belagavi</div></div><span class="tag" id="count">Loading...</span></div>
-  <div class="searchrow"><input id="search" type="search" placeholder="Search masjid name or area..." autocomplete="off" aria-label="Search masjid name or area"><button class="btn" id="nearbyBtn" type="button">📍 Nearby Masjids</button></div>
-  <div class="masjids" id="masjidList"><div class="state">Loading masjids...</div></div>
-</section>
-
-<section class="panel" id="account">
-  <div class="panelhead"><div><h2>🔐 Imam / Admin Account</h2><div class="sub">Imam accounts require admin approval before access is granted.</div></div><span class="tag" id="authState">Signed out</span></div>
-  <div id="authMessage" class="status-message" hidden></div>
-  <div id="signedOutPanel">
-    <div class="formgrid">
-      <div class="fieldwrap"><label for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="Enter your email" required></div>
-      <div class="fieldwrap"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Password (minimum 8 characters)" required></div>
+<main class="wrap">
+  <section class="datebar">
+    <div>
+      <span class="muted">TODAY · BELAGAVI, INDIA</span>
+      <strong id="today">Loading date…</strong>
     </div>
-    <div class="actions"><button class="btn" id="loginBtn" type="button">Sign in</button><button class="btn gold" id="registerBtn" type="button">Register as Imam</button></div>
-    <p class="sub">Registration creates a pending Imam account. The website administrator must approve it.</p>
+    <span class="muted">🟢 Saved masjid timings</span>
+  </section>
+
+  <section id="prayerTimes">
+    <div class="section-head">
+      <div>
+        <h2>🕰 Prayer Timings — Start &amp; End</h2>
+        <p>Times are loaded from the existing Masjids database.</p>
+      </div>
+      <span class="muted">Hanafi</span>
+    </div>
+    <div class="grid" id="scheduleGrid">
+      <div class="panel">Loading saved prayer times…</div>
+    </div>
+    <div class="callout">
+      <strong>Note:</strong> Timings are shown as saved in the database. Please confirm local schedules with the respective masjid.
+    </div>
+  </section>
+
+  <section id="directory">
+    <div class="section-head">
+      <div>
+        <h2>🕌 Masjid Directory</h2>
+        <p>Find a masjid and check its Azaan, Jamaat and other saved times.</p>
+      </div>
+      <a class="btn" href="imam.html">Imam Login</a>
+    </div>
+    <input id="search" class="search" type="search" placeholder="Search masjid, area or address…" autocomplete="off">
+    <div id="masjidList"><div class="state">Loading masjids…</div></div>
+  </section>
+
+  <section class="hadith">
+    <h2>🌙 Hadith of the Day</h2>
+    <p id="hadithText">Loading…</p>
+    <small id="hadithSource"></small>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-inner footrow">
+    <div><strong>🕌 Belgaum Salah</strong><p>Serving the Belagavi community.</p></div>
+    <div>Belagavi, Karnataka, India</div>
+    <a href="imam.html">Imam Login</a>
   </div>
-  <div id="signedInPanel" hidden><p id="accountSummary"></p><button class="btn light" id="refreshAccountBtn" type="button">Refresh status</button><button class="btn danger" id="logoutBtn" type="button">Sign out</button></div>
-</section>
-
-<section class="panel" id="imamDashboard" hidden>
-  <div class="panelhead"><div><h2>🕌 My Assigned Masjid</h2><div class="sub">Only Azaan and Jamaat timings can be edited here.</div></div><span class="tag" id="imamDashboardStatus">Approved Imam</span></div>
-  <div id="imamMessage" class="status-message" hidden></div><div id="imamAssignment"></div>
-  <form id="imamTimingForm" hidden><input id="imamMasjidId" type="hidden"><div class="formgrid" id="imamTimingFields"></div><div class="actions"><button class="btn" id="saveImamTimingsBtn" type="submit">Save Azaan &amp; Jamaat</button></div></form>
-</section>
-
-<section class="panel" id="adminDashboard" hidden>
-  <div class="panelhead"><div><h2>👑 Super Admin Dashboard</h2><div class="sub">Approve Imams, assign masjids and manage the directory.</div></div><span class="tag">Administrator</span></div>
-  <div id="adminMessage" class="status-message" hidden></div>
-  <h3>Imam registrations</h3><div class="sub">Pending registrations must be approved before an Imam can edit timings.</div>
-  <div id="adminUsers" class="table-scroll"><div class="state">Loading Imam accounts...</div></div>
-  <hr><h3>Manage masjids</h3><p class="sub">Add or edit masjid details, timings and assigned Imam. Do not enter invented masjid information.</p>
-  <form id="adminMasjidForm">
-    <input id="adminMasjidId" type="hidden">
-    <div class="formgrid">
-      <div class="fieldwrap"><label for="adminMasjidName">Masjid name *</label><input id="adminMasjidName" required></div>
-      <div class="fieldwrap"><label for="adminMasjidArea">Area</label><input id="adminMasjidArea"></div>
-      <div class="fieldwrap full"><label for="adminMasjidAddress">Address</label><input id="adminMasjidAddress"></div>
-      <div class="fieldwrap full"><label for="adminMasjidMap">Google Maps URL</label><input id="adminMasjidMap" type="url" placeholder="https://..."></div>
-      <div class="fieldwrap full"><label for="adminAssignImam">Assign approved Imam</label><select id="adminAssignImam"><option value="">No Imam assigned</option></select></div>
-    </div>
-    <h3>Prayer timings</h3><div class="formgrid" id="adminTimingFields"></div>
-    <div class="actions"><button class="btn" id="saveAdminMasjidBtn" type="submit">Save Masjid</button><button class="btn light" id="clearAdminMasjidBtn" type="button">Clear form</button></div>
-  </form>
-  <hr><h3>All masjids</h3><div id="adminMasjidList" class="table-scroll"><div class="state">Loading masjids...</div></div>
-</section>
-</div>
-
-<aside>
-  <section class="panel">
-    <div class="clockrow">
-      <div class="clock" id="clock"><span class="hand hour" id="hourHand"></span><span class="hand minute" id="minuteHand"></span><span class="hand second" id="secondHand"></span><span class="dot"></span></div>
-      <div class="location"><b>📍 Belagavi, Karnataka</b><br>India Standard Time<br><b id="digitalClock">--:--:--</b><br><span id="hijriNote">Daily local date</span></div>
-    </div>
-    <div class="sunbox"><div>🌅 Sunrise<br><b id="sunrise">—</b></div><div>🌇 Sunset<br><b id="sunset">—</b></div></div>
-  </section>
-  <section class="panel hadith" id="hadith">
-    <div class="panelhead"><h2>📜 Hadith of the Day</h2><span class="sub" style="color:#e5d9b6">Daily rotation</span></div>
-    <div class="arabic" id="hadithArabic" dir="rtl">مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ</div>
-    <div class="translation" id="hadithTranslation">Whoever guides someone to goodness will have a reward like the one who did it.</div>
-    <div class="source" id="hadithSource">Sahih Muslim 1893</div>
-    <div class="hadithcontrols"><button id="prevHadith" type="button" aria-label="Previous hadith">‹</button><span id="hadithIndex">1 / 3</span><button id="nextHadith" type="button" aria-label="Next hadith">›</button></div>
-  </section>
-  <div class="banner">Closer to Allah ♥</div>
-</aside>
-</div></main>
-<footer>🕌 BELGAUM SALAH — Closer to Allah · Belagavi, Karnataka, India</footer>
-
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
 
-/* SUPABASE CONNECTION */
 const SUPABASE_URL = "https://ziewfvsoktvawskimwqb.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
-const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $ = id => document.getElementById(id);
-const BELAGAVI_LAT = 15.8497;
-const BELAGAVI_LNG = 74.4977;
 
-let masjids = [];
-let currentUser = null;
-let currentProfile = null;
-let approvedImams = [];
-let allProfiles = [];
-
-const TIMING_FIELDS = [
-  ["fajr_azaan", "Fajr Azaan"],
-  ["fajr_jamaat", "Fajr Jamaat"],
-  ["zuhr_azaan", "Zuhr Azaan"],
-  ["zuhr_jamaat", "Zuhr Jamaat"],
-  ["asr_azaan", "Asr Azaan"],
-  ["asr_jamaat", "Asr Jamaat"],
-  ["maghrib_azaan", "Maghrib Azaan"],
-  ["maghrib_jamaat", "Maghrib Jamaat"],
-  ["isha_azaan", "Isha Azaan"],
-  ["isha_jamaat", "Isha Jamaat"]
-];
-
-const EXTRA_TIME_FIELDS = [
-  ["ishraq_time", "Ishraq start"],
-  ["ishraq_end_time", "Ishraq end"],
-  ["chasht_time", "Chasht start"],
-  ["chasht_end_time", "Chasht end"],
-  ["awabin_time", "Awwabin start"],
-  ["awabin_end_time", "Awwabin end"],
-  ["tahajjud_time", "Tahajjud start"],
-  ["tahajjud_end_time", "Tahajjud end"],
-  ["sehri_start_time", "Sehri start"],
-  ["sehri_end_time", "Sehri end"],
-  ["iftar_time", "Iftar"]
-];
-
-function message(id, text, isError = false) {
-  const el = $(id);
-  if (!el) return;
-  el.textContent = text;
-  el.hidden = false;
-  el.classList.toggle("status-error", isError);
-}
-function clearMessage(id) {
-  const el = $(id);
-  if (!el) return;
-  el.textContent = "";
-  el.hidden = true;
-  el.classList.remove("status-error");
-}
-function showValue(value) {
-  return value == null || String(value).trim() === "" ? "—" : String(value);
-}
-function textElement(tag, className, text) {
-  const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== undefined) el.textContent = text;
-  return el;
-}
-function safeMapURL(m) {
-  const saved = m.map_link || m.google_maps_link || "";
-  if (saved) {
-    try {
-      const url = new URL(saved);
-      if (url.protocol === "https:") return url.href;
-    } catch (_) {}
-  }
-  const query = [m.name, m.area, m.address, "Belagavi"].filter(Boolean).join(", ");
-  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(query);
-}
-function safeTimeInput(value) {
-  if (value == null) return "";
-  const match = String(value).match(/(\d{1,2}):(\d{2})/);
-  if (!match) return "";
-  return match[1].padStart(2, "0") + ":" + match[2];
-}
-function addTimeInputs(containerId, fields, prefix) {
-  const container = $(containerId);
-  container.replaceChildren();
-  fields.forEach(([key, label]) => {
-    const wrap = textElement("div", "fieldwrap");
-    const lab = textElement("label", "", label);
-    lab.htmlFor = prefix + key;
-    const input = document.createElement("input");
-    input.id = prefix + key;
-    input.name = key;
-    input.type = "time";
-    input.className = "field";
-    input.autocomplete = "off";
-    wrap.append(lab, input);
-    container.appendChild(wrap);
-  });
-}
-
-/* DATE AND LIVE CLOCK */
 $("today").textContent = new Date().toLocaleDateString("en-IN", {
-  weekday: "long", day: "numeric", month: "long", year: "numeric",
-  timeZone: "Asia/Kolkata"
+  weekday:"long", day:"numeric", month:"long", year:"numeric",
+  timeZone:"Asia/Kolkata"
 });
 
-function updateClock() {
-  const now = new Date();
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit",
-    second: "2-digit", hourCycle: "h23"
-  }).formatToParts(now);
-  const p = Object.fromEntries(parts.map(x => [x.type, x.value]));
-  const h = Number(p.hour), m = Number(p.minute), s = Number(p.second);
+const scheduleFields = [
+  ["🌅 Fajr Start","fajr_start_time"],
+  ["🌄 Fajr End","fajr_end_time"],
+  ["☀️ Zuhr Start","zuhr_start_time"],
+  ["🌤️ Zuhr End","zuhr_end_time"],
+  ["🕓 Asr Start (Hanafi)","asr_start_time"],
+  ["🕔 Asr End","asr_end_time"],
+  ["🌇 Maghrib Start","maghrib_start_time"],
+  ["🌆 Maghrib End","maghrib_end_time"],
+  ["🌙 Isha Start","isha_start_time"],
+  ["🌌 Isha End","isha_end_time"],
+  ["✨ Ishraq Start","ishraq_start_time"],
+  ["✨ Ishraq End","ishraq_end_time"],
+  ["🌤️ Chasht Start","chasht_start_time"],
+  ["🌤️ Chasht End","chasht_end_time"],
+  ["🌙 Awwabin Start","awabin_start_time"],
+  ["🌙 Awwabin End","awabin_end_time"],
+  ["🤲 Tahajjud Start","tahajjud_start_time"],
+  ["🤲 Tahajjud End","tahajjud_end_time"],
+  ["🌄 Sehri Start","sehri_start_time"],
+  ["⏳ Sehri Last Time","sehri_last_time"],
+  ["🌅 Sehri End","sehri_end_time"],
+  ["🌇 Iftar","iftar_time"]
+];
 
-  $("digitalClock").textContent = now.toLocaleTimeString("en-IN", {
-    timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit",
-    second: "2-digit", hour12: true
-  });
-  $("hourHand").style.transform = `translateX(-50%) rotate(${(h % 12) * 30 + m * .5}deg)`;
-  $("minuteHand").style.transform = `translateX(-50%) rotate(${m * 6 + s * .1}deg)`;
-  $("secondHand").style.transform = `translateX(-50%) rotate(${s * 6}deg)`;
-}
-for (let i = 1; i <= 12; i++) {
-  const n = textElement("span", "num", String(i));
-  const angle = i * Math.PI / 6;
-  n.style.left = `${50 + 38 * Math.sin(angle)}%`;
-  n.style.top = `${50 - 38 * Math.cos(angle)}%`;
-  $("clock").appendChild(n);
-}
-updateClock();
-setInterval(updateClock, 1000);
+const mainPrayers = [
+  ["Fajr","fajr_start_time","fajr_end_time","fajr_azaan","fajr_jamaat"],
+  ["Zuhr","zuhr_start_time","zuhr_end_time","zuhr_azaan","zuhr_jamaat"],
+  ["Asr (Hanafi)","asr_start_time","asr_end_time","asr_azaan","asr_jamaat"],
+  ["Maghrib","maghrib_start_time","maghrib_end_time","maghrib_azaan","maghrib_jamaat"],
+  ["Isha","isha_start_time","isha_end_time","isha_azaan","isha_jamaat"]
+];
 
-/* PRAYER-TIME API */
-function getMinutes(value) {
-  const match = String(value || "").match(/(\d{1,2}):(\d{2})/);
-  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
-}
-function formatTime(value) {
-  if (value == null || !Number.isFinite(value)) return "—";
-  const total = ((Math.round(value) % 1440) + 1440) % 1440;
-  const hour = Math.floor(total / 60), minute = total % 60;
-  return `${hour % 12 || 12}:${String(minute).padStart(2, "0")} ${hour >= 12 ? "PM" : "AM"}`;
-}
-function apiDate(offset = 0) {
-  const parts = Object.fromEntries(
-    new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit"
-    }).formatToParts(new Date()).map(x => [x.type, x.value])
-  );
-  const d = new Date(Date.UTC(
-    Number(parts.year), Number(parts.month) - 1, Number(parts.day) + offset
-  ));
-  return `${String(d.getUTCDate()).padStart(2, "0")}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${d.getUTCFullYear()}`;
-}
-async function getPrayerTimes(offset = 0) {
-  const url = new URL(`https://api.aladhan.com/v1/timings/${apiDate(offset)}`);
-  url.searchParams.set("latitude", BELAGAVI_LAT);
-  url.searchParams.set("longitude", BELAGAVI_LNG);
-  url.searchParams.set("method", "1");
-  url.searchParams.set("school", "1");
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) throw new Error("Prayer-time service unavailable.");
-  const json = await response.json();
-  if (json.code !== 200 || !json.data || !json.data.timings) {
-    throw new Error("Prayer timings could not be loaded.");
-  }
-  return json.data.timings;
-}
-function makeTile(label, value) {
-  const el = textElement("div", "tile");
-  el.append(textElement("span", "", label), textElement("b", "", value || "—"));
-  return el;
+const extraFields = [
+  ["Ishraq","ishraq_time"],
+  ["Tahajjud","tahajjud_time"],
+  ["Awwabin","awabin_time"],
+  ["Chasht","chasht_time"],
+  ["Sehri Start","sehri_start_time"],
+  ["Sehri End","sehri_end_time"],
+  ["Iftar","iftar_time"]
+];
+
+let masjids = [];
+
+function safeText(value) {
+  return value == null || String(value).trim() === "" ? "—" : String(value);
 }
 
-/* UPDATED PRAYER CARDS: START AND END */
-async function updatePrayerTimes() {
-  $("timingStatus").textContent = "● Updating timings";
-  const t = await getPrayerTimes();
-  const next = await getPrayerTimes(1).catch(() => ({}));
+function makeElement(tag, className, content) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (content !== undefined) node.textContent = content;
+  return node;
+}
 
-  // Sunrise card removed. End means the next listed prayer time.
-  const prayers = [
-    ["Fajr", "🌄", t.Fajr, t.Sunrise],
-    ["Zuhr", "☀️", t.Dhuhr, t.Asr],
-    ["Asr (Hanafi)", "🌤️", t.Asr, t.Maghrib],
-    ["Maghrib", "🌇", t.Maghrib, t.Isha],
-    ["Isha", "🌙", t.Isha, next.Fajr]
-  ];
+function addTile(parent, label, value) {
+  const tile = makeElement("div","panel");
+  tile.appendChild(makeElement("h3","",label));
+  tile.appendChild(makeElement("div","time-value",safeText(value)));
+  parent.appendChild(tile);
+}
 
-  const grid = $("prayerGrid");
+async function loadSavedSchedule() {
+  const grid = $("scheduleGrid");
   grid.replaceChildren();
 
-  prayers.forEach(([name, icon, start, end]) => {
-    const card = textElement("div", "prayer");
-    card.append(textElement("div", "symbol", icon), textElement("h3", "", name));
+  const {data,error} = await db
+    .from("Masjids")
+    .select("*")
+    .order("name",{ascending:true})
+    .limit(1);
 
-    const times = textElement("div", "times");
-    const left = textElement("div", "");
-    left.append(
-      textElement("span", "", "Start"),
-      textElement("b", "", formatTime(getMinutes(start)))
-    );
-    const right = textElement("div", "");
-    right.append(
-      textElement("span", "", "End"),
-      textElement("b", "", formatTime(getMinutes(end)))
-    );
-    times.append(left, right);
-    card.appendChild(times);
-    grid.appendChild(card);
-  });
+  if (error) {
+    console.error("Schedule error:",error);
+    grid.appendChild(makeElement("div","panel",
+      "Unable to load saved timings. Please check the Supabase connection and SELECT permissions."));
+    return;
+  }
 
-  const sunrise = getMinutes(t.Sunrise);
-  const zuhr = getMinutes(t.Dhuhr);
-  const maghrib = getMinutes(t.Maghrib);
-  const isha = getMinutes(t.Isha);
-  const fajr = getMinutes(t.Fajr);
-  const nextFajr = getMinutes(next.Fajr) ?? fajr;
+  if (!data || data.length === 0) {
+    grid.appendChild(makeElement("div","panel",
+      "No saved schedule found. Add a masjid and its timings first."));
+    return;
+  }
 
-  $("specialGrid").replaceChildren(
-    makeTile("Ishraq start", formatTime(sunrise == null ? null : sunrise + 15)),
-    makeTile("Ishraq end", formatTime(zuhr == null ? null : zuhr - 10)),
-    makeTile("Chasht / Duha start", formatTime(sunrise == null ? null : sunrise + 20)),
-    makeTile("Chasht / Duha end", formatTime(zuhr == null ? null : zuhr - 10)),
-    makeTile("Awwabin start", formatTime(maghrib == null ? null : maghrib + 5)),
-    makeTile("Awwabin end", formatTime(isha)),
-    makeTile("Tahajjud start", formatTime(
-      isha == null || nextFajr == null ? null :
-      isha + (((nextFajr - isha + 1440) % 1440) * 2 / 3)
-    )),
-    makeTile("Tahajjud end", formatTime(nextFajr))
-  );
-
-  $("fastingGrid").replaceChildren(
-    makeTile("Sehri start", formatTime(getMinutes(t.Imsak) ?? fajr)),
-    makeTile("Sehri end", formatTime(fajr)),
-    makeTile("Iftar", formatTime(maghrib)),
-    makeTile("Calculation", "Karachi · Hanafi")
-  );
-
-  $("sunrise").textContent = formatTime(sunrise);
-  $("sunset").textContent = formatTime(getMinutes(t.Sunset));
-  $("timingStatus").textContent = "● Timings loaded";
+  // Show stored values only. No automatic time calculation.
+  const saved = data[0];
+  scheduleFields.forEach(([label,key]) => addTile(grid,label,saved[key]));
 }
 
-/* MASJID DIRECTORY */
-function makeMasjidCard(m) {
-  const card = textElement("article", "masjid");
-  card.append(
-    textElement("div", "", "🕌"),
-    textElement("h3", "", m.name),
-    textElement("p", "", "📍 " + (m.area || "Belagavi"))
-  );
-  if (m.address) card.appendChild(textElement("p", "", m.address));
-  const tiles = textElement("div", "tiles");
-
-  [
-    ["Fajr", "fajr_azaan", "fajr_jamaat"],
-    ["Zuhr", "zuhr_azaan", "zuhr_jamaat"],
-    ["Asr", "asr_azaan", "asr_jamaat"],
-    ["Maghrib", "maghrib_azaan", "maghrib_jamaat"],
-    ["Isha", "isha_azaan", "isha_jamaat"]
-  ].forEach(([name, azaan, jamaat]) => {
-    const tile = textElement("div", "tile");
-    tile.append(
-      textElement("span", "", name),
-      textElement("b", "", "Jamaat: " + showValue(m[jamaat])),
-      textElement("span", "", "Azaan: " + showValue(m[azaan]))
-    );
-    tiles.appendChild(tile);
-  });
-  card.appendChild(tiles);
-
-  const map = document.createElement("a");
-  map.className = "map";
-  map.href = safeMapURL(m);
-  map.target = "_blank";
-  map.rel = "noopener noreferrer";
-  map.textContent = "📍 Open Google Maps ↗";
-  card.appendChild(map);
-  return card;
+function addTimeLine(parent,label,value) {
+  const line = makeElement("div","small-time");
+  line.appendChild(makeElement("span","",label));
+  line.appendChild(makeElement("b","",safeText(value)));
+  parent.appendChild(line);
 }
+
+function validMapUrl(value) {
+  try {
+    const u = new URL(value);
+    return u.protocol === "https:" ? u.href : "";
+  } catch {
+    return "";
+  }
+}
+
 function renderMasjids() {
-  const query = $("search").value.trim().toLocaleLowerCase("en-IN");
+  const query = $("search").value.trim().toLowerCase();
   const filtered = masjids.filter(m =>
-    [m.name, m.area, m.address].some(v =>
-      String(v || "").toLocaleLowerCase("en-IN").includes(query)
+    [m.name,m.area,m.address].some(v =>
+      String(v || "").toLowerCase().includes(query)
     )
   );
-  $("count").textContent = `${filtered.length} masjids`;
+
   const list = $("masjidList");
   list.replaceChildren();
 
-  // Keep the public directory visually empty until real records are added.
-  if (!masjids.length) {
-    $("count").textContent = "0 masjids";
-    return;
-  }
   if (!filtered.length) {
-    list.appendChild(textElement("div", "state", "No matching masjid found."));
+    list.appendChild(makeElement("div","state",
+      masjids.length ? "No matching masjid found. Try another search."
+                     : "No masjid records found in the database."));
     return;
   }
-  filtered.forEach(m => list.appendChild(makeMasjidCard(m)));
+
+  filtered.forEach(m => {
+    const card = makeElement("article","masjid-card");
+    card.appendChild(makeElement("h3","","🕌 " + safeText(m.name)));
+    card.appendChild(makeElement("div","muted","📍 " + safeText(m.area)));
+    card.appendChild(makeElement("p","muted",safeText(m.address)));
+
+    const mapUrl = validMapUrl(m.google_maps_link);
+    const map = makeElement("a","btn secondary","📍 Open Map");
+    map.href = mapUrl ||
+      ("https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent([m.name,m.area,m.address,"Belagavi"].filter(Boolean).join(", ")));
+    map.target = "_blank";
+    map.rel = "noopener noreferrer";
+    card.appendChild(map);
+
+    card.appendChild(makeElement("h4","","🕰 Prayer timings"));
+    const times = makeElement("div","small-grid");
+
+    mainPrayers.forEach(([name,start,end,azaan,jamaat]) => {
+      addTimeLine(times,name + " Start",m[start]);
+      addTimeLine(times,name + " End",m[end]);
+      addTimeLine(times,name + " Azaan",m[azaan]);
+      addTimeLine(times,name + " Jamaat",m[jamaat]);
+    });
+
+    card.appendChild(times);
+    card.appendChild(makeElement("h4","","✨ Other timings"));
+    const extras = makeElement("div","small-grid");
+    extraFields.forEach(([label,key]) => addTimeLine(extras,label,m[key]));
+    card.appendChild(extras);
+    list.appendChild(card);
+  });
 }
+
 async function loadMasjids() {
-  const { data, error } = await client.from("Masjids").select("*").order("name", { ascending: true });
-  if (error) throw error;
-  masjids = Array.isArray(data) ? data : [];
+  $("masjidList").replaceChildren(
+    makeElement("div","state","Loading masjids…")
+  );
+
+  const {data,error} = await db
+    .from("Masjids")
+    .select("*")
+    .order("name",{ascending:true});
+
+  if (error) {
+    console.error("Masjid load error:",error);
+    $("masjidList").replaceChildren(
+      makeElement("div","state",
+        "Could not load masjids. Check the Supabase table and public SELECT policy.")
+    );
+    return;
+  }
+
+  masjids = data || [];
   renderMasjids();
-  if (currentProfile?.role === "admin") await renderAdminMasjidList();
-  if (currentProfile?.role === "imam" && currentProfile.approved) await renderImamAssignment();
 }
-$("search").addEventListener("input", () => {
-  const input = $("search");
-  const cursor = input.selectionStart;
-  const cleaned = input.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
-  if (input.value !== cleaned) {
-    input.value = cleaned;
-    try { input.setSelectionRange(cursor - 1, cursor - 1); } catch (_) {}
-  }
-  renderMasjids();
-});
-$("nearbyBtn").addEventListener("click", () => {
-  window.open("https://www.google.com/maps/search/masjid+near+me/", "_blank", "noopener,noreferrer");
-});
 
-/* SIGN IN AND IMAM REGISTRATION */
-function setAuthMessage(text, isError = false) { message("authMessage", text, isError); }
+$("search").addEventListener("input",renderMasjids);
 
-async function registerImam() {
-  clearMessage("authMessage");
-  const email = $("authEmail").value.trim().toLowerCase();
-  const password = $("authPassword").value;
-  if (!email || !password) return setAuthMessage("Email aur password dono bharo.", true);
-  if (password.length < 8) return setAuthMessage("Password kam se kam 8 characters ka hona chahiye.", true);
-
-  $("registerBtn").disabled = true;
-  try {
-    const { data, error } = await client.auth.signUp({
-      email, password, options: { data: { requested_role: "imam" } }
-    });
-    if (error) throw error;
-    if (data.session) {
-      await refreshAccount();
-      setAuthMessage("Registration received. Your Imam account is pending admin approval.");
-    } else {
-      setAuthMessage("Registration submitted. If email confirmation is enabled, verify your email first. Your Imam account still requires admin approval.");
-    }
-  } catch (error) {
-    setAuthMessage(error.message || "Registration failed.", true);
-  } finally {
-    $("registerBtn").disabled = false;
-  }
-}
-async function signIn() {
-  clearMessage("authMessage");
-  const email = $("authEmail").value.trim().toLowerCase();
-  const password = $("authPassword").value;
-  if (!email || !password) return setAuthMessage("Email aur password dono bharo.", true);
-
-  $("loginBtn").disabled = true;
-  try {
-    const { error } = await client.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    await refreshAccount();
-  } catch (error) {
-    setAuthMessage(error.message || "Sign-in failed.", true);
-  } finally {
-    $("loginBtn").disabled = false;
-  }
-}
-$("loginBtn").addEventListener("click", signIn);
-$("registerBtn").addEventListener("click", registerImam);
-
-$("logoutBtn").addEventListener("click", async () => {
-  const { error } = await client.auth.signOut();
-  if (error) return setAuthMessage(error.message, true);
-  currentUser = null;
-  currentProfile = null;
-  await updateAccountUI();
-});
-$("refreshAccountBtn").addEventListener("click", refreshAccount);
-
-async function getMyProfile() {
-  if (!currentUser) return null;
-  const { data, error } = await client.from("profiles")
-    .select("id,email,role,approved")
-    .eq("id", currentUser.id).maybeSingle();
-  if (error) throw error;
-  return data;
-}
-async function refreshAccount() {
-  const { data } = await client.auth.getUser();
-  currentUser = data?.user || null;
-  currentProfile = null;
-  if (currentUser) {
-    try {
-      currentProfile = await getMyProfile();
-    } catch (error) {
-      console.error("Profile load failed:", error);
-      setAuthMessage("Profile load nahi hua. Supabase profiles SELECT policy check karo.", true);
-    }
-  }
-  await updateAccountUI();
-}
-async function updateAccountUI() {
-  const signedIn = Boolean(currentUser);
-  $("signedOutPanel").hidden = signedIn;
-  $("signedInPanel").hidden = !signedIn;
-  $("adminDashboard").hidden = true;
-  $("imamDashboard").hidden = true;
-
-  if (!signedIn) {
-    $("authState").textContent = "Signed out";
-    $("accountSummary").textContent = "";
-    return;
-  }
-  $("authState").textContent = currentProfile?.approved ? "Approved" : "Pending";
-  $("accountSummary").textContent =
-    `Signed in: ${currentUser.email || ""}. Role: ${currentProfile?.role || "profile not found"}. Status: ${currentProfile?.approved ? "Approved" : "Pending approval"}.`;
-
-  if (!currentProfile) {
-    setAuthMessage("Account sign-in hua, lekin profile nahi mila. Admin se Supabase profile check karwao.", true);
-    return;
-  }
-  if (currentProfile.role === "admin" && currentProfile.approved === true) {
-    $("adminDashboard").hidden = false;
-    clearMessage("authMessage");
-    await loadAdminDashboard();
-    return;
-  }
-  if (currentProfile.role === "imam" && currentProfile.approved === true) {
-    $("imamDashboard").hidden = false;
-    clearMessage("authMessage");
-    await renderImamAssignment();
-    return;
-  }
-  setAuthMessage("Aapka account abhi admin approval ka intezar kar raha hai. Approval se pehle dashboard access nahi milega.");
-}
-client.auth.onAuthStateChange((_event, session) => {
-  setTimeout(() => {
-    currentUser = session?.user || null;
-    refreshAccount().catch(error => {
-      console.error(error);
-      setAuthMessage("Account status load nahi ho saka.", true);
-    });
-  }, 0);
-});
-
-/* HADITH ROTATION */
 const hadiths = [
   {
-    ar: "مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
-    en: "Whoever guides someone to goodness will have a reward like the one who did it.",
-    src: "Sahih Muslim 1893"
+    text:"Actions are judged by intentions.",
+    source:"Sahih al-Bukhari, Hadith 1"
   },
-  { ar: "الدِّينُ النَّصِيحَةُ", en: "The religion is sincere advice.", src: "Sahih Muslim 55" },
-  { ar: "مَنْ لَا يَرْحَمْ لَا يُرْحَمْ", en: "Whoever does not show mercy will not be shown mercy.", src: "Sahih al-Bukhari 6013" }
+  {
+    text:"The best among you are those who learn the Quran and teach it.",
+    source:"Sahih al-Bukhari, Hadith 5027"
+  },
+  {
+    text:"A good word is charity.",
+    source:"Sahih al-Bukhari, Hadith 2989"
+  }
 ];
-let hadithIndex = Math.floor(Date.now() / 86400000) % hadiths.length;
+
 function showHadith() {
-  hadithIndex = ((hadithIndex % hadiths.length) + hadiths.length) % hadiths.length;
-  const h = hadiths[hadithIndex];
-  $("hadithArabic").textContent = h.ar;
-  $("hadithTranslation").textContent = "“" + h.en + "”";
-  $("hadithSource").textContent = h.src;
-  $("hadithIndex").textContent = `${hadithIndex + 1} / ${hadiths.length}`;
+  const day = Math.floor(Date.now()/86400000);
+  const h = hadiths[day % hadiths.length];
+  $("hadithText").textContent = h.text;
+  $("hadithSource").textContent = h.source;
 }
-$("prevHadith").addEventListener("click", () => { hadithIndex--; showHadith(); });
-$("nextHadith").addEventListener("click", () => { hadithIndex++; showHadith(); });
+
 showHadith();
-
-/* IMAM TIMING DASHBOARD */
-function setImamMessage(text, isError = false) {
-  message("imamMessage", text, isError);
-}
-
-async function renderImamAssignment() {
-  if (!currentUser || currentProfile?.role !== "imam" || currentProfile?.approved !== true) {
-    $("imamTimingForm").hidden = true;
-    $("imamAssignment").textContent = "Approved Imam access required.";
-    return;
-  }
-
-  $("imamAssignment").textContent = "Loading assigned masjid...";
-  $("imamTimingForm").hidden = true;
-
-  const { data, error } = await client.from("Masjids")
-    .select("*").eq("imam_id", currentUser.id).limit(2);
-
-  if (error) {
-    $("imamAssignment").textContent = "Could not load assignment.";
-    setImamMessage(error.message, true);
-    return;
-  }
-  if (!data || data.length === 0) {
-    $("imamAssignment").textContent = "Abhi aapko koi masjid assign nahi hui hai. Admin se contact karein.";
-    return;
-  }
-  if (data.length > 1) {
-    $("imamAssignment").textContent = "Multiple masjids assigned. Please contact the administrator.";
-    return;
-  }
-
-  const m = data[0];
-  $("imamAssignment").replaceChildren(
-    textElement("h3", "", m.name || "Assigned Masjid"),
-    textElement("p", "", m.area || "Belagavi"),
-    textElement("p", "", m.address || "")
-  );
-  $("imamMasjidId").value = m.id;
-  addTimeInputs("imamTimingFields", TIMING_FIELDS, "imam_");
-  TIMING_FIELDS.forEach(([key]) => {
-    $("imam_" + key).value = safeTimeInput(m[key]);
-  });
-  $("imamTimingForm").hidden = false;
-}
-
-$("imamTimingForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  clearMessage("imamMessage");
-
-  if (!currentUser || currentProfile?.role !== "imam" || currentProfile?.approved !== true) {
-    setImamMessage("Approved Imam access required.", true);
-    return;
-  }
-  const masjidId = $("imamMasjidId").value;
-  if (!masjidId) {
-    setImamMessage("Assigned masjid nahi mili.", true);
-    return;
-  }
-
-  const updates = {};
-  TIMING_FIELDS.forEach(([key]) => {
-    updates[key] = $("imam_" + key).value || null;
-  });
-
-  $("saveImamTimingsBtn").disabled = true;
-  try {
-    const { data, error } = await client.from("Masjids")
-      .update(updates)
-      .eq("id", masjidId)
-      .eq("imam_id", currentUser.id)
-      .select("id");
-
-    if (error) throw error;
-    if (!data || data.length !== 1) {
-      throw new Error("No assigned masjid was updated. Check approval and assignment.");
-    }
-
-    setImamMessage("Azaan aur Jamaat timings save ho gayi hain.");
-    await loadMasjids();
-    await renderImamAssignment();
-  } catch (error) {
-    setImamMessage(error.message || "Timings save nahi hui.", true);
-  } finally {
-    $("saveImamTimingsBtn").disabled = false;
-  }
-});
-
-/* ADMIN DASHBOARD */
-function setAdminMessage(text, isError = false) {
-  message("adminMessage", text, isError);
-}
-function requireAdmin() {
-  if (!currentUser || currentProfile?.role !== "admin" || currentProfile?.approved !== true) {
-    throw new Error("Only the approved administrator can perform this action.");
-  }
-}
-async function loadAdminDashboard() {
-  requireAdmin();
-  await Promise.all([
-    loadAdminProfiles(),
-    loadApprovedImams(),
-    renderAdminMasjidList()
-  ]);
-}
-
-async function loadAdminProfiles() {
-  const container = $("adminUsers");
-  container.replaceChildren(textElement("div", "state", "Loading Imam accounts..."));
-
-  const { data, error } = await client.from("profiles")
-    .select("id,email,role,approved,created_at")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    container.replaceChildren(textElement("div", "state", error.message));
-    return;
-  }
-
-  allProfiles = data || [];
-  const imams = allProfiles.filter(p => p.role === "imam");
-  if (!imams.length) {
-    container.replaceChildren(textElement("div", "state", "No Imam registrations yet."));
-    return;
-  }
-
-  const table = textElement("table", "admin-table");
-  const thead = document.createElement("thead");
-  const header = document.createElement("tr");
-  ["Email", "Status", "Actions"].forEach(label => header.appendChild(textElement("th", "", label)));
-  thead.appendChild(header);
-  table.appendChild(thead);
-
-  const tbody = document.createElement("tbody");
-  imams.forEach(profile => {
-    const tr = document.createElement("tr");
-    tr.appendChild(textElement("td", "", profile.email || "No email"));
-
-    const statusCell = document.createElement("td");
-    statusCell.appendChild(textElement(
-      "span",
-      "badge " + (profile.approved ? "approved" : "pending"),
-      profile.approved ? "Approved" : "Pending"
-    ));
-    tr.appendChild(statusCell);
-
-    const actionsCell = document.createElement("td");
-    const approve = textElement("button", "btn", "Approve");
-    approve.type = "button";
-    approve.addEventListener("click", () => changeImamApproval(profile, true));
-
-    const reject = textElement("button", "btn danger", "Reject");
-    reject.type = "button";
-    reject.style.margin = "4px";
-    reject.addEventListener("click", () => changeImamApproval(profile, false));
-
-    const remove = textElement("button", "btn light", "Remove profile");
-    remove.type = "button";
-    remove.style.margin = "4px";
-    remove.addEventListener("click", () => removeImamProfile(profile));
-
-    actionsCell.append(approve, reject, remove);
-    tr.appendChild(actionsCell);
-    tbody.appendChild(tr);
-  });
-  table.appendChild(tbody);
-  container.replaceChildren(table);
-}
-
-async function changeImamApproval(profile, approved) {
-  try {
-    requireAdmin();
-    const action = approved ? "approve" : "reject";
-    if (!confirm(`Do you want to ${action} ${profile.email}?`)) return;
-
-    const { data, error } = await client.from("profiles")
-      .update({ approved })
-      .eq("id", profile.id)
-      .eq("role", "imam")
-      .select("id");
-
-    if (error) throw error;
-    if (!data || data.length !== 1) throw new Error("Profile update was not permitted.");
-
-    setAdminMessage(approved
-      ? "Imam approved. You can now assign a masjid."
-      : "Imam rejected. Account access is disabled until approved again.");
-
-    await loadAdminProfiles();
-    await loadApprovedImams();
-  } catch (error) {
-    setAdminMessage(error.message || "Approval update failed.", true);
-  }
-}
-
-async function removeImamProfile(profile) {
-  try {
-    requireAdmin();
-    if (profile.id === currentUser.id) {
-      throw new Error("You cannot remove your own administrator profile.");
-    }
-    if (!confirm(`Remove the profile for ${profile.email}? This does not delete the Supabase Auth login itself.`)) return;
-
-    const { error: assignmentError } = await client.from("Masjids")
-      .update({ imam_id: null }).eq("imam_id", profile.id);
-    if (assignmentError) throw assignmentError;
-
-    const { error } = await client.from("profiles")
-      .delete().eq("id", profile.id).eq("role", "imam");
-    if (error) throw error;
-
-    setAdminMessage("Profile removed and masjid assignments cleared. The Supabase Auth user itself still exists; deleting Auth users requires a trusted server-side admin function.");
-    await loadAdminProfiles();
-    await loadApprovedImams();
-    await loadMasjids();
-  } catch (error) {
-    setAdminMessage(error.message || "Profile could not be removed.", true);
-  }
-}
-
-async function loadApprovedImams() {
-  requireAdmin();
-  const { data, error } = await client.from("profiles")
-    .select("id,email,role,approved")
-    .eq("role", "imam").eq("approved", true)
-    .order("email", { ascending: true });
-
-  if (error) {
-    setAdminMessage("Approved Imam list could not load: " + error.message, true);
-    return;
-  }
-
-  approvedImams = data || [];
-  const select = $("adminAssignImam");
-  const selected = select.value;
-  select.replaceChildren(new Option("No Imam assigned", ""));
-  approvedImams.forEach(profile => select.add(new Option(profile.email, profile.id)));
-  if (approvedImams.some(p => p.id === selected)) select.value = selected;
-}
-
-/* ADMIN: ADD, EDIT AND DELETE MASJIDS */
-function clearAdminMasjidForm() {
-  $("adminMasjidForm").reset();
-  $("adminMasjidId").value = "";
-  $("saveAdminMasjidBtn").textContent = "Save Masjid";
-  addTimeInputs("adminTimingFields", [...TIMING_FIELDS, ...EXTRA_TIME_FIELDS], "admin_");
-}
-$("clearAdminMasjidBtn").addEventListener("click", clearAdminMasjidForm);
-
-async function renderAdminMasjidList() {
-  const container = $("adminMasjidList");
-  container.replaceChildren(textElement("div", "state", "Loading masjids..."));
-
-  try {
-    const { data, error } = await client.from("Masjids")
-      .select("*").order("name", { ascending: true });
-    if (error) throw error;
-
-    masjids = data || [];
-    renderMasjids();
-
-    if (!masjids.length) {
-      container.replaceChildren(textElement("div", "state", "No masjids have been added."));
-      return;
-    }
-
-    const table = textElement("table", "admin-table");
-    const thead = document.createElement("thead");
-    const row = document.createElement("tr");
-    ["Masjid", "Area", "Assigned Imam", "Actions"].forEach(label => row.appendChild(textElement("th", "", label)));
-    thead.appendChild(row);
-    table.appendChild(thead);
-
-    const tbody = document.createElement("tbody");
-    masjids.forEach(m => {
-      const tr = document.createElement("tr");
-      tr.appendChild(textElement("td", "", m.name || "Unnamed"));
-      tr.appendChild(textElement("td", "", m.area || "—"));
-      const assigned = allProfiles.find(p => p.id === m.imam_id);
-      tr.appendChild(textElement("td", "", assigned?.email || "Not assigned"));
-
-      const actions = document.createElement("td");
-      const edit = textElement("button", "btn light", "Edit");
-      edit.type = "button";
-      edit.addEventListener("click", () => fillAdminMasjidForm(m));
-
-      const remove = textElement("button", "btn danger", "Delete");
-      remove.type = "button";
-      remove.style.margin = "4px";
-      remove.addEventListener("click", () => deleteMasjid(m));
-
-      actions.append(edit, remove);
-      tr.appendChild(actions);
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    container.replaceChildren(table);
-  } catch (error) {
-    container.replaceChildren(textElement("div", "state", error.message || "Masjid list could not load."));
-  }
-}
-
-function fillAdminMasjidForm(m) {
-  $("adminMasjidId").value = m.id || "";
-  $("adminMasjidName").value = m.name || "";
-  $("adminMasjidArea").value = m.area || "";
-  $("adminMasjidAddress").value = m.address || "";
-  $("adminMasjidMap").value = m.map_link || m.google_maps_link || "";
-  $("adminAssignImam").value = m.imam_id || "";
-
-  addTimeInputs("adminTimingFields", [...TIMING_FIELDS, ...EXTRA_TIME_FIELDS], "admin_");
-  [...TIMING_FIELDS, ...EXTRA_TIME_FIELDS].forEach(([key]) => {
-    const input = $("admin_" + key);
-    if (input) input.value = safeTimeInput(m[key]);
-  });
-
-  $("saveAdminMasjidBtn").textContent = "Update Masjid";
-  $("adminMasjidForm").scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-$("adminMasjidForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  try {
-    requireAdmin();
-    const name = $("adminMasjidName").value.trim();
-    if (!name) throw new Error("Masjid name is required.");
-
-    const payload = {
-      name,
-      area: $("adminMasjidArea").value.trim() || null,
-      address: $("adminMasjidAddress").value.trim() || null,
-      map_link: $("adminMasjidMap").value.trim() || null,
-      imam_id: $("adminAssignImam").value || null
-    };
-
-    [...TIMING_FIELDS, ...EXTRA_TIME_FIELDS].forEach(([key]) => {
-      const input = $("admin_" + key);
-      if (input) payload[key] = input.value || null;
-    });
-
-    const id = $("adminMasjidId").value;
-    $("saveAdminMasjidBtn").disabled = true;
-    let result;
-
-    if (id) {
-      result = await client.from("Masjids").update(payload).eq("id", id).select("id");
-    } else {
-      result = await client.from("Masjids").insert(payload).select("id");
-    }
-
-    if (result.error) throw result.error;
-    if (!result.data || result.data.length !== 1) {
-      throw new Error("No masjid was saved. Check the database policies.");
-    }
-
-    setAdminMessage(id ? "Masjid updated successfully." : "Masjid added successfully.");
-    clearAdminMasjidForm();
-    await loadMasjids();
-    await renderAdminMasjidList();
-  } catch (error) {
-    setAdminMessage(error.message || "Masjid could not be saved.", true);
-  } finally {
-    $("saveAdminMasjidBtn").disabled = false;
-  }
-});
-
-async function deleteMasjid(m) {
-  try {
-    requireAdmin();
-    if (!confirm(`Delete "${m.name}" from the masjid directory?`)) return;
-
-    const { error } = await client.from("Masjids").delete().eq("id", m.id);
-    if (error) throw error;
-
-    setAdminMessage("Masjid deleted.");
-    await loadMasjids();
-    await renderAdminMasjidList();
-  } catch (error) {
-    setAdminMessage(error.message || "Masjid could not be deleted.", true);
-  }
-}
-
-/* WEBSITE STARTUP */
-(async function startWebsite() {
-  addTimeInputs("adminTimingFields", [...TIMING_FIELDS, ...EXTRA_TIME_FIELDS], "admin_");
-
-  await loadMasjids().catch(error => {
-    console.error("Masjid directory error:", error);
-    $("count").textContent = "Connection error";
-    $("masjidList").replaceChildren(
-      textElement("div", "state", "Masjid directory could not load. Check Supabase connection and SELECT policy.")
-    );
-  });
-
-  await updatePrayerTimes().catch(error => {
-    console.error("Prayer timings error:", error);
-    $("timingStatus").textContent = "● Timings unavailable";
-    $("prayerGrid").replaceChildren(
-      textElement("div", "state", "Prayer timings could not load. Please try again later.")
-    );
-  });
-
-  await refreshAccount().catch(error => console.error("Account initialization error:", error));
-})();
-
-setInterval(() => {
-  updatePrayerTimes().catch(error => {
-    console.error(error);
-    $("timingStatus").textContent = "● Timings unavailable";
-  });
-}, 6 * 60 * 60 * 1000);
-
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
-    updateClock();
-    updatePrayerTimes().catch(console.error);
-  }
-});
+loadSavedSchedule();
+loadMasjids();
 </script>
 </body>
 </html>
