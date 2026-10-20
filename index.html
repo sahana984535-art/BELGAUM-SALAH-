@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +6,7 @@
 <meta name="theme-color" content="#064b40">
 <title>Belgaum Salah</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 :root{--green:#064b40;--deep:#032f29;--gold:#dca849;--bg:#f5f6f1;--line:#e0e9e3;--muted:#697b74}
 *{box-sizing:border-box}
@@ -15,7 +15,8 @@ header{background:white;padding:14px 5%;display:flex;justify-content:space-betwe
 .brand{font-size:20px;font-weight:800;color:var(--green)}
 .brand small{display:block;font-size:11px;color:#9b742e}
 nav{display:flex;gap:7px;flex-wrap:wrap}
-nav a{padding:9px 12px;background:#f3f4ef;border-radius:24px;text-decoration:none;font-size:12px;font-weight:800}
+nav a{padding:9px 12px;background:#f3f4ef;border-radius:24px;text-decoration:none;font-size:12px;font-weight:800;color:var(--green)}
+.hidden{display:none!important}
 .hero{background:linear-gradient(90deg,#032f29dc,#032f2966),url("https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=2000&q=85") center/cover;color:white;text-align:center;padding:42px 15px}
 .hero .arabic{font:34px Amiri,serif}
 .hero h1{font-size:clamp(27px,5vw,42px);margin:10px 0}
@@ -71,6 +72,7 @@ footer{background:var(--deep);color:#dce9df;padding:20px;text-align:center;font-
 </style>
 </head>
 <body>
+
 <header>
   <div class="brand">🕌 BELGAUM SALAH<small>— Closer to Allah —</small></div>
   <nav>
@@ -78,7 +80,8 @@ footer{background:var(--deep);color:#dce9df;padding:20px;text-align:center;font-
     <a href="#prayerTimes">Prayer Times</a>
     <a href="#masjids">Masjids</a>
     <a href="#hadith">Hadith</a>
-    <a href="imam.html">🔐 Imam Login</a>
+    <a href="imam.html" id="imamLoginLink">🔐 Imam Login</a>
+    <a href="imam-dashboard.html" id="imamDashboardLink" class="hidden">🕌 Imam Dashboard</a>
   </nav>
   <div><b id="today">Loading date...</b><br><small>Belagavi, Karnataka · India</small></div>
 </header>
@@ -168,14 +171,15 @@ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY)
 const $=id=>document.getElementById(id);
 const LAT=15.8497,LNG=74.4977;
 let masjids=[];
-
-function textElement(tag,cls,text){
+  function textElement(tag,cls,text){
   const e=document.createElement(tag);
   if(cls)e.className=cls;
   if(text!==undefined)e.textContent=text;
   return e;
 }
-function showValue(v){return v==null||String(v).trim()===""?"—":String(v);}
+function showValue(v){
+  return v==null||String(v).trim()===""?"—":String(v);
+}
 function getMinutes(v){
   const m=String(v||"").match(/(\d{1,2}):(\d{2})/);
   return m?Number(m[1])*60+Number(m[2]):null;
@@ -188,20 +192,23 @@ function formatTime(v){
 }
 function localParts(date=new Date()){
   return Object.fromEntries(new Intl.DateTimeFormat("en-GB",{
-    timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"
+    timeZone:"Asia/Kolkata",
+    hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"
   }).formatToParts(date).map(p=>[p.type,p.value]));
 }
 function updateClock(){
   const now=new Date();
   $("today").textContent=now.toLocaleDateString("en-IN",{
-    weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Kolkata"
+    weekday:"long",day:"numeric",month:"long",year:"numeric",
+    timeZone:"Asia/Kolkata"
   });
   $("localDate").textContent=now.toLocaleDateString("en-IN",{
     day:"numeric",month:"short",year:"numeric",timeZone:"Asia/Kolkata"
   });
   const p=localParts(now),h=+p.hour,m=+p.minute,s=+p.second;
   $("digitalClock").textContent=now.toLocaleTimeString("en-IN",{
-    timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true
+    timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",
+    second:"2-digit",hour12:true
   });
   $("hourHand").style.transform=`translateX(-50%) rotate(${(h%12)*30+m*.5}deg)`;
   $("minuteHand").style.transform=`translateX(-50%) rotate(${m*6+s*.1}deg)`;
@@ -235,12 +242,11 @@ async function getPrayerTimes(offset=0){
   if(j.code!==200||!j.data?.timings)throw Error("Prayer timings unavailable.");
   return j.data.timings;
 }
-
-/* One card per prayer; both Start and End are inside that same card. */
 async function updatePrayerTimes(){
   $("timingStatus").textContent="● Updating timings";
-  const [t,next]=await Promise.all([getPrayerTimes(),getPrayerTimes(1).catch(()=>({}))]);
-
+  const [t,next]=await Promise.all([
+    getPrayerTimes(),getPrayerTimes(1).catch(()=>({}))
+  ]);
   const fajr=getMinutes(t.Fajr);
   const sunrise=getMinutes(t.Sunrise);
   const zuhr=getMinutes(t.Dhuhr);
@@ -256,36 +262,26 @@ async function updatePrayerTimes(){
     {name:"Maghrib",icon:"🌇",start:maghrib,end:isha},
     {name:"Isha",icon:"🌙",start:isha,end:nextFajr}
   ];
-
   const grid=$("prayerGrid");
   grid.replaceChildren();
 
   prayers.forEach(p=>{
     const card=textElement("div","prayer");
-    card.append(
-      textElement("div","symbol",p.icon),
-      textElement("h3","",p.name)
-    );
+    card.append(textElement("div","symbol",p.icon),textElement("h3","",p.name));
     const times=textElement("div","times");
     const start=textElement("div","");
-    start.append(
-      textElement("span","","Start Time"),
-      textElement("b","",formatTime(p.start))
-    );
+    start.append(textElement("span","","Start Time"),
+                 textElement("b","",formatTime(p.start)));
     const end=textElement("div","");
-    end.append(
-      textElement("span","","End Time"),
-      textElement("b","",formatTime(p.end))
-    );
+    end.append(textElement("span","","End Time"),
+               textElement("b","",formatTime(p.end)));
     times.append(start,end);
     card.appendChild(times);
     grid.appendChild(card);
   });
-
   $("timingStatus").textContent="● Timings loaded";
 }
 
-/* Masjid directory: Azaan and Jamaat times only */
 function mapURL(m){
   const saved=m.map_link||m.google_maps_link||"";
   if(saved){
@@ -326,6 +322,7 @@ function makeMasjidCard(m){
     tiles.appendChild(tile);
   });
   card.appendChild(tiles);
+
   const link=document.createElement("a");
   link.className="map";
   link.href=mapURL(m);
@@ -343,6 +340,7 @@ function renderMasjids(){
   $("count").textContent=`${filtered.length} masjids`;
   const list=$("masjidList");
   list.replaceChildren();
+
   if(!filtered.length){
     list.appendChild(textElement("div","state",
       masjids.length?"No matching masjid found.":"No masjids found in database."));
@@ -351,23 +349,39 @@ function renderMasjids(){
   filtered.forEach(m=>list.appendChild(makeMasjidCard(m)));
 }
 async function loadMasjids(){
-  const {data,error}=await client.from("Masjids").select("*").order("name",{ascending:true});
+  const {data,error}=await client.from("Masjids")
+    .select("*").order("name",{ascending:true});
   if(error)throw error;
   masjids=data||[];
   renderMasjids();
 }
 $("search").addEventListener("input",renderMasjids);
 $("nearbyBtn").addEventListener("click",()=>{
-  window.open("https://www.google.com/maps/search/masjid+near+me/","_blank","noopener,noreferrer");
+  window.open(
+    "https://www.google.com/maps/search/masjid+near+me/",
+    "_blank","noopener,noreferrer"
+  );
 });
-
-/* Hadith panel */
+  /* Hadith panel */
 const hadiths=[
-  {ar:"مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",en:"Whoever guides someone to goodness will have a reward like the one who did it.",src:"Sahih Muslim 1893"},
-  {ar:"الدِّينُ النَّصِيحَةُ",en:"The religion is sincere advice.",src:"Sahih Muslim 55"},
-  {ar:"مَنْ لَا يَرْحَمْ لَا يُرْحَمْ",en:"Whoever does not show mercy will not be shown mercy.",src:"Sahih al-Bukhari 6013"}
+  {
+    ar:"مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
+    en:"Whoever guides someone to goodness will have a reward like the one who did it.",
+    src:"Sahih Muslim 1893"
+  },
+  {
+    ar:"الدِّينُ النَّصِيحَةُ",
+    en:"The religion is sincere advice.",
+    src:"Sahih Muslim 55"
+  },
+  {
+    ar:"مَنْ لَا يَرْحَمْ لَا يُرْحَمْ",
+    en:"Whoever does not show mercy will not be shown mercy.",
+    src:"Sahih al-Bukhari 6013"
+  }
 ];
 let hadithIndex=Math.floor(Date.now()/86400000)%hadiths.length;
+
 function showHadith(){
   hadithIndex=(hadithIndex%hadiths.length+hadiths.length)%hadiths.length;
   const h=hadiths[hadithIndex];
@@ -376,28 +390,129 @@ function showHadith(){
   $("hadithSource").textContent=h.src;
   $("hadithIndex").textContent=`${hadithIndex+1} / ${hadiths.length}`;
 }
-$("prevHadith").addEventListener("click",()=>{hadithIndex--;showHadith();});
-$("nextHadith").addEventListener("click",()=>{hadithIndex++;showHadith();});
+$("prevHadith").addEventListener("click",()=>{
+  hadithIndex--;
+  showHadith();
+});
+$("nextHadith").addEventListener("click",()=>{
+  hadithIndex++;
+  showHadith();
+});
+
+/* Approved Imam navigation */
+let navCheckRunning=false;
+let navCheckAgain=false;
+
+async function updateImamNavigation(){
+  if(navCheckRunning){
+    navCheckAgain=true;
+    return;
+  }
+
+  navCheckRunning=true;
+
+  const loginLink=$("imamLoginLink");
+  const dashboardLink=$("imamDashboardLink");
+
+  // Safe default: dashboard link stays hidden until verified.
+  loginLink.classList.remove("hidden");
+  dashboardLink.classList.add("hidden");
+
+  try{
+    const {data:sessionData,error:sessionError}=
+      await client.auth.getSession();
+
+    if(sessionError)throw sessionError;
+
+    const session=sessionData.session;
+
+    if(!session){
+      return;
+    }
+
+    const {data:profile,error:profileError}=await client
+      .from("profiles")
+      .select("role, approved")
+      .eq("id",session.user.id)
+      .maybeSingle();
+
+    if(profileError){
+      console.error("Imam profile verification failed:",profileError);
+      return;
+    }
+
+    if(
+      profile &&
+      profile.role==="imam" &&
+      profile.approved===true
+    ){
+      loginLink.classList.add("hidden");
+      dashboardLink.classList.remove("hidden");
+    }
+  }catch(error){
+    console.error("Could not check Imam status:",error);
+  }finally{
+    navCheckRunning=false;
+
+    if(navCheckAgain){
+      navCheckAgain=false;
+      updateImamNavigation();
+    }
+  }
+}
+
 showHadith();
 
-/* Start website */
+/* Start public website */
 (async()=>{
-  try{await loadMasjids();}
-  catch(e){
+  try{
+    await loadMasjids();
+  }catch(e){
     console.error(e);
     $("count").textContent="Connection error";
-    $("masjidList").replaceChildren(textElement("div","state","Masjid directory could not load. Check Supabase connection and SELECT policy."));
+    $("masjidList").replaceChildren(
+      textElement(
+        "div",
+        "state",
+        "Masjid directory could not load. Check Supabase connection and SELECT policy."
+      )
+    );
   }
-  try{await updatePrayerTimes();}
-  catch(e){
+
+  try{
+    await updatePrayerTimes();
+  }catch(e){
     console.error(e);
     $("timingStatus").textContent="● Timings unavailable";
-    $("prayerGrid").replaceChildren(textElement("div","state","Prayer timings could not load. Try again later."));
+    $("prayerGrid").replaceChildren(
+      textElement(
+        "div",
+        "state",
+        "Prayer timings could not load. Try again later."
+      )
+    );
   }
+
+  await updateImamNavigation();
 })();
-setInterval(()=>updatePrayerTimes().catch(console.error),6*60*60*1000);
+
+setInterval(()=>{
+  updatePrayerTimes().catch(console.error);
+},6*60*60*1000);
+
 document.addEventListener("visibilitychange",()=>{
-  if(!document.hidden){updateClock();updatePrayerTimes().catch(console.error);}
+  if(!document.hidden){
+    updateClock();
+    updatePrayerTimes().catch(console.error);
+    updateImamNavigation();
+  }
+});
+
+/* Re-check navigation when the auth session changes. */
+client.auth.onAuthStateChange(()=>{
+  setTimeout(()=>{
+    updateImamNavigation();
+  },0);
 });
 </script>
 </body>
