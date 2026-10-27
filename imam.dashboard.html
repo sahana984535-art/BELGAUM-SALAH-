@@ -1,0 +1,169 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Imam Dashboard | Belgaum Salah</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6f2;color:#17362d;font:15px Arial,sans-serif}
+header{background:#032f29;color:white;padding:18px}
+main{max-width:850px;margin:25px auto;padding:0 14px}
+.card{background:white;border:1px solid #dce8e0;border-radius:15px;padding:22px;margin-bottom:18px}
+input{width:100%;padding:12px;border:1px solid #ccdcd1;border-radius:8px;font:inherit;margin:5px 0 12px}
+button,.link{display:inline-block;padding:11px 15px;border:0;border-radius:9px;background:#075b49;color:white;font-weight:bold;cursor:pointer;text-decoration:none;margin:4px 5px 4px 0}
+.secondary{background:#e8f1eb;color:#075b49}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.item{border:1px solid #dce8e0;padding:13px;border-radius:10px}
+.status{padding:12px;border-radius:9px;background:#fff5db;white-space:pre-wrap;line-height:1.6}
+.hidden{display:none!important}.muted{color:#687d74;line-height:1.6}
+@media(max-width:580px){.grid{grid-template-columns:1fr}.card{padding:15px}}
+</style>
+</head>
+<body>
+<header>
+<h2>🕌 Belgaum Salah — Imam Dashboard</h2>
+<div>Manage timings for your assigned masjid</div>
+</header>
+<main>
+<section id="loadingCard" class="card">
+<h2>Verifying access...</h2><p class="muted">Checking your account and assigned masjid.</p>
+</section>
+
+<section id="dashboard" class="hidden">
+<div class="card">
+<a href="./index.html" class="link">← Home Page</a>
+<button id="refreshBtn" class="secondary">Refresh</button>
+<button id="logoutBtn">Sign Out</button>
+<div id="message" class="status">Loading masjid...</div>
+</div>
+
+<div class="card">
+<h2 id="masjidName">Assigned Masjid</h2>
+<p id="masjidAddress" class="muted"></p>
+<p class="muted">You can change only the azaan and jamaat times of your assigned masjid.</p>
+<form id="timingForm">
+<div class="grid" id="timingFields"></div>
+<button id="saveBtn" type="submit">Save Prayer Timings</button>
+</form>
+</div>
+</section>
+</main>
+
+<script>
+"use strict";
+const SUPABASE_URL="https://ziewfvsoktvawskimwqb.supabase.co";
+const SUPABASE_KEY="sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+let user=null,masjid=null;
+
+const prayers=[
+ ["Fajr","fajr_azaan","fajr_jamaat"],
+ ["Zuhr","zuhr_azaan","zuhr_jamaat"],
+ ["Asr","asr_azaan","asr_jamaat"],
+ ["Maghrib","maghrib_azaan","maghrib_jamaat"],
+ ["Isha","isha_azaan","isha_jamaat"]
+];
+
+function showMessage(text,error=false){
+  $("message").textContent=text;
+  $("message").style.background=error?"#ffeded":"#fff5db";
+}
+function makeTimeField(label,id,value){
+  const wrap=document.createElement("div");wrap.className="item";
+  const l=document.createElement("label");l.htmlFor=id;l.textContent=label;
+  const input=document.createElement("input");
+  input.type="time";input.id=id;input.value=value?String(value).slice(0,5):"";
+  wrap.append(l,input);return wrap;
+}
+function showDenied(text){
+  $("loadingCard").innerHTML="";
+  const h=document.createElement("h2");h.textContent="Access unavailable";
+  const p=document.createElement("p");p.className="status";p.textContent=text;
+  const a=document.createElement("a");a.className="link";
+  a.href="./imam.html";a.textContent="Go to Imam Login";
+  $("loadingCard").append(h,p,a);
+}
+
+async function loadAssignedMasjid(){
+  const {data:userData,error:userError}=await db.auth.getUser();
+  if(userError)throw userError;
+  user=userData.user;
+  if(!user)throw new Error("You are not signed in. Please sign in.");
+
+  const {data:profile,error:profileError}=await db.from("profiles")
+    .select("role,approved").eq("id",user.id).maybeSingle();
+  if(profileError)throw profileError;
+  if(profile?.role!=="imam"||profile.approved!==true)
+    throw new Error("Your account is not approved for Imam Dashboard.");
+
+  const {data:rows,error}=await db.from("Masjids")
+    .select("id,name,area,address,imam_id,fajr_azaan,fajr_jamaat,zuhr_azaan,zuhr_jamaat,asr_azaan,asr_jamaat,maghrib_azaan,maghrib_jamaat,isha_azaan,isha_jamaat")
+    .eq("imam_id",user.id);
+
+  if(error)throw error;
+  if(!rows||rows.length===0)
+    throw new Error("No masjid is assigned to your account yet. Please contact the administrator.");
+  if(rows.length>1)
+    throw new Error("More than one masjid is assigned to this account. Please ask the administrator to correct the assignment.");
+
+  masjid=rows[0];
+  $("masjidName").textContent=masjid.name||"Assigned Masjid";
+  $("masjidAddress").textContent=[masjid.area,masjid.address].filter(Boolean).join(" · ");
+  const fields=$("timingFields");fields.replaceChildren();
+  prayers.forEach(([name,a,j])=>{
+    fields.append(
+      makeTimeField(name+" — Azaan",a,masjid[a]),
+      makeTimeField(name+" — Jamaat",j,masjid[j])
+    );
+  });
+  $("loadingCard").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
+  showMessage("Access verified. Check timings carefully before saving.");
+}
+
+$("timingForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  const btn=$("saveBtn");btn.disabled=true;btn.textContent="Saving...";
+  try{
+    if(!user||!masjid)throw new Error("Dashboard is not ready. Refresh and try again.");
+    const patch={};
+    prayers.forEach(([name,a,j])=>{
+      patch[a]=$(`${a}`).value||null;
+      patch[j]=$(`${j}`).value||null;
+    });
+
+    // Both the masjid ID and Imam ID are restricted in the update query.
+    const {data,error}=await db.from("Masjids")
+      .update(patch)
+      .eq("id",masjid.id)
+      .eq("imam_id",user.id)
+      .select("id");
+
+    if(error)throw error;
+    if(!data||data.length!==1)
+      throw new Error("No timing changes saved. Confirm assignment and database update policies.");
+    showMessage("Prayer timings saved successfully.");
+    await loadAssignedMasjid();
+  }catch(e){showMessage("Save failed: "+e.message,true);}
+  finally{btn.disabled=false;btn.textContent="Save Prayer Timings";}
+});
+
+$("refreshBtn").onclick=async()=>{
+  try{await loadAssignedMasjid();showMessage("Timings refreshed.");}
+  catch(e){showMessage(e.message,true);}
+};
+$("logoutBtn").onclick=async()=>{
+  await db.auth.signOut();
+  location.href="./imam.html";
+};
+
+(async()=>{
+  try{await loadAssignedMasjid();}
+  catch(e){showDenied(e.message);}
+})();
+</script>
+</body>
+</html>
