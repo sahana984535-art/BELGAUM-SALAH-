@@ -2,1198 +2,208 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Belgaum Salah | Admin Dashboard</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Imam Approval Admin | Belgaum Salah</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root {
-  --green:#073d32;
-  --green2:#0b5947;
-  --gold:#d9b76b;
-  --bg:#f3f7f4;
-  --white:#fff;
-  --text:#183128;
-  --muted:#718078;
-  --line:#e1e9e3;
-  --red:#a62a22;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0;
-  font:14px/1.5 system-ui,-apple-system,Segoe UI,Arial,sans-serif;
-  color:var(--text);
-  background:var(--bg);
-}
-button,input,select,textarea { font:inherit; }
-button { cursor:pointer; }
-.hidden { display:none!important; }
-
-.btn {
-  border:0;
-  border-radius:9px;
-  padding:9px 13px;
-  font-weight:700;
-}
-.primary { background:var(--green); color:white; }
-.light { background:#e9f1eb; color:var(--green); }
-.gold { background:#fff1ce; color:#70521a; }
-.danger { background:#fff0ee; color:var(--red); }
-.small { padding:6px 9px; font-size:12px; }
-.full { width:100%; }
-
-.muted { color:var(--muted); font-size:12px; }
-.field { display:grid; gap:5px; margin:12px 0; }
-.field label { font-size:12px; font-weight:750; color:#52645b; }
-.field input,.field select,.field textarea {
-  width:100%;
-  padding:10px 11px;
-  border:1px solid #d5e1d9;
-  border-radius:9px;
-  background:white;
-  color:var(--text);
-}
-.field input:focus,.field select:focus,.field textarea:focus {
-  outline:2px solid #d0e4d6;
-  border-color:var(--green2);
-}
-.error {
-  margin-top:12px;
-  padding:10px;
-  background:#fff0ef;
-  color:#9f251d;
-  border-radius:9px;
-}
-.notice {
-  background:#fff8e7;
-  border:1px solid #eedfb7;
-  padding:12px;
-  border-radius:10px;
-  color:#715b27;
-  font-size:12px;
-  margin-bottom:17px;
-}
-
-/* Login */
-.login-screen {
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  padding:20px;
-  background:radial-gradient(circle at top right,#dce9d8,transparent 45%),var(--bg);
-}
-.login-card {
-  width:min(420px,100%);
-  background:white;
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:27px;
-  box-shadow:0 12px 32px #123d2d12;
-}
-.logo {
-  width:48px;
-  height:48px;
-  display:grid;
-  place-items:center;
-  border-radius:14px;
-  background:var(--green);
-  color:var(--gold);
-  font-size:25px;
-}
-.login-card h1 { margin:14px 0 2px; font-size:24px; }
-
-/* Dashboard layout */
-.app {
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:235px minmax(0,1fr);
-}
-.sidebar {
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-  padding:20px 14px;
-  color:white;
-  background:linear-gradient(180deg,#062f28,#0a4b3b);
-}
-.brand {
-  padding:8px;
-  font-size:16px;
-  font-weight:800;
-}
-.brand small {
-  display:block;
-  color:#bfd3c8;
-  font-size:10px;
-  letter-spacing:1px;
-  font-weight:500;
-}
-.nav-label {
-  padding:0 11px;
-  color:#a8c5b8;
-  font-size:10px;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  margin-bottom:7px;
-}
-.nav { display:grid; gap:5px; }
-.nav button {
-  width:100%;
-  border:0;
-  border-radius:9px;
-  padding:11px;
-  text-align:left;
-  background:transparent;
-  color:#dce9e1;
-}
-.nav button.active,.nav button:hover {
-  background:#ffffff18;
-  color:white;
-}
-.nav button span { color:var(--gold); margin-right:9px; }
-.sidebar-bottom {
-  margin-top:auto;
-  padding:12px 8px;
-  color:#b8d0c4;
-  font-size:11px;
-  border-top:1px solid #ffffff20;
-}
-.main { min-width:0; }
-.topbar {
-  min-height:72px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:12px 24px;
-  background:white;
-  border-bottom:1px solid var(--line);
-}
-.topbar h2 { margin:0; font-size:17px; }
-.account { display:flex; align-items:center; gap:10px; }
-.avatar {
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:#e6f0e9;
-  color:var(--green);
-  font-weight:800;
-}
-.content { max-width:1450px; margin:auto; padding:24px; }
-.page-head {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:18px;
-}
-.page-head h1 { font-size:25px; margin:0 0 3px; }
-.page-head p { margin:0; }
-
-/* Overview cards */
-.stats {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:12px;
-  margin-bottom:19px;
-}
-.stat {
-  background:white;
-  border:1px solid var(--line);
-  border-radius:13px;
-  padding:17px;
-}
-.stat span { color:var(--muted); font-size:12px; }
-.stat strong { display:block; font-size:28px; margin-top:8px; }
-
-/* Tables and panels */
-.panel {
-  background:white;
-  border:1px solid var(--line);
-  border-radius:13px;
-  overflow:hidden;
-  margin-bottom:18px;
-}
-.panel-head {
-  padding:15px 17px;
-  border-bottom:1px solid var(--line);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
-}
-.panel-head h3 { font-size:15px; margin:0; }
-.toolbar { display:flex; gap:8px; flex-wrap:wrap; }
-.toolbar input,.toolbar select {
-  min-width:150px;
-  padding:8px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:white;
-}
-.table-wrap { overflow:auto; }
-table { width:100%; border-collapse:collapse; min-width:650px; }
-th,td {
-  padding:12px 14px;
-  text-align:left;
-  border-bottom:1px solid #edf1ee;
-  font-size:12px;
-  vertical-align:middle;
-}
-th {
-  background:#fafcfb;
-  color:var(--muted);
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.6px;
-}
-tr:last-child td { border-bottom:0; }
-.name { font-weight:750; }
-.sub { display:block; color:var(--muted); font-size:11px; }
-.actions { display:flex; gap:5px; flex-wrap:wrap; }
-.badge {
-  display:inline-block;
-  border-radius:20px;
-  padding:4px 8px;
-  font-size:10px;
-  font-weight:800;
-  background:#e5f5e9;
-  color:#23633a;
-}
-.badge.pending { background:#fff2d2; color:#7a5b1b; }
-.empty { padding:25px; text-align:center; color:var(--muted); }
-
-/* Modal forms */
-.form-grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0 13px;
-}
-.span-2 { grid-column:1/-1; }
-.modal-backdrop {
-  position:fixed;
-  inset:0;
-  z-index:10;
-  display:grid;
-  place-items:center;
-  padding:16px;
-  overflow:auto;
-  background:#09271fc9;
-}
-.modal {
-  width:min(720px,100%);
-  max-height:94vh;
-  overflow:auto;
-  background:white;
-  border-radius:16px;
-  padding:20px;
-}
-.modal-head {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid var(--line);
-  padding-bottom:12px;
-}
-.modal-head h3 { margin:0; font-size:17px; }
-.modal-foot {
-  grid-column:1/-1;
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  border-top:1px solid var(--line);
-  padding-top:14px;
-  margin-top:12px;
-}
-.toast {
-  position:fixed;
-  z-index:20;
-  right:20px;
-  bottom:20px;
-  max-width:85vw;
-  padding:12px 16px;
-  border-radius:10px;
-  color:white;
-  background:#123e31;
-  box-shadow:0 8px 24px #0002;
-}
-.toast.bad { background:#a32a21; }
-
-@media(max-width:950px) {
-  .app { grid-template-columns:195px minmax(0,1fr); }
-  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .content { padding:17px; }
-}
-@media(max-width:650px) {
-  .app { display:block; }
-  .sidebar { min-height:0; padding:10px; gap:8px; }
-  .brand { padding:4px; }
-  .nav-label,.sidebar-bottom { display:none; }
-  .nav { display:flex; overflow:auto; }
-  .nav button { white-space:nowrap; width:auto; }
-  .topbar { padding:12px; }
-  .content { padding:12px; }
-  .page-head h1 { font-size:21px; }
-  .stats { gap:8px; }
-  .stat { padding:12px; }
-  .stat strong { font-size:23px; }
-  .form-grid { grid-template-columns:1fr; }
-  .span-2,.modal-foot { grid-column:auto; }
-}
+body{margin:0;background:#f3f7f4;color:#18362e;font-family:Arial,sans-serif}
+header{background:#043d32;color:white;padding:20px}
+main{max-width:1000px;margin:25px auto;padding:16px}
+.card,.request{background:white;border:1px solid #dce8e0;border-radius:14px;padding:20px;margin:14px 0}
+input,select{font:inherit;padding:12px;border:1px solid #ccdcd1;border-radius:8px;width:100%;box-sizing:border-box;margin:7px 0 12px}
+button{padding:12px 15px;border:0;border-radius:8px;background:#075b49;color:white;font-weight:bold;cursor:pointer;margin:5px 5px 5px 0}
+.secondary{background:#e8f1eb;color:#075b49}
+.danger{background:#a52b25}
+.muted{color:#687d74;white-space:pre-wrap;line-height:1.6}
+.status{background:#fff7e5;padding:12px;border-radius:8px;white-space:pre-wrap}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
+<header>
+  <h2>🕌 Belgaum Salah — Admin Approvals</h2>
+</header>
 
-<!-- LOGIN -->
-<section id="loginScreen" class="login-screen">
-  <div class="login-card">
-    <div class="logo">🕌</div>
-    <h1>Belgaum Salah</h1>
-    <p class="muted">Secure administrator sign in</p>
+<main>
+<section id="login" class="card">
+  <h2>Admin Sign In</h2>
+  <p class="muted">Use your existing approved administrator account.</p>
+  <form id="loginForm">
+    <label>Email</label>
+    <input id="email" type="email" required>
+    <label>Password</label>
+    <input id="password" type="password" required>
+    <button type="submit">Sign In</button>
+  </form>
+  <p id="loginStatus" class="status hidden"></p>
+</section>
 
-    <form id="loginForm">
-      <div class="field">
-        <label for="loginEmail">Admin email</label>
-        <input id="loginEmail" type="email" autocomplete="username" required>
-      </div>
-      <div class="field">
-        <label for="loginPassword">Password</label>
-        <input id="loginPassword" type="password" autocomplete="current-password" required>
-      </div>
-      <button class="btn primary full" type="submit">Sign in to dashboard</button>
-    </form>
-
-    <div id="loginMessage" aria-live="polite"></div>
-    <p class="muted" style="margin-top:18px">
-      Only an approved account with the admin role can enter.
-    </p>
+<section id="panel" class="hidden">
+  <div class="card">
+    <h2>Pending Imam Applications</h2>
+    <p class="muted">This page checks for requests every 20 seconds while open.</p>
+    <div id="status" class="status">Loading...</div>
+    <button id="refresh" type="button">Refresh Requests</button>
+    <button id="logout" class="secondary" type="button">Sign Out</button>
   </div>
+  <div id="requests"></div>
 </section>
-
-<!-- ADMIN APPLICATION -->
-<section id="adminApp" class="app hidden">
-  <aside class="sidebar">
-    <div class="brand">🕌 Belgaum Salah<small>ADMIN CONSOLE</small></div>
-
-    <div>
-      <div class="nav-label">Workspace</div>
-      <nav class="nav" id="navigation">
-        <button class="active" data-page="overview"><span>▦</span>Overview</button>
-        <button data-page="masjids"><span>⌂</span>Masjids</button>
-        <button data-page="imams"><span>♙</span>Imams & access</button>
-        <button data-page="timings"><span>◷</span>Prayer timings</button>
-      </nav>
-    </div>
-
-    <div class="sidebar-bottom">Belagavi, Karnataka<br>Admin workspace</div>
-  </aside>
-
-  <main class="main">
-    <header class="topbar">
-      <div>
-        <h2 id="topTitle">Overview</h2>
-        <span class="muted">Manage the directory and prayer information</span>
-      </div>
-      <div class="account">
-        <div class="avatar">A</div>
-        <div>
-          <strong id="adminEmail" style="font-size:12px"></strong>
-          <div class="muted">Administrator</div>
-        </div>
-        <button id="signOutButton" class="btn light small">Sign out</button>
-      </div>
-    </header>
-
-    <div class="content">
-      <div class="notice">
-        Changes affect the public directory. Verify prayer times with the respective masjid.
-        Database RLS policies are required for actual security.
-      </div>
-
-      <!-- OVERVIEW -->
-      <section id="page-overview" class="page">
-        <div class="page-head">
-          <div><h1>Dashboard overview</h1><p class="muted">A quick view of your directory.</p></div>
-          <button id="refreshButton" class="btn primary">↻ Refresh data</button>
-        </div>
-        <div class="stats">
-          <div class="stat"><span>Total masjids</span><strong id="statMasjids">—</strong></div>
-          <div class="stat"><span>Imam accounts</span><strong id="statImams">—</strong></div>
-          <div class="stat"><span>Pending approvals</span><strong id="statPending">—</strong></div>
-          <div class="stat"><span>Assigned masjids</span><strong id="statAssigned">—</strong></div>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><h3>Masjid directory preview</h3><button class="btn light small" data-goto="masjids">View all →</button></div>
-          <div id="recentMasjids" class="table-wrap"><div class="empty">Loading…</div></div>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><h3>Pending Imam approvals</h3><button class="btn light small" data-goto="imams">Review →</button></div>
-          <div id="pendingPreview"><div class="empty">Loading…</div></div>
-        </div>
-      </section>
-
-      <!-- MASJIDS -->
-      <section id="page-masjids" class="page hidden">
-        <div class="page-head">
-          <div><h1>Masjid directory</h1><p class="muted">Add, edit, assign or remove masjids.</p></div>
-          <button id="addMasjidButton" class="btn primary">＋ Add masjid</button>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><h3>All masjids</h3><div class="toolbar">
-            <input id="masjidSearch" type="search" placeholder="Search name or area…">
-            <button id="masjidRefresh" class="btn light small">Refresh</button>
-          </div></div>
-          <div id="masjidsTable" class="table-wrap"></div>
-        </div>
-      </section>
-
-      <!-- IMAMS -->
-      <section id="page-imams" class="page hidden">
-        <div class="page-head">
-          <div><h1>Imams & account access</h1><p class="muted">Approve accounts and assign masjids.</p></div>
-          <button id="imamsRefresh" class="btn light">↻ Refresh</button>
-        </div>
-        <div class="notice">
-          This page manages existing profiles. Create Auth accounts through Supabase Authentication.
-          Never save passwords in the profiles table.
-        </div>
-        <div class="panel">
-          <div class="panel-head"><h3>Imam accounts</h3><div class="toolbar">
-            <select id="imamFilter">
-              <option value="all">All accounts</option>
-              <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-            </select>
-            <input id="imamSearch" type="search" placeholder="Search email…">
-          </div></div>
-          <div id="imamsTable" class="table-wrap"></div>
-        </div>
-      </section>
-
-      <!-- TIMINGS -->
-      <section id="page-timings" class="page hidden">
-        <div class="page-head">
-          <div><h1>Prayer timings</h1><p class="muted">Edit Azaan and Jamaat times for each masjid.</p></div>
-          <button id="timingsRefresh" class="btn light">↻ Refresh</button>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><h3>Timing records</h3><div class="toolbar">
-            <input id="timingSearch" type="search" placeholder="Search masjid or area…">
-          </div></div>
-          <div id="timingsTable" class="table-wrap"></div>
-        </div>
-      </section>
-    </div>
-  </main>
-</section>
-
-<div id="modalHost"></div>
-<div id="toastHost" aria-live="polite"></div>
-<!-- Part 2 continues here -->
-</body>
-</html>
+</main>
 
 <script>
-"use strict";
+const SUPABASE_URL='https://ziewfvsoktvawskimwqb.supabase.co';
+const SUPABASE_KEY='sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+let timer=null;
 
-/* Use only the Supabase publishable key in browser code.
-   Never put a service_role or secret key here. */
-const SUPABASE_URL = "https://ziewfvsoktvawskimwqb.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY,
-  { auth: { persistSession: true, autoRefreshToken: true } }
-);
-
-const $ = id => document.getElementById(id);
-
-const TIMINGS = [
-  ["fajr_azaan", "Fajr Azaan"],
-  ["fajr_jamaat", "Fajr Jamaat"],
-  ["zuhr_azaan", "Zuhr Azaan"],
-  ["zuhr_jamaat", "Zuhr Jamaat"],
-  ["asr_azaan", "Asr Azaan"],
-  ["asr_jamaat", "Asr Jamaat"],
-  ["maghrib_azaan", "Maghrib Azaan"],
-  ["maghrib_jamaat", "Maghrib Jamaat"],
-  ["isha_azaan", "Isha Azaan"],
-  ["isha_jamaat", "Isha Jamaat"]
-];
-
-const PAGE_TITLES = {
-  overview: "Overview",
-  masjids: "Masjids",
-  imams: "Imams & access",
-  timings: "Prayer timings"
-};
-
-let currentUser = null;
-let masjids = [];
-let profiles = [];
-
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[ch]);
-}
-
-function toast(message, bad = false) {
-  $("toastHost").innerHTML =
-    `<div class="toast ${bad ? "bad" : ""}">${esc(message)}</div>`;
-  setTimeout(() => $("toastHost").replaceChildren(), 4000);
-}
-
-function showLoginError(message) {
-  $("loginMessage").innerHTML =
-    `<div class="error">${esc(message)}</div>`;
-}
-
-function emailFor(userId) {
-  return profiles.find(p => p.id === userId)?.email || "Unassigned";
-}
-
-function showPage(page) {
-  if (!PAGE_TITLES[page]) return;
-
-  document.querySelectorAll(".page").forEach(section => {
-    section.classList.add("hidden");
-  });
-
-  $("page-" + page).classList.remove("hidden");
-
-  document.querySelectorAll("#navigation button").forEach(button => {
-    button.classList.toggle("active", button.dataset.page === page);
-  });
-
-  $("topTitle").textContent = PAGE_TITLES[page];
-}
-
-document.querySelectorAll("#navigation button").forEach(button => {
-  button.addEventListener("click", () => showPage(button.dataset.page));
-});
-
-document.querySelectorAll("[data-goto]").forEach(button => {
-  button.addEventListener("click", () => showPage(button.dataset.goto));
-});
-
-/* Check the signed-in user's existing profile. */
-async function enterDashboard(user) {
-  const { data: profile, error } = await db
-    .from("profiles")
-    .select("id,email,role,approved")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (error) throw error;
-
-  if (
-    !profile ||
-    profile.role !== "admin" ||
-    profile.approved !== true
-  ) {
-    await db.auth.signOut();
-    throw new Error(
-      "This account is not an approved admin. Check the profiles table."
-    );
-  }
-
-  currentUser = user;
-  $("adminEmail").textContent = profile.email || user.email || "Admin";
-  $("loginScreen").classList.add("hidden");
-  $("adminApp").classList.remove("hidden");
-
-  await refreshAll();
-}
-
-/* Login form */
-$("loginForm").addEventListener("submit", async event => {
+$('loginForm').addEventListener('submit',async event=>{
   event.preventDefault();
-  $("loginMessage").replaceChildren();
+  $('loginStatus').classList.add('hidden');
 
-  const button = event.currentTarget.querySelector("button[type='submit']") ||
-                 event.currentTarget.querySelector("button");
-  button.disabled = true;
-  button.textContent = "Signing in…";
-
-  try {
-    const { data, error } = await db.auth.signInWithPassword({
-      email: $("loginEmail").value.trim(),
-      password: $("loginPassword").value
+  try{
+    const {data,error}=await db.auth.signInWithPassword({
+      email:$('email').value.trim(),
+      password:$('password').value
     });
+    if(error) throw error;
 
-    if (error) throw error;
-    await enterDashboard(data.user);
-  } catch (error) {
-    showLoginError(error.message || "Unable to sign in.");
-  } finally {
-    button.disabled = false;
-    button.textContent = "Sign in to dashboard";
+    const {data:profile,error:profileError}=await db
+      .from('profiles')
+      .select('role,approved')
+      .eq('id',data.user.id)
+      .maybeSingle();
+
+    if(profileError) throw profileError;
+
+    if(profile?.role!=='admin'||profile?.approved!==true){
+      await db.auth.signOut();
+      throw new Error('This account is not an approved admin.');
+    }
+
+    $('login').classList.add('hidden');
+    $('panel').classList.remove('hidden');
+    await loadRequests();
+    timer=setInterval(loadRequests,20000);
+  }catch(error){
+    $('loginStatus').textContent=error.message;
+    $('loginStatus').classList.remove('hidden');
   }
 });
 
-$("signOutButton").addEventListener("click", async () => {
-  const { error } = await db.auth.signOut();
-  if (error) {
-    toast("Sign out failed: " + error.message, true);
-    return;
-  }
-
-  currentUser = null;
-  $("adminApp").classList.add("hidden");
-  $("loginScreen").classList.remove("hidden");
-  $("loginPassword").value = "";
-});
-
-/* Load the two existing tables. */
-async function refreshAll() {
-  try {
-    const [masjidResult, profileResult] = await Promise.all([
-      db.from("Masjids").select("*").order("name", { ascending: true }),
-      db.from("profiles")
-        .select("id,email,role,approved,created_at")
-        .order("created_at", { ascending: false })
-    ]);
-
-    if (masjidResult.error) throw masjidResult.error;
-    if (profileResult.error) throw profileResult.error;
-
-    masjids = masjidResult.data || [];
-    profiles = profileResult.data || [];
-
-    renderOverview();
-    renderMasjids();
-    renderImams();
-    renderTimings();
-  } catch (error) {
-    console.error("Dashboard load error:", error);
-    toast("Could not load data: " + error.message, true);
-  }
-}
-
-function makeTable(headers, rows) {
-  if (!rows.length) {
-    return '<div class="empty">No records found.</div>';
-  }
-
-  return `
-    <table>
-      <thead><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr></thead>
-      <tbody>
-        ${rows.map(row =>
-          `<tr>${row.map(cell => `<td>${cell}</td>`).join("")}</tr>`
-        ).join("")}
-      </tbody>
-    </table>`;
-}
-
-/* Overview cards and previews */
-function renderOverview() {
-  const imams = profiles.filter(p => p.role === "imam");
-  const pending = imams.filter(p => p.approved !== true);
-
-  $("statMasjids").textContent = masjids.length;
-  $("statImams").textContent = imams.length;
-  $("statPending").textContent = pending.length;
-  $("statAssigned").textContent = masjids.filter(m => m.imam_id).length;
-
-  $("recentMasjids").innerHTML = makeTable(
-    ["Masjid", "Area", "Assigned Imam", "Action"],
-    masjids.slice(0, 5).map(m => [
-      `<span class="name">${esc(m.name)}</span>`,
-      esc(m.area || "—"),
-      esc(emailFor(m.imam_id)),
-      `<button class="btn light small" data-edit-masjid="${esc(m.id)}">Edit</button>`
-    ])
-  );
-
-  $("pendingPreview").innerHTML = makeTable(
-    ["Imam email", "Status", "Action"],
-    pending.slice(0, 5).map(p => [
-      esc(p.email || p.id),
-      '<span class="badge pending">Pending</span>',
-      `<button class="btn primary small" data-approve="${esc(p.id)}">Approve</button>`
-    ])
-  );
-
-  $("recentMasjids").querySelectorAll("[data-edit-masjid]").forEach(button => {
-    button.addEventListener("click", () => openMasjidModal(button.dataset.editMasjid));
-  });
-
-  $("pendingPreview").querySelectorAll("[data-approve]").forEach(button => {
-    button.addEventListener("click", () => updateApproval(button.dataset.approve, true));
-  });
-}
-
-/* Masjid list */
-function renderMasjids() {
-  const query = $("masjidSearch").value.toLowerCase().trim();
-
-  const filtered = masjids.filter(m =>
-    [m.name, m.area, m.address].some(value =>
-      String(value || "").toLowerCase().includes(query)
-    )
-  );
-
-  $("masjidsTable").innerHTML = makeTable(
-    ["Masjid", "Area / address", "Assigned Imam", "Timings", "Actions"],
-    filtered.map(m => [
-      `<span class="name">${esc(m.name)}</span><span class="sub">ID: ${esc(m.id)}</span>`,
-      `${esc(m.area || "—")}<span class="sub">${esc(m.address || "")}</span>`,
-      esc(emailFor(m.imam_id)),
-      `${TIMINGS.filter(([key]) => m[key]).length}/10 filled`,
-      `<div class="actions">
-        <button class="btn light small" data-edit-masjid="${esc(m.id)}">Edit</button>
-        <button class="btn gold small" data-edit-timings="${esc(m.id)}">Timings</button>
-        <button class="btn danger small" data-delete-masjid="${esc(m.id)}">Delete</button>
-      </div>`
-    ])
-  );
-
-  $("masjidsTable").querySelectorAll("[data-edit-masjid]").forEach(button => {
-    button.addEventListener("click", () => openMasjidModal(button.dataset.editMasjid));
-  });
-
-  $("masjidsTable").querySelectorAll("[data-edit-timings]").forEach(button => {
-    button.addEventListener("click", () => openTimingModal(button.dataset.editTimings));
-  });
-
-  $("masjidsTable").querySelectorAll("[data-delete-masjid]").forEach(button => {
-    button.addEventListener("click", () => deleteMasjid(button.dataset.deleteMasjid));
-  });
-}
-
-/* Imam account list */
-function renderImams() {
-  const query = $("imamSearch").value.toLowerCase().trim();
-  const filter = $("imamFilter").value;
-
-  const filtered = profiles.filter(p => {
-    if (p.role !== "imam") return false;
-    if (!String(p.email || "").toLowerCase().includes(query)) return false;
-    if (filter === "pending" && p.approved === true) return false;
-    if (filter === "approved" && p.approved !== true) return false;
-    return true;
-  });
-
-  $("imamsTable").innerHTML = makeTable(
-    ["Imam account", "Approval", "Assigned masjid", "Actions"],
-    filtered.map(p => {
-      const assigned = masjids
-        .filter(m => m.imam_id === p.id)
-        .map(m => m.name)
-        .join(", ");
-
-      return [
-        `<span class="name">${esc(p.email || "No email")}</span>
-         <span class="sub">${esc(p.id)}</span>`,
-        p.approved === true
-          ? '<span class="badge">Approved</span>'
-          : '<span class="badge pending">Pending</span>',
-        esc(assigned || "Not assigned"),
-        `<div class="actions">
-          <button class="btn ${p.approved === true ? "light" : "primary"} small"
-            data-approval="${esc(p.id)}"
-            data-approved="${p.approved === true ? "false" : "true"}">
-            ${p.approved === true ? "Revoke" : "Approve"}
-          </button>
-          <button class="btn gold small" data-assign-imam="${esc(p.id)}">Assign masjid</button>
-        </div>`
-      ];
-    })
-  );
-
-  $("imamsTable").querySelectorAll("[data-approval]").forEach(button => {
-    button.addEventListener("click", () =>
-      updateApproval(
-        button.dataset.approval,
-        button.dataset.approved === "true"
-      )
-    );
-  });
-
-  $("imamsTable").querySelectorAll("[data-assign-imam]").forEach(button => {
-    button.addEventListener("click", () => openAssignModal(button.dataset.assignImam));
-  });
-}
-
-/* Prayer timings table */
-function renderTimings() {
-  const query = $("timingSearch").value.toLowerCase().trim();
-  const filtered = masjids.filter(m =>
-    [m.name, m.area].some(value =>
-      String(value || "").toLowerCase().includes(query)
-    )
-  );
-
-  const prayers = [
-    ["fajr_azaan", "fajr_jamaat"],
-    ["zuhr_azaan", "zuhr_jamaat"],
-    ["asr_azaan", "asr_jamaat"],
-    ["maghrib_azaan", "maghrib_jamaat"],
-    ["isha_azaan", "isha_jamaat"]
-  ];
-
-  $("timingsTable").innerHTML = makeTable(
-    ["Masjid", "Fajr", "Zuhr", "Asr", "Maghrib", "Isha", "Action"],
-    filtered.map(m => [
-      `<span class="name">${esc(m.name)}</span><span class="sub">${esc(m.area || "")}</span>`,
-      ...prayers.map(pair =>
-        `${esc(m[pair[0]] || "—")}<span class="sub">Jamaat: ${esc(m[pair[1]] || "—")}</span>`
-      ),
-      `<button class="btn primary small" data-edit-timings="${esc(m.id)}">Edit</button>`
-    ])
-  );
-
-  $("timingsTable").querySelectorAll("[data-edit-timings]").forEach(button => {
-    button.addEventListener("click", () => openTimingModal(button.dataset.editTimings));
-  });
-}
-
-/* Refresh buttons and search filters */
-$("refreshButton").addEventListener("click", refreshAll);
-$("masjidRefresh").addEventListener("click", refreshAll);
-$("imamsRefresh").addEventListener("click", refreshAll);
-$("timingsRefresh").addEventListener("click", refreshAll);
-
-$("masjidSearch").addEventListener("input", renderMasjids);
-$("imamSearch").addEventListener("input", renderImams);
-$("imamFilter").addEventListener("change", renderImams);
-$("timingSearch").addEventListener("input", renderTimings);
-
-/* Part 3 continues here */
-
-/* Modal helpers */
-function openModal(title, content) {
-  $("modalHost").innerHTML = `
-    <div class="modal-backdrop" id="modalBackdrop">
-      <section class="modal" role="dialog" aria-modal="true">
-        <div class="modal-head">
-          <h3>${esc(title)}</h3>
-          <button type="button" class="btn light small" id="closeModal">✕</button>
-        </div>
-        ${content}
-      </section>
-    </div>`;
-
-  $("closeModal").addEventListener("click", closeModal);
-
-  $("modalBackdrop").addEventListener("click", event => {
-    if (event.target.id === "modalBackdrop") closeModal();
-  });
-}
-
-function closeModal() {
-  $("modalHost").replaceChildren();
-}
-
-/* Add or edit a masjid */
-function openMasjidModal(id = null) {
-  const masjid = masjids.find(m => String(m.id) === String(id)) || {};
-
-  const approvedImams = profiles.filter(p =>
-    p.role === "imam" && p.approved === true
-  );
-
-  const imamOptions = approvedImams.map(p => `
-    <option value="${esc(p.id)}"
-      ${masjid.imam_id === p.id ? "selected" : ""}>
-      ${esc(p.email || p.id)}
-    </option>`).join("");
-
-  openModal(id ? "Edit masjid" : "Add masjid", `
-    <form id="masjidForm" class="form-grid">
-      <div class="field">
-        <label>Masjid name *</label>
-        <input name="name" required value="${esc(masjid.name || "")}">
-      </div>
-
-      <div class="field">
-        <label>Area</label>
-        <input name="area" value="${esc(masjid.area || "")}">
-      </div>
-
-      <div class="field span-2">
-        <label>Address</label>
-        <textarea name="address" rows="2">${esc(masjid.address || "")}</textarea>
-      </div>
-
-      <div class="field span-2">
-        <label>Google Maps link</label>
-        <input name="map_link" type="url"
-          placeholder="https://maps.google.com/…"
-          value="${esc(masjid.map_link || "")}">
-      </div>
-
-      <div class="field span-2">
-        <label>Assigned approved Imam</label>
-        <select name="imam_id">
-          <option value="">— Not assigned —</option>
-          ${imamOptions}
-        </select>
-      </div>
-
-      <div class="modal-foot">
-        <button type="button" id="cancelMasjid" class="btn light">Cancel</button>
-        <button type="submit" class="btn primary">Save masjid</button>
-      </div>
-    </form>
-  `);
-
-  $("cancelMasjid").addEventListener("click", closeModal);
-
-  $("masjidForm").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const button = form.querySelector('[type="submit"]');
-    button.disabled = true;
-
-    const values = new FormData(form);
-
-    const payload = {
-      name: String(values.get("name") || "").trim(),
-      area: String(values.get("area") || "").trim() || null,
-      address: String(values.get("address") || "").trim() || null,
-      map_link: String(values.get("map_link") || "").trim() || null,
-      imam_id: String(values.get("imam_id") || "").trim() || null
-    };
-
-    try {
-      const result = id
-        ? await db.from("Masjids").update(payload).eq("id", masjid.id)
-        : await db.from("Masjids").insert(payload);
-
-      if (result.error) throw result.error;
-
-      closeModal();
-      await refreshAll();
-      toast(id ? "Masjid updated successfully." : "Masjid added successfully.");
-    } catch (error) {
-      toast("Could not save masjid: " + error.message, true);
-      button.disabled = false;
-    }
-  });
-}
-
-$("addMasjidButton").addEventListener("click", () => openMasjidModal());
-
-/* Edit Azaan and Jamaat times */
-function openTimingModal(id) {
-  const masjid = masjids.find(m => String(m.id) === String(id));
-  if (!masjid) return;
-
-  openModal("Edit prayer timings", `
-    <p class="muted">${esc(masjid.name || "Masjid")}</p>
-
-    <form id="timingForm" class="form-grid">
-      ${TIMINGS.map(([key, label]) => `
-        <div class="field">
-          <label>${esc(label)}</label>
-          <input name="${key}" type="time"
-            value="${esc(String(masjid[key] || "").slice(0, 5))}">
-        </div>
-      `).join("")}
-
-      <div class="modal-foot">
-        <button type="button" id="cancelTimings" class="btn light">Cancel</button>
-        <button type="submit" class="btn primary">Save timings</button>
-      </div>
-    </form>
-  `);
-
-  $("cancelTimings").addEventListener("click", closeModal);
-
-  $("timingForm").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const button = form.querySelector('[type="submit"]');
-    button.disabled = true;
-
-    const values = new FormData(form);
-    const payload = {};
-
-    TIMINGS.forEach(([key]) => {
-      payload[key] = String(values.get(key) || "").trim() || null;
-    });
-
-    try {
-      const { error } = await db
-        .from("Masjids")
-        .update(payload)
-        .eq("id", masjid.id);
-
-      if (error) throw error;
-
-      closeModal();
-      await refreshAll();
-      toast("Prayer timings saved successfully.");
-    } catch (error) {
-      toast("Could not save timings: " + error.message, true);
-      button.disabled = false;
-    }
-  });
-}
-
-/* Delete masjid */
-async function deleteMasjid(id) {
-  const masjid = masjids.find(m => String(m.id) === String(id));
-  if (!masjid) return;
-
-  if (!confirm(`Delete "${masjid.name}"? This cannot be undone.`)) return;
-
-  try {
-    const { error } = await db
-      .from("Masjids")
-      .delete()
-      .eq("id", masjid.id);
-
-    if (error) throw error;
-
-    await refreshAll();
-    toast("Masjid deleted.");
-  } catch (error) {
-    toast("Could not delete masjid: " + error.message, true);
-  }
-}
-
-/* Approve or revoke an existing Imam profile */
-async function updateApproval(id, approved) {
-  const profile = profiles.find(p => p.id === id);
-
-  if (!profile || profile.role !== "imam") {
-    toast("This profile is not an Imam account.", true);
-    return;
-  }
-
-  const action = approved ? "Approve" : "Revoke approval for";
-
-  if (!confirm(`${action} ${profile.email || "this Imam"}?`)) return;
-
-  try {
-    const { error } = await db
-      .from("profiles")
-      .update({ approved })
-      .eq("id", profile.id)
-      .eq("role", "imam");
-
-    if (error) throw error;
-
-    await refreshAll();
-    toast(approved ? "Imam approved." : "Imam approval revoked.");
-  } catch (error) {
-    toast(
-      "Approval failed. Check the profiles UPDATE RLS policy: " +
-      error.message,
-      true
-    );
-  }
-}
-
-/* Assign an approved Imam to a masjid */
-function openAssignModal(profileId) {
-  const profile = profiles.find(p => p.id === profileId);
-  if (!profile) return;
-
-  const options = masjids.map(m => `
-    <option value="${esc(m.id)}"
-      ${m.imam_id === profileId ? "selected" : ""}>
-      ${esc(m.name || "Masjid")}
-      ${m.area ? " — " + esc(m.area) : ""}
-    </option>
-  `).join("");
-
-  openModal("Assign Imam to masjid", `
-    <p class="muted">${esc(profile.email || profile.id)}</p>
-    <form id="assignForm">
-      <div class="field">
-        <label>Select masjid</label>
-        <select name="masjid_id">
-          <option value="">— Remove current assignment —</option>
-          ${options}
-        </select>
-      </div>
-
-      <div class="notice">
-        Each masjid has one imam_id field. If an Imam is moved to another
-        masjid, their previous assignment will be cleared first.
-      </div>
-
-      <div class="modal-foot">
-        <button type="button" id="cancelAssign" class="btn light">Cancel</button>
-        <button type="submit" class="btn primary">Save assignment</button>
-      </div>
-    </form>
-  `);
-
-  $("cancelAssign").addEventListener("click", closeModal);
-
-  $("assignForm").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const button = event.currentTarget.querySelector('[type="submit"]');
-    button.disabled = true;
-
-    const values = new FormData(event.currentTarget);
-    const selectedMasjidId = String(values.get("masjid_id") || "");
-
-    try {
-      // Clear this Imam's previous assignment(s).
-      const previous = masjids.filter(m => m.imam_id === profileId);
-
-      for (const masjid of previous) {
-        const { error } = await db
-          .from("Masjids")
-          .update({ imam_id: null })
-          .eq("id", masjid.id);
-
-        if (error) throw error;
+async function loadRequests(){
+  $('status').textContent='Loading requests...';
+
+  try{
+    const {data:requests,error}=await db
+      .from('imam_signup_requests')
+      .select('*')
+      .eq('status','pending')
+      .order('created_at',{ascending:true});
+    if(error) throw error;
+
+    const {data:masjids,error:masjidError}=await db
+      .from('Masjids')
+      .select('id,name,area,address,imam_id')
+      .order('name');
+    if(masjidError) throw masjidError;
+
+    $('requests').replaceChildren();
+    $('status').textContent=requests.length
+      ?requests.length+' pending application(s).'
+      :'No pending applications.';
+
+    for(const r of requests){
+      const card=document.createElement('article');
+      card.className='request';
+
+      const title=document.createElement('h3');
+      title.textContent=r.imam_name+' — '+r.masjid_name;
+
+      const details=document.createElement('p');
+      details.className='muted';
+      details.textContent=
+        'Phone: '+r.phone+
+        '\nEmail: '+(r.email||'Not available')+
+        '\nArea: '+r.area+
+        '\nAddress: '+r.address+
+        '\nSubmitted: '+new Date(r.created_at).toLocaleString('en-IN');
+
+      const select=document.createElement('select');
+      const first=document.createElement('option');
+      first.value='';
+      first.textContent='Select masjid to assign...';
+      select.append(first);
+
+      for(const m of masjids){
+        const option=document.createElement('option');
+        option.value=m.id;
+        option.textContent=m.name+' — '+(m.area||'')+
+          (m.imam_id?' (already assigned)':'');
+        if(m.imam_id) option.disabled=true;
+        select.append(option);
       }
 
-      // Assign to the newly selected masjid.
-      if (selectedMasjidId) {
-        const { error } = await db
-          .from("Masjids")
-          .update({ imam_id: profileId })
-          .eq("id", selectedMasjidId);
+      const approve=document.createElement('button');
+      approve.textContent='Approve & Assign Masjid';
+      approve.onclick=async()=>{
+        if(!select.value){
+          alert('Please select an available masjid.');
+          return;
+        }
+        if(!confirm('Approve this Imam and assign the selected masjid?'))return;
+        approve.disabled=true;
 
-        if (error) throw error;
-      }
+        try{
+          const {error}=await db.rpc('admin_approve_imam_request',{
+            p_request_id:r.id,
+            p_masjid_id:select.value
+          });
+          if(error) throw error;
+          alert('Imam approved and masjid assigned.');
+          await loadRequests();
+        }catch(error){
+          alert('Approval failed: '+error.message);
+        }finally{
+          approve.disabled=false;
+        }
+      };
 
-      closeModal();
-      await refreshAll();
-      toast("Imam assignment updated.");
-    } catch (error) {
-      toast("Assignment failed: " + error.message, true);
-      button.disabled = false;
+      const reject=document.createElement('button');
+      reject.textContent='Reject Application';
+      reject.className='danger';
+      reject.onclick=async()=>{
+        const note=prompt('Reason (optional):')||'';
+        if(!confirm('Reject this application?'))return;
+        try{
+          const {error}=await db.rpc('admin_reject_imam_request',{
+            p_request_id:r.id,
+            p_note:note
+          });
+          if(error) throw error;
+          await loadRequests();
+        }catch(error){
+          alert('Reject failed: '+error.message);
+        }
+      };
+
+      card.append(title,details,select,approve,reject);
+      $('requests').append(card);
     }
-  });
+  }catch(error){
+    $('status').textContent=
+      'Could not load applications: '+error.message+
+      '\nCheck SQL setup, table permissions and admin role.';
+  }
 }
 
-/* Initial session check */
-(async function initialiseAdmin() {
-  try {
-    const { data, error } = await db.auth.getSession();
-    if (error) throw error;
-
-    if (data.session?.user) {
-      await enterDashboard(data.session.user);
-    }
-  } catch (error) {
-    showLoginError(error.message || "Please sign in again.");
-  }
-})();
+$('refresh').onclick=loadRequests;
+$('logout').onclick=async()=>{
+  if(timer)clearInterval(timer);
+  await db.auth.signOut();
+  location.reload();
+};
 </script>
 </body>
 </html>
