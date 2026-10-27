@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Imam Registration | Belgaum Salah</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f7f3;color:#18382e;font-family:Arial,sans-serif}
+header{background:#064534;color:white;padding:22px}
+main{max-width:760px;margin:25px auto;padding:15px}
+.card{background:white;border:1px solid #dbe7df;border-radius:15px;padding:22px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.full{grid-column:1/-1}
+input{width:100%;padding:12px;border:1px solid #ccd9d0;border-radius:8px;font-size:15px}
+button{padding:12px 16px;border:0;border-radius:8px;background:#075b47;color:white;font-weight:bold;cursor:pointer;margin:5px 4px 5px 0}
+.secondary{background:#e8f2eb;color:#075b47}
+.status{padding:12px;background:#fff7e6;border-radius:8px;white-space:pre-wrap;line-height:1.5}
+.hidden{display:none!important}
+@media(max-width:580px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header>
+<h2>🕌 Belgaum Salah</h2>
+Imam Registration Portal
+</header>
+<main>
+<section class="card" id="authCard">
+<h1>Imam Sign Up</h1>
+<p>Submit your details. Admin approval is required before dashboard access.</p>
+<div id="message" class="status hidden"></div>
+
+<form id="signupForm">
+<div class="grid">
+<div class="field">
+<label>Full Imam Name *</label>
+<input id="imamName" required maxlength="100">
+</div>
+<div class="field">
+<label>Phone Number *</label>
+<input id="phone" type="tel" required maxlength="20">
+</div>
+<div class="field full">
+<label>Requested Masjid Name *</label>
+<input id="masjidName" required maxlength="150">
+</div>
+<div class="field">
+<label>Area *</label>
+<input id="area" required maxlength="120">
+</div>
+<div class="field">
+<label>Full Address *</label>
+<input id="address" required maxlength="250">
+</div>
+<div class="field">
+<label>Email *</label>
+<input id="email" type="email" required>
+</div>
+<div class="field">
+<label>Password (minimum 8 characters) *</label>
+<input id="password" type="password" minlength="8" required>
+</div>
+</div>
+<button id="signupBtn" type="submit">Submit Registration</button>
+</form>
+
+<hr>
+<h2>Already Registered?</h2>
+<form id="loginForm">
+<div class="field">
+<label>Email</label>
+<input id="loginEmail" type="email" required>
+</div>
+<div class="field">
+<label>Password</label>
+<input id="loginPassword" type="password" required>
+</div>
+<button type="submit">Sign In / Check Status</button>
+</form>
+</section>
+
+<section id="pendingCard" class="card hidden">
+<h2>Application Status</h2>
+<p id="pendingStatus" class="status">Checking...</p>
+<button id="checkStatus" class="secondary" type="button">Check Again</button>
+<button id="signOut" type="button">Sign Out</button>
+</section>
+
+<section id="approvedCard" class="card hidden">
+<h2>Application Approved</h2>
+<p>Your masjid has been assigned by the admin.</p>
+<a href="./imam-dashboard.html">
+<button type="button">Open Imam Dashboard</button>
+</a>
+</section>
+</main>
+
+<script>
+const SUPABASE_URL='https://ziewfvsoktvawskimwqb.supabase.co';
+const SUPABASE_KEY='sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+
+function message(text){
+$('message').textContent=text;
+$('message').classList.remove('hidden');
+}
+
+async function checkApplication(userId){
+$('authCard').classList.add('hidden');
+$('pendingCard').classList.remove('hidden');
+$('approvedCard').classList.add('hidden');
+$('pendingStatus').textContent='Checking application...';
+
+try{
+if(!userId){
+const {data,error}=await db.auth.getUser();
+if(error)throw error;
+userId=data.user?.id;
+}
+if(!userId)throw new Error('Please sign in again.');
+
+const {data,error}=await db.from('imam_signup_requests')
+.select('status,admin_note,assigned_masjid_id')
+.eq('user_id',userId).maybeSingle();
+
+if(error)throw error;
+if(!data){
+$('pendingStatus').textContent='Application not found. Contact admin.';
+return;
+}
+if(data.status==='approved'&&data.assigned_masjid_id){
+$('pendingCard').classList.add('hidden');
+$('approvedCard').classList.remove('hidden');
+}else if(data.status==='rejected'){
+$('pendingStatus').textContent='Application rejected. '+(data.admin_note||'Please contact admin.');
+}else{
+$('pendingStatus').textContent='Your application has been sent to admin. Please wait for approval and masjid assignment.';
+}
+}catch(e){
+$('pendingStatus').textContent='Status check failed: '+e.message;
+}
+}
+
+$('signupForm').addEventListener('submit',async e=>{
+e.preventDefault();
+$('signupBtn').disabled=true;
+try{
+const metadata={
+imam_name:$('imamName').value.trim(),
+phone:$('phone').value.trim(),
+masjid_name:$('masjidName').value.trim(),
+area:$('area').value.trim(),
+address:$('address').value.trim()
+};
+const {data,error}=await db.auth.signUp({
+email:$('email').value.trim(),
+password:$('password').value,
+options:{data:metadata}
+});
+if(error)throw error;
+if(!data.user)throw new Error('Account was not created.');
+
+if(data.session){
+await checkApplication(data.user.id);
+}else{
+message('Account created. If email confirmation is enabled, confirm your email, then sign in to check your application.');
+}
+}catch(e){message(e.message);}
+finally{$('signupBtn').disabled=false;}
+});
+
+$('loginForm').addEventListener('submit',async e=>{
+e.preventDefault();
+try{
+const {data,error}=await db.auth.signInWithPassword({
+email:$('loginEmail').value.trim(),
+password:$('loginPassword').value
+});
+if(error)throw error;
+await checkApplication(data.user.id);
+}catch(e){message(e.message);}
+});
+
+$('checkStatus').onclick=()=>checkApplication();
+$('signOut').onclick=async()=>{
+await db.auth.signOut();
+location.reload();
+};
+
+(async()=>{
+const {data}=await db.auth.getSession();
+if(data.session)await checkApplication(data.session.user.id);
+})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Approval | Belgaum Salah</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f7f3;color:#18382e;font-family:Arial,sans-serif}
+header{background:#064534;color:white;padding:22px}
+main{max-width:1000px;margin:25px auto;padding:15px}
+.card,.request{background:white;border:1px solid #dbe7df;border-radius:14px;padding:20px;margin:15px 0}
+input,select{width:100%;padding:12px;border:1px solid #ccd9d0;border-radius:8px;margin:8px 0 13px;font-size:15px}
+button{padding:12px 15px;border:0;border-radius:8px;background:#075b47;color:white;font-weight:bold;cursor:pointer;margin:5px 5px 5px 0}
+.secondary{background:#e8f2eb;color:#075b47}
+.danger{background:#a52b25}
+.status,.details{padding:12px;border-radius:8px;white-space:pre-wrap;line-height:1.5;background:#fff7e6}
+.details{background:#f5f8f5;color:#52675c}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header>
+<h2>🕌 Belgaum Salah</h2>
+Admin Approval Dashboard
+</header>
+<main>
+<section id="loginCard" class="card">
+<h2>Admin Login</h2>
+<p>Login with your existing approved administrator account.</p>
+<form id="loginForm">
+<label>Email</label>
+<input id="email" type="email" required>
+<label>Password</label>
+<input id="password" type="password" required>
+<button type="submit">Admin Sign In</button>
+</form>
+<p id="loginMessage" class="status hidden"></p>
+</section>
+
+<section id="panel" class="hidden">
+<div class="card">
+<h2>Imam Applications</h2>
+<p id="status" class="status">Loading applications...</p>
+<button id="refreshBtn" type="button">Refresh Applications</button>
+<button id="logoutBtn" class="secondary" type="button">Sign Out</button>
+</div>
+<div id="requests"></div>
+</section>
+</main>
+
+<script>
+const SUPABASE_URL='https://ziewfvsoktvawskimwqb.supabase.co';
+const SUPABASE_KEY='sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+let refreshTimer=null;
+
+$('loginForm').addEventListener('submit',async e=>{
+e.preventDefault();
+$('loginMessage').classList.add('hidden');
+try{
+const {data,error}=await db.auth.signInWithPassword({
+email:$('email').value.trim(),
+password:$('password').value
+});
+if(error)throw error;
+
+const {data:profile,error:profileError}=await db.from('profiles')
+.select('role,approved').eq('id',data.user.id).maybeSingle();
+if(profileError)throw profileError;
+
+if(!profile||profile.role!=='admin'||profile.approved!==true){
+await db.auth.signOut();
+throw new Error('This account is not an approved admin account.');
+}
+
+$('loginCard').classList.add('hidden');
+$('panel').classList.remove('hidden');
+await loadRequests();
+refreshTimer=setInterval(loadRequests,20000);
+}catch(e){
+$('loginMessage').textContent=e.message;
+$('loginMessage').classList.remove('hidden');
+}
+});
+
+async function loadRequests(){
+$('status').textContent='Loading pending applications...';
+try{
+const {data:requests,error}=await db.from('imam_signup_requests')
+.select('*').eq('status','pending').order('created_at',{ascending:true});
+if(error)throw error;
+
+const {data:masjids,error:masjidError}=await db.from('Masjids')
+.select('id,name,area,imam_id').order('name');
+if(masjidError)throw masjidError;
+
+$('requests').replaceChildren();
+$('status').textContent=requests.length
+?requests.length+' pending application(s).'
+:'No pending applications found.';
+
+for(const r of requests){
+const card=document.createElement('div');
+card.className='request';
+
+const heading=document.createElement('h3');
+heading.textContent=r.imam_name+' — '+r.masjid_name;
+
+const details=document.createElement('p');
+details.className='details';
+details.textContent=
+'Phone: '+r.phone+
+'\nEmail: '+(r.email||'Not available')+
+'\nArea: '+r.area+
+'\nAddress: '+r.address+
+'\nSubmitted: '+new Date(r.created_at).toLocaleString('en-IN');
+
+const select=document.createElement('select');
+const placeholder=document.createElement('option');
+placeholder.value='';
+placeholder.textContent='Select available masjid...';
+select.append(placeholder);
+
+for(const m of masjids){
+const opt=document.createElement('option');
+opt.value=m.id;
+opt.textContent=m.name+' — '+(m.area||'')+
+(m.imam_id?' (Already assigned)':'');
+if(m.imam_id)opt.disabled=true;
+select.append(opt);
+}
+
+const approve=document.createElement('button');
+approve.textContent='Approve & Assign Masjid';
+approve.onclick=async()=>{
+if(!select.value){alert('Please select a masjid first.');return;}
+if(!confirm('Approve this Imam and assign the selected masjid?'))return;
+approve.disabled=true;
+try{
+const {error}=await db.rpc('admin_approve_imam_request',{
+p_request_id:r.id,p_masjid_id:select.value
+});
+if(error)throw error;
+alert('Application approved and masjid assigned.');
+await loadRequests();
+}catch(e){alert('Approval failed: '+e.message);}
+finally{approve.disabled=false;}
+};
+
+const reject=document.createElement('button');
+reject.textContent='Reject';
+reject.className='danger';
+reject.onclick=async()=>{
+if(!confirm('Reject this Imam application?'))return;
+const note=prompt('Reason (optional):')||'';
+try{
+const {error}=await db.rpc('admin_reject_imam_request',{
+p_request_id:r.id,p_note:note
+});
+if(error)throw error;
+await loadRequests();
+}catch(e){alert('Rejection failed: '+e.message);}
+};
+
+card.append(heading,details,select,approve,reject);
+$('requests').append(card);
+}
+}catch(e){
+$('status').textContent='Error loading applications: '+e.message+
+'\nCheck that SQL setup has been run and database permissions are correct.';
+}
+}
+
+$('refreshBtn').onclick=loadRequests;
+$('logoutBtn').onclick=async()=>{
+if(refreshTimer)clearInterval(refreshTimer);
+await db.auth.signOut();
+location.reload();
+};
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Imam Dashboard | Belgaum Salah</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f7f3;color:#18382e;font-family:Arial,sans-serif}
+header{background:#064534;color:white;padding:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
+main{max-width:950px;margin:25px auto;padding:15px}
+.card{background:white;border:1px solid #dbe7df;border-radius:14px;padding:22px;margin-bottom:18px}
+.field{display:flex;flex-direction:column;gap:7px;margin:12px 0}
+input{width:100%;padding:12px;border:1px solid #ccd9d0;border-radius:8px;font-size:15px}
+button{padding:12px 15px;border:0;border-radius:8px;background:#075b47;color:white;font-weight:bold;cursor:pointer;margin:5px 5px 5px 0}
+.secondary{background:#e8f2eb;color:#075b47}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.prayer{border:1px solid #dbe7df;border-radius:12px;padding:15px;margin:12px 0}
+.status{padding:12px;border-radius:8px;background:#fff7e6;white-space:pre-wrap;line-height:1.5}
+.success{background:#e6f7eb;color:#075b47}
+.hidden{display:none!important}
+.muted{color:#65796e;line-height:1.5}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<div><h2>🕌 Belgaum Salah</h2>Imam Dashboard</div>
+<button id="logoutBtn" class="secondary hidden" type="button">Sign Out</button>
+</header>
+
+<main>
+<section id="loginCard" class="card">
+<h2>Imam Login</h2>
+<p class="muted">Only approved Imams can access the dashboard.</p>
+<p id="loginMessage" class="status hidden"></p>
+<form id="loginForm">
+<div class="field">
+<label>Email</label>
+<input id="email" type="email" required>
+</div>
+<div class="field">
+<label>Password</label>
+<input id="password" type="password" required>
+</div>
+<button id="loginBtn" type="submit">Sign In</button>
+</form>
+<p><a href="./imam.html">New Imam? Register here</a></p>
+</section>
+
+<section id="dashboard" class="hidden">
+<div class="card">
+<h2 id="masjidName">Assigned Masjid</h2>
+<p id="masjidAddress" class="muted"></p>
+<p id="masjidArea" class="muted"></p>
+<p id="pageMessage" class="status hidden"></p>
+</div>
+<div class="card">
+<h2>Prayer Timings</h2>
+<p class="muted">Set azaan and jamaat times, then save your changes.</p>
+<form id="timingForm">
+<div id="prayerFields"></div>
+<button id="saveBtn" type="submit">Save Timings</button>
+<button id="reloadBtn" class="secondary" type="button">Reload Timings</button>
+</form>
+</div>
+</section>
+
+<section id="noAssignment" class="card hidden">
+<h2>No Masjid Assigned</h2>
+<p>Please contact the admin to assign a masjid to your account.</p>
+</section>
+</main>
+
+<script>
+const SUPABASE_URL='https://ziewfvsoktvawskimwqb.supabase.co';
+const SUPABASE_KEY='sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+
+const prayers=[
+{key:'fajr',name:'Fajr'},
+{key:'zuhr',name:'Zuhr'},
+{key:'asr',name:'Asr'},
+{key:'maghrib',name:'Maghrib'},
+{key:'isha',name:'Isha'}
+];
+
+let currentUser=null;
+let assignedMasjid=null;
+
+function showMessage(id,text,success=false){
+const el=$(id);
+el.textContent=text;
+el.className='status'+(success?' success':'');
+}
+function hideMessage(id){
+$(id).textContent='';
+$(id).classList.add('hidden');
+}
+function showLogin(text=''){
+$('loginCard').classList.remove('hidden');
+$('dashboard').classList.add('hidden');
+$('noAssignment').classList.add('hidden');
+$('logoutBtn').classList.add('hidden');
+if(text){
+showMessage('loginMessage',text);
+$('loginMessage').classList.remove('hidden');
+}
+}
+
+function timeValue(value){
+if(!value)return '';
+const m=String(value).match(/^(\d{1,2}):(\d{2})/);
+return m?m[1].padStart(2,'0')+':'+m[2]:'';
+}
+
+function renderFields(row){
+$('prayerFields').replaceChildren();
+
+for(const p of prayers){
+const box=document.createElement('div');
+box.className='prayer';
+const title=document.createElement('h3');
+title.textContent=p.name;
+box.append(title);
+
+const grid=document.createElement('div');
+grid.className='grid';
+
+for(const type of ['azaan','jamaat']){
+const key=p.key+'_'+type;
+const field=document.createElement('div');
+field.className='field';
+const label=document.createElement('label');
+label.textContent=p.name+' '+type;
+label.htmlFor=key;
+
+const input=document.createElement('input');
+input.type='time';
+input.id=key;
+input.required=true;
+input.value=timeValue(row[key]);
+
+field.append(label,input);
+grid.append(field);
+}
+box.append(grid);
+$('prayerFields').append(box);
+}
+}
+
+async function loadAssignedMasjid(){
+const {data,error}=await db.from('Masjids')
+.select('id,name,area,address,imam_id,fajr_azaan,fajr_jamaat,zuhr_azaan,zuhr_jamaat,asr_azaan,asr_jamaat,maghrib_azaan,maghrib_jamaat,isha_azaan,isha_jamaat')
+.eq('imam_id',currentUser.id);
+
+if(error)throw error;
+
+if(!data||data.length===0){
+assignedMasjid=null;
+$('dashboard').classList.add('hidden');
+$('noAssignment').classList.remove('hidden');
+return;
+}
+if(data.length!==1){
+throw new Error('Multiple masjids are assigned to this account. Contact admin.');
+}
+
+assignedMasjid=data[0];
+$('masjidName').textContent=assignedMasjid.name||'Assigned Masjid';
+$('masjidAddress').textContent=assignedMasjid.address||'';
+$('masjidArea').textContent=assignedMasjid.area?'Area: '+assignedMasjid.area:'';
+renderFields(assignedMasjid);
+}
+
+async function checkAccess(user){
+currentUser=user;
+
+const {data:profile,error}=await db.from('profiles')
+.select('id,role,approved')
+.eq('id',user.id).maybeSingle();
+
+if(error)throw error;
+
+if(!profile||profile.role!=='imam'||profile.approved!==true){
+await db.auth.signOut();
+currentUser=null;
+showLogin('Access denied. Your Imam account is not approved.');
+return;
+}
+
+$('loginCard').classList.add('hidden');
+$('dashboard').classList.remove('hidden');
+$('noAssignment').classList.add('hidden');
+$('logoutBtn').classList.remove('hidden');
+await loadAssignedMasjid();
+}
+
+$('loginForm').addEventListener('submit',async e=>{
+e.preventDefault();
+hideMessage('loginMessage');
+$('loginBtn').disabled=true;
+try{
+const {data,error}=await db.auth.signInWithPassword({
+email:$('email').value.trim(),
+password:$('password').value
+});
+if(error)throw error;
+await checkAccess(data.user);
+}catch(e){
+showLogin(e.message);
+}finally{
+$('loginBtn').disabled=false;
+}
+});
+
+$('timingForm').addEventListener('submit',async e=>{
+e.preventDefault();
+hideMessage('pageMessage');
+
+if(!currentUser||!assignedMasjid){
+showMessage('pageMessage','No assigned masjid found.');
+$('pageMessage').classList.remove('hidden');
+return;
+}
+
+$('saveBtn').disabled=true;
+try{
+const updates={};
+for(const p of prayers){
+for(const type of ['azaan','jamaat']){
+const key=p.key+'_'+type;
+const value=$(key).value;
+if(!value)throw new Error('Please enter all azaan and jamaat times.');
+updates[key]=value;
+}
+}
+
+const {data,error}=await db.from('Masjids')
+.update(updates)
+.eq('id',assignedMasjid.id)
+.eq('imam_id',currentUser.id)
+.select('id');
+
+if(error)throw error;
+if(!data||data.length!==1){
+throw new Error('No timings were saved. Check the database update policies.');
+}
+
+showMessage('pageMessage','Prayer timings saved successfully.',true);
+$('pageMessage').classList.remove('hidden');
+await loadAssignedMasjid();
+}catch(e){
+showMessage('pageMessage',e.message);
+$('pageMessage').classList.remove('hidden');
+}finally{
+$('saveBtn').disabled=false;
+}
+});
+
+$('reloadBtn').onclick=async()=>{
+try{
+await loadAssignedMasjid();
+showMessage('pageMessage','Timings reloaded.',true);
+$('pageMessage').classList.remove('hidden');
+}catch(e){
+showMessage('pageMessage',e.message);
+$('pageMessage').classList.remove('hidden');
+}
+};
+
+$('logoutBtn').onclick=async()=>{
+await db.auth.signOut();
+currentUser=null;
+assignedMasjid=null;
+showLogin();
+};
+
+(async()=>{
+try{
+const {data,error}=await db.auth.getSession();
+if(error)throw error;
+if(data.session)await checkAccess(data.session.user);
+}catch(e){
+showLogin(e.message);
+}
+})();
+</script>
+</body>
+</html>
