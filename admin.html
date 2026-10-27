@@ -1,0 +1,282 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Private Admin | Belgaum Salah</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f1f5f2;color:#17362d;font:15px Arial,sans-serif}
+header{background:#032f29;color:white;padding:20px}main{max-width:1100px;margin:25px auto;padding:0 14px}
+.card{background:white;padding:20px;border-radius:14px;border:1px solid #dce8e0;margin-bottom:18px;overflow-wrap:anywhere}
+input,select{width:100%;padding:11px;border:1px solid #ccdcd1;border-radius:8px;font:inherit;margin:5px 0 12px}
+button{padding:10px 14px;border:0;border-radius:8px;background:#075b49;color:white;font-weight:bold;cursor:pointer;margin:3px}
+.danger{background:#a52c2c}.light{background:#e8f1eb;color:#075b49}.hidden{display:none!important}
+.status{padding:12px;border-radius:8px;background:#fff5db;white-space:pre-wrap;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.item{border:1px solid #dce8e0;border-radius:10px;padding:14px;margin:12px 0}
+.small{color:#687d74;font-size:13px;line-height:1.6}
+table{width:100%;border-collapse:collapse}td,th{text-align:left;border-bottom:1px solid #e1e9e3;padding:9px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:14px}table{font-size:12px}}
+</style>
+</head>
+<body>
+<header>
+<h2>🔐 Belgaum Salah — Admin Portal</h2>
+<div>Private administration</div>
+</header>
+<main>
+<section id="loginCard" class="card">
+<h2>Admin Sign In</h2>
+<p class="small">Only an account with an approved admin profile can use this portal.</p>
+<div id="loginMessage" class="status hidden"></div>
+<form id="loginForm">
+<label>Email</label><input id="email" type="email" required autocomplete="username">
+<label>Password</label><input id="password" type="password" required autocomplete="current-password">
+<button type="submit">Sign In</button>
+</form>
+</section>
+
+<section id="adminPanel" class="hidden">
+<div class="card">
+<button id="refreshBtn" class="light">Refresh Data</button>
+<button id="logoutBtn">Sign Out</button>
+<div id="mainMessage" class="status">Loading admin data...</div>
+</div>
+
+<div class="card">
+<h2>Pending Imam Applications</h2>
+<p class="small">Select a masjid before approving an Imam. A masjid should be assigned to only one Imam at a time.</p>
+<div id="requests">Loading requests...</div>
+</div>
+
+<div class="card">
+<h2>Masjid Management</h2>
+<h3>Add Masjid</h3>
+<form id="addMasjidForm">
+<div class="grid">
+<div><label>Masjid name *</label><input id="newName" required maxlength="150"></div>
+<div><label>Area *</label><input id="newArea" required maxlength="120"></div>
+<div><label>Address</label><input id="newAddress" maxlength="250"></div>
+<div><label>Google Maps link (optional)</label><input id="newMap" type="url" placeholder="https://..."></div>
+</div>
+<button type="submit">Add Masjid</button>
+</form>
+<hr>
+<h3>Existing Masjids & Timings</h3>
+<div id="masjidAdminList">Loading masjids...</div>
+</div>
+</section>
+</main>
+
+<script>
+"use strict";
+const URL="https://ziewfvsoktvawskimwqb.supabase.co";
+const KEY="sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
+const db=window.supabase.createClient(URL,KEY);
+const $=id=>document.getElementById(id);
+let currentUser=null, masjids=[];
+
+function note(id,msg,error=false){
+  $(id).textContent=msg;
+  $(id).classList.remove("hidden");
+  if(error) $(id).style.background="#ffeded";
+  else $(id).style.background="#fff5db";
+}
+function el(tag,text="",cls=""){
+  const n=document.createElement(tag);n.textContent=text;
+  if(cls)n.className=cls;return n;
+}
+function field(label,id,value,type="text"){
+  const wrap=el("label",label);
+  const input=document.createElement("input");
+  input.id=id;input.value=value??"";input.type=type;
+  wrap.appendChild(input);return wrap;
+}
+function timeInput(label,id,value){
+  const wrap=el("label",label);
+  const input=document.createElement("input");
+  input.id=id;input.type="time";
+  input.value=value?String(value).slice(0,5):"";
+  wrap.appendChild(input);return wrap;
+}
+
+async function verifyAdmin(){
+  const {data,error}=await db.auth.getUser();
+  if(error||!data.user)throw new Error("Please sign in.");
+  const {data:profile,error:pe}=await db.from("profiles")
+    .select("role,approved").eq("id",data.user.id).maybeSingle();
+  if(pe)throw pe;
+  if(profile?.role!=="admin"||profile.approved!==true)
+    throw new Error("Access denied. This account is not an approved admin.");
+  currentUser=data.user;
+}
+
+async function loadRequests(){
+  const {data,error}=await db.from("imam_signup_requests")
+    .select("*").eq("status","pending").order("created_at",{ascending:true});
+  if(error)throw error;
+  const root=$("requests");root.replaceChildren();
+  if(!data?.length){root.append(el("p","No pending applications."));return;}
+  data.forEach(r=>{
+    const box=el("div","","item");
+    box.append(el("h3",r.imam_name||r.full_name||"Imam application"));
+    box.append(el("p","Email: "+(r.email||"See signup metadata")));
+    box.append(el("p","Phone: "+(r.phone||"—")));
+    box.append(el("p","Requested masjid: "+(r.masjid_name||"—")));
+    box.append(el("p","Area: "+(r.area||"—")));
+    box.append(el("p","Address: "+(r.address||"—")));
+    box.append(el("p","User ID: "+(r.user_id||"—"),"small"));
+
+    const select=document.createElement("select");
+    select.append(new Option("Select a masjid to assign",""));
+    masjids.filter(m=>!m.imam_id||m.imam_id===r.user_id).forEach(m=>{
+      select.append(new Option(m.name+" — "+(m.area||""),m.id));
+    });
+    box.append(el("label","Assign masjid:"));box.append(select);
+
+    const approve=el("button","Approve & Assign");
+    approve.onclick=async()=>{
+      if(!select.value){alert("Please select a masjid first.");return;}
+      if(!confirm("Approve this Imam and assign the selected masjid?"))return;
+      try{
+        const {error}=await db.rpc("admin_approve_imam_request",{
+          p_request_id:r.id,p_masjid_id:select.value
+        });
+        if(error)throw error;
+        note("mainMessage","Imam approved and assigned.");
+        await refreshAll();
+      }catch(e){note("mainMessage","Approval failed: "+e.message,true);}
+    };
+    const reject=el("button","Reject","danger");
+    reject.onclick=async()=>{
+      const reason=prompt("Reason for rejection (optional):")||"";
+      if(!confirm("Reject this application?"))return;
+      try{
+        const {error}=await db.rpc("admin_reject_imam_request",{
+          p_request_id:r.id,p_note:reason
+        });
+        if(error)throw error;
+        note("mainMessage","Application rejected.");
+        await refreshAll();
+      }catch(e){note("mainMessage","Rejection failed: "+e.message,true);}
+    };
+    box.append(approve,reject);root.append(box);
+  });
+}
+
+async function loadMasjids(){
+  const {data,error}=await db.from("Masjids").select("*").order("name");
+  if(error)throw error;
+  masjids=data||[];
+  renderMasjids();
+}
+function renderMasjids(){
+  const root=$("masjidAdminList");root.replaceChildren();
+  if(!masjids.length){root.append(el("p","No masjids found."));return;}
+  masjids.forEach(m=>{
+    const box=el("div","","item");
+    box.append(el("h3",m.name||"Masjid"));
+    box.append(el("p","Area: "+(m.area||"—")+" | Assigned Imam ID: "+(m.imam_id||"Not assigned"),"small"));
+    const grid=el("div","","grid");
+    grid.append(field("Masjid name","name_"+m.id,m.name));
+    grid.append(field("Area","area_"+m.id,m.area));
+    grid.append(field("Address","address_"+m.id,m.address));
+    grid.append(field("Google Maps URL","map_"+m.id,m.map_link||m.google_maps_link||"","url"));
+    const rows=[
+      ["Fajr","fajr_azaan","fajr_jamaat"],["Zuhr","zuhr_azaan","zuhr_jamaat"],
+      ["Asr","asr_azaan","asr_jamaat"],["Maghrib","maghrib_azaan","maghrib_jamaat"],
+      ["Isha","isha_azaan","isha_jamaat"]
+    ];
+    rows.forEach(([name,a,j])=>{
+      grid.append(timeInput(name+" Azaan",a+"_"+m.id,m[a]));
+      grid.append(timeInput(name+" Jamaat",j+"_"+m.id,m[j]));
+    });
+    box.append(grid);
+    const save=el("button","Save Details & Timings");
+    save.onclick=async()=>{
+      const patch={
+        name:$("name_"+m.id).value.trim(),
+        area:$("area_"+m.id).value.trim(),
+        address:$("address_"+m.id).value.trim(),
+        map_link:$("map_"+m.id).value.trim()||null
+      };
+      rows.forEach(([n,a,j])=>{
+        patch[a]=$(`${a}_${m.id}`).value||null;
+        patch[j]=$(`${j}_${m.id}`).value||null;
+      });
+      try{
+        const {error}=await db.from("Masjids").update(patch).eq("id",m.id);
+        if(error)throw error;
+        note("mainMessage","Masjid details and timings saved.");
+        await loadMasjids();
+      }catch(e){note("mainMessage","Save failed: "+e.message,true);}
+    };
+    const del=el("button","Delete Masjid","danger");
+    del.onclick=async()=>{
+      if(m.imam_id){alert("This masjid is assigned to an Imam. Unassign the Imam first.");return;}
+      if(!confirm("Permanently delete "+m.name+"? This cannot be undone."))return;
+      try{
+        const {error}=await db.from("Masjids").delete().eq("id",m.id);
+        if(error)throw error;
+        note("mainMessage","Masjid deleted.");await refreshAll();
+      }catch(e){note("mainMessage","Delete failed: "+e.message,true);}
+    };
+    box.append(save,del);root.append(box);
+  });
+}
+
+async function refreshAll(){
+  await verifyAdmin();
+  await Promise.all([loadMasjids(),loadRequests()]);
+}
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();const btn=e.submitter;btn.disabled=true;
+  try{
+    const {error}=await db.auth.signInWithPassword({
+      email:$("email").value.trim(),password:$("password").value
+    });
+    if(error)throw error;
+    await verifyAdmin();
+    $("loginCard").classList.add("hidden");
+    $("adminPanel").classList.remove("hidden");
+    note("mainMessage","Admin signed in.");
+    await refreshAll();
+  }catch(e){note("loginMessage",e.message,true);}
+  finally{btn.disabled=false;}
+});
+$("refreshBtn").onclick=()=>refreshAll().catch(e=>note("mainMessage",e.message,true));
+$("logoutBtn").onclick=async()=>{
+  await db.auth.signOut();location.reload();
+};
+$("addMasjidForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  try{
+    await verifyAdmin();
+    const row={
+      name:$("newName").value.trim(),
+      area:$("newArea").value.trim(),
+      address:$("newAddress").value.trim()||null,
+      map_link:$("newMap").value.trim()||null
+    };
+    const {error}=await db.from("Masjids").insert(row);
+    if(error)throw error;
+    $("addMasjidForm").reset();
+    note("mainMessage","Masjid added.");await refreshAll();
+  }catch(e){note("mainMessage","Add masjid failed: "+e.message,true);}
+});
+(async()=>{
+  const {data}=await db.auth.getSession();
+  if(data.session){
+    try{
+      await verifyAdmin();
+      $("loginCard").classList.add("hidden");
+      $("adminPanel").classList.remove("hidden");
+      await refreshAll();
+    }catch(e){note("loginMessage",e.message,true);}
+  }
+})();
+</script>
+</body>
+</html>
