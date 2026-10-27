@@ -7,220 +7,284 @@
 <title>Imam Portal | Belgaum Salah</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{margin:0;background:#f3f7f4;color:#18362e;font-family:Arial,sans-serif}
-header{background:#043d32;color:white;padding:20px}
-main{max-width:800px;margin:30px auto;padding:16px}
-.card{background:white;border:1px solid #dce8e0;border-radius:16px;padding:22px;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+:root{--green:#064b40;--deep:#032f29;--gold:#e3b65d}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:#18362e;background:#f2f6f2}
+header{padding:15px 5%;background:var(--deep);color:white;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header h2{margin:0}
+.home{background:#fff;color:var(--deep);text-decoration:none;padding:10px 15px;border-radius:9px;font-weight:bold}
+.hero{padding:45px 16px;background:linear-gradient(#032f29a8,#032f29d9),url('https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1800&q=85') center/cover;color:white;text-align:center}
+.hero h1{font-size:clamp(28px,5vw,42px);margin:5px}
+.hero p{line-height:1.7}
+main{max-width:760px;margin:24px auto;padding:0 14px 35px}
+.card{background:white;border:1px solid #dce8e0;border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:0 6px 22px #18362e0b}
+h2{margin-top:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .field{display:flex;flex-direction:column;gap:7px}
 .full{grid-column:1/-1}
-input{padding:12px;border:1px solid #ccdcd1;border-radius:9px;font:inherit;width:100%;box-sizing:border-box}
-button{padding:12px 16px;border:0;border-radius:9px;background:#075b49;color:white;font-weight:bold;cursor:pointer;margin-top:12px}
-.secondary{background:#e8f1eb;color:#075b49}
-.status{padding:12px;margin:12px 0;border-radius:9px;background:#fff7e5;white-space:pre-wrap}
+input{width:100%;padding:12px;border:1px solid #ccdcd1;border-radius:9px;font:inherit}
+button{padding:12px 16px;border:0;border-radius:9px;background:var(--green);color:white;font-weight:bold;cursor:pointer;margin:10px 7px 0 0}
+button:disabled{opacity:.55;cursor:wait}
+.secondary{background:#e8f1eb;color:var(--green)}
+.status{padding:13px;margin:14px 0;border-radius:9px;background:#fff7e5;white-space:pre-wrap;line-height:1.6}
+.success{background:#e8f6ec;color:#14532d}
+.error{background:#ffeded;color:#8a2020}
+.muted{color:#687d74;line-height:1.7}
 .hidden{display:none!important}
-.muted{color:#687d74;line-height:1.6}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+hr{border:0;border-top:1px solid #dce8e0;margin:25px 0}
+footer{text-align:center;background:var(--deep);color:white;padding:18px;font-size:12px}
+@media(max-width:580px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.card{padding:17px}}
 </style>
 </head>
 <body>
 <header>
-  <h2>🕌 Belgaum Salah</h2>
-  <div>IMAM REGISTRATION PORTAL</div>
+  <div><h2>🕌 Belgaum Salah</h2><small>IMAM PORTAL</small></div>
+  <a class="home" href="./index.html">← Back to Home</a>
 </header>
+
+<section class="hero">
+  <h1>Imam Registration Portal</h1>
+  <p>Register your masjid details, submit your application<br>
+  and wait for administrator approval.</p>
+</section>
 
 <main>
 <section id="authCard" class="card">
-  <h1>Imam Registration</h1>
-  <p class="muted">Register your details. Admin approval and masjid assignment are required before you can edit prayer timings.</p>
+  <div id="message" class="status hidden" role="status"></div>
 
-  <div id="status" class="status hidden"></div>
+  <div id="signupSection">
+    <h2>📝 New Imam Registration</h2>
+    <p class="muted">Enter your correct details. Your account must be approved and a masjid assigned before you can edit prayer timings.</p>
+    <form id="signupForm">
+      <div class="grid">
+        <div class="field">
+          <label for="imamName">Full Imam Name *</label>
+          <input id="imamName" required maxlength="100" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="phone">Phone Number *</label>
+          <input id="phone" type="tel" required maxlength="20" autocomplete="tel">
+        </div>
+        <div class="field full">
+          <label for="masjidName">Requested Masjid Name *</label>
+          <input id="masjidName" required maxlength="150">
+        </div>
+        <div class="field">
+          <label for="area">Area / Locality *</label>
+          <input id="area" required maxlength="120">
+        </div>
+        <div class="field">
+          <label for="address">Full Address *</label>
+          <input id="address" required maxlength="250">
+        </div>
+        <div class="field full">
+          <label for="email">Email Address *</label>
+          <input id="email" type="email" required autocomplete="email">
+        </div>
+        <div class="field full">
+          <label for="password">Create Password (minimum 8 characters) *</label>
+          <input id="password" type="password" minlength="8" required autocomplete="new-password">
+        </div>
+      </div>
+      <button id="signupBtn" type="submit">Submit Registration</button>
+    </form>
+  </div>
 
-  <form id="signupForm">
-    <div class="grid">
-      <div class="field">
-        <label>Full Imam Name *</label>
-        <input id="imamName" required maxlength="100">
-      </div>
-      <div class="field">
-        <label>Phone Number *</label>
-        <input id="phone" type="tel" required maxlength="20">
-      </div>
-      <div class="field full">
-        <label>Requested Masjid Name *</label>
-        <input id="masjidName" required maxlength="150">
-      </div>
-      <div class="field">
-        <label>Area / Locality *</label>
-        <input id="area" required maxlength="120">
-      </div>
-      <div class="field">
-        <label>Full Address *</label>
-        <input id="address" required maxlength="250">
-      </div>
-      <div class="field">
-        <label>Email Address *</label>
-        <input id="email" type="email" required>
-      </div>
-      <div class="field">
-        <label>Create Password *</label>
-        <input id="password" type="password" minlength="8" required>
-      </div>
-    </div>
-    <button id="signupBtn" type="submit">Submit Registration</button>
-  </form>
+  <hr>
 
-  <hr style="margin:24px 0;border:0;border-top:1px solid #dce8e0">
-
-  <h2>Already Registered? Sign In</h2>
-  <form id="loginForm">
-    <div class="field">
-      <label>Email</label>
-      <input id="loginEmail" type="email" required>
-    </div>
-    <div class="field" style="margin-top:12px">
-      <label>Password</label>
-      <input id="loginPassword" type="password" required>
-    </div>
-    <button type="submit">Sign In / Check Status</button>
-  </form>
+  <div id="loginSection">
+    <h2>🔐 Already Registered? Sign In</h2>
+    <p class="muted">Using another mobile? Sign in with the same email and password. Do not create another account.</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginEmail">Email Address</label>
+        <input id="loginEmail" type="email" required autocomplete="username">
+      </div>
+      <div class="field" style="margin-top:12px">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" required autocomplete="current-password">
+      </div>
+      <button id="loginBtn" type="submit">Sign In / Check Application</button>
+    </form>
+  </div>
 </section>
 
-<section id="pendingCard" class="card hidden">
-  <h2>Application Status</h2>
-  <p id="pendingStatus" class="status">Checking status...</p>
-  <button id="checkStatus" class="secondary" type="button">Check Again</button>
-  <button id="signOut" type="button">Sign Out</button>
-</section>
-
-<section id="approvedCard" class="card hidden">
-  <h2>Imam Access Approved</h2>
-  <p>Your masjid has been assigned. You can open your dashboard.</p>
-  <a href="./imam-dashboard.html">
-    <button type="button">Open Imam Dashboard</button>
-  </a>
+<section id="statusCard" class="card hidden">
+  <h2>📋 Your Application</h2>
+  <div id="applicationMessage" class="status">Checking application...</div>
+  <button id="checkBtn" class="secondary" type="button">Check Status Again</button>
+  <button id="dashboardBtn" class="hidden" type="button">🕌 Open Imam Dashboard</button>
+  <button id="signOutBtn" class="secondary" type="button">Sign Out</button>
 </section>
 </main>
 
+<footer>Belgaum Salah · Belagavi, Karnataka</footer>
+
 <script>
-const SUPABASE_URL='https://ziewfvsoktvawskimwqb.supabase.co';
-const SUPABASE_KEY='sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu';
+"use strict";
+
+const SUPABASE_URL="https://ziewfvsoktvawskimwqb.supabase.co";
+const SUPABASE_KEY="sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
 
-function showMessage(message){
-  $('status').textContent=message;
-  $('status').classList.remove('hidden');
+function message(text,type=""){
+  const el=$("message");
+  el.textContent=text;
+  el.className="status "+type;
 }
 
-async function showApplicationStatus(userId){
-  $('authCard').classList.add('hidden');
-  $('pendingCard').classList.remove('hidden');
-  $('approvedCard').classList.add('hidden');
-  $('pendingStatus').textContent='Checking your application...';
+function showStatusPage(){
+  $("authCard").classList.add("hidden");
+  $("statusCard").classList.remove("hidden");
+}
+
+function showAuthPage(){
+  $("statusCard").classList.add("hidden");
+  $("authCard").classList.remove("hidden");
+  message("");
+}
+
+async function checkApplication(){
+  showStatusPage();
+  $("applicationMessage").textContent="Checking your application...";
+  $("dashboardBtn").classList.add("hidden");
 
   try{
-    if(!userId){
-      const {data,error}=await db.auth.getUser();
-      if(error) throw error;
-      userId=data.user?.id;
-    }
-    if(!userId) throw new Error('Please sign in again.');
+    const {data:userData,error:userError}=await db.auth.getUser();
+    if(userError) throw userError;
+    const user=userData.user;
+    if(!user) throw new Error("Please sign in again.");
 
-    const {data,error}=await db
-      .from('imam_signup_requests')
-      .select('status,admin_note,assigned_masjid_id')
-      .eq('user_id',userId)
+    const {data:profile,error:profileError}=await db
+      .from("profiles")
+      .select("role,approved")
+      .eq("id",user.id)
       .maybeSingle();
 
-    if(error) throw error;
+    if(profileError) throw profileError;
 
-    if(!data){
-      $('pendingStatus').textContent='No application found. Please contact the administrator.';
-      return;
-    }
+    const {data:request,error:requestError}=await db
+      .from("imam_signup_requests")
+      .select("status,admin_note,assigned_masjid_id")
+      .eq("user_id",user.id)
+      .maybeSingle();
 
-    if(data.status==='approved' && data.assigned_masjid_id){
-      $('pendingCard').classList.add('hidden');
-      $('approvedCard').classList.remove('hidden');
-    }else if(data.status==='rejected'){
-      $('pendingStatus').textContent=
-        'Application not approved. '+(data.admin_note||'Please contact admin.');
+    if(requestError) throw requestError;
+
+    if(profile?.role==="imam" && profile.approved===true &&
+       request?.status==="approved" && request.assigned_masjid_id){
+      $("applicationMessage").textContent=
+        "Approved! Your masjid has been assigned. You can open your dashboard.";
+      $("applicationMessage").className="status success";
+      $("dashboardBtn").classList.remove("hidden");
+    }else if(request?.status==="rejected"){
+      $("applicationMessage").textContent=
+        "Your application was not approved. "+
+        (request.admin_note||"Please contact the administrator.");
+      $("applicationMessage").className="status error";
+    }else if(request?.status==="approved"){
+      $("applicationMessage").textContent=
+        "Your application is approved, but your access or masjid assignment is not complete yet. Please contact the administrator.";
+    }else if(request){
+      $("applicationMessage").textContent=
+        "Registration submitted successfully. Please wait for admin approval and masjid assignment.";
     }else{
-      $('pendingStatus').textContent=
-        'Your application has been submitted. Please wait for admin approval and masjid assignment.';
+      $("applicationMessage").textContent=
+        "No application record was found. Please contact the administrator.";
     }
-  }catch(error){
-    $('pendingStatus').textContent='Could not check status: '+error.message;
+  }catch(err){
+    $("applicationMessage").textContent=
+      "Could not check status: "+err.message;
+    $("applicationMessage").className="status error";
   }
 }
 
-$('signupForm').addEventListener('submit',async event=>{
+$("signupForm").addEventListener("submit",async event=>{
   event.preventDefault();
-  const button=$('signupBtn');
-  button.disabled=true;
-  button.textContent='Submitting...';
+  const btn=$("signupBtn");
+  btn.disabled=true;
+  btn.textContent="Submitting...";
 
   try{
     const metadata={
-      imam_name:$('imamName').value.trim(),
-      phone:$('phone').value.trim(),
-      masjid_name:$('masjidName').value.trim(),
-      area:$('area').value.trim(),
-      address:$('address').value.trim()
+      imam_name:$("imamName").value.trim(),
+      phone:$("phone").value.trim(),
+      masjid_name:$("masjidName").value.trim(),
+      area:$("area").value.trim(),
+      address:$("address").value.trim()
     };
 
     const {data,error}=await db.auth.signUp({
-      email:$('email').value.trim(),
-      password:$('password').value,
+      email:$("email").value.trim(),
+      password:$("password").value,
       options:{data:metadata}
     });
 
     if(error) throw error;
-    if(!data.user) throw new Error('Account was not created.');
+    if(!data.user) throw new Error("Account creation was not confirmed.");
 
-    $('authCard').classList.add('hidden');
-    $('pendingCard').classList.remove('hidden');
+    $("signupForm").reset();
+    showStatusPage();
 
     if(data.session){
-      await showApplicationStatus(data.user.id);
+      await checkApplication();
     }else{
-      $('pendingStatus').textContent=
-        'Account created. If email confirmation is enabled, confirm your email, then sign in to check application status.';
+      $("applicationMessage").textContent=
+        "Registration submitted to account creation. If email confirmation is enabled, check your email, confirm your address, then sign in here to check your application. If no application appears, contact the administrator.";
+      $("applicationMessage").className="status success";
     }
-  }catch(error){
-    showMessage(error.message);
+  }catch(err){
+    message(err.message,"error");
   }finally{
-    button.disabled=false;
-    button.textContent='Submit Registration';
+    btn.disabled=false;
+    btn.textContent="Submit Registration";
   }
 });
 
-$('loginForm').addEventListener('submit',async event=>{
+$("loginForm").addEventListener("submit",async event=>{
   event.preventDefault();
+  const btn=$("loginBtn");
+  btn.disabled=true;
+  btn.textContent="Signing in...";
+
   try{
-    const {data,error}=await db.auth.signInWithPassword({
-      email:$('loginEmail').value.trim(),
-      password:$('loginPassword').value
+    const {error}=await db.auth.signInWithPassword({
+      email:$("loginEmail").value.trim(),
+      password:$("loginPassword").value
     });
     if(error) throw error;
-    await showApplicationStatus(data.user.id);
-  }catch(error){
-    showMessage(error.message);
+    await checkApplication();
+  }catch(err){
+    message(err.message,"error");
+  }finally{
+    btn.disabled=false;
+    btn.textContent="Sign In / Check Application";
   }
 });
 
-$('checkStatus').onclick=()=>showApplicationStatus();
-$('signOut').onclick=async()=>{
-  await db.auth.signOut();
-  $('pendingCard').classList.add('hidden');
-  $('approvedCard').classList.add('hidden');
-  $('authCard').classList.remove('hidden');
-};
+$("checkBtn").addEventListener("click",checkApplication);
+
+$("dashboardBtn").addEventListener("click",()=>{
+  window.location.href="./imam-dashboard.html";
+});
+
+$("signOutBtn").addEventListener("click",async()=>{
+  const {error}=await db.auth.signOut();
+  if(error){
+    $("applicationMessage").textContent="Sign out failed: "+error.message;
+    return;
+  }
+  showAuthPage();
+});
 
 (async()=>{
-  const {data}=await db.auth.getSession();
-  if(data.session) await showApplicationStatus(data.session.user.id);
+  const {data,error}=await db.auth.getSession();
+  if(error){
+    message("Could not check existing login: "+error.message,"error");
+    return;
+  }
+  if(data.session) await checkApplication();
 })();
 </script>
 </body>
