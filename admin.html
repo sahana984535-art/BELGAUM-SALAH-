@@ -2,256 +2,502 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Private Admin | Belgaum Salah</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Belgaum Salah | Admin Portal</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f1f5f2;color:#17362d;font:15px Arial,sans-serif}
-header{background:#032f29;color:white;padding:20px}main{max-width:1100px;margin:25px auto;padding:0 14px}
-.card{background:white;padding:20px;border-radius:14px;border:1px solid #dce8e0;margin-bottom:18px;overflow-wrap:anywhere}
+:root{--green:#075b49;--deep:#032f29;--bg:#f1f5f2;--line:#dce8e0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#17362d;font:15px Arial,sans-serif}
+header{background:var(--deep);color:white;padding:20px}
+main{max-width:1100px;margin:25px auto;padding:0 14px}
+.card{background:white;padding:20px;border-radius:14px;border:1px solid var(--line);margin-bottom:18px;overflow-wrap:anywhere}
 input,select{width:100%;padding:11px;border:1px solid #ccdcd1;border-radius:8px;font:inherit;margin:5px 0 12px}
-button{padding:10px 14px;border:0;border-radius:8px;background:#075b49;color:white;font-weight:bold;cursor:pointer;margin:3px}
-.danger{background:#a52c2c}.light{background:#e8f1eb;color:#075b49}.hidden{display:none!important}
-.status{padding:12px;border-radius:8px;background:#fff5db;white-space:pre-wrap;line-height:1.5}
+button,.btn{display:inline-block;padding:11px 14px;border:0;border-radius:8px;background:var(--green);color:white;font-weight:bold;cursor:pointer;margin:4px;text-decoration:none}
+button:disabled{opacity:.5;cursor:wait}
+.light{background:#e8f1eb;color:var(--green)}
+.danger{background:#a52c2c}
+.hidden{display:none!important}
+.status{padding:12px;border-radius:8px;background:#fff5db;white-space:pre-wrap;line-height:1.6;margin:12px 0}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.item{border:1px solid #dce8e0;border-radius:10px;padding:14px;margin:12px 0}
+.item{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0}
 .small{color:#687d74;font-size:13px;line-height:1.6}
-table{width:100%;border-collapse:collapse}td,th{text-align:left;border-bottom:1px solid #e1e9e3;padding:9px}
-@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:14px}table{font-size:12px}}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:14px}}
 </style>
 </head>
 <body>
 <header>
-<h2>🔐 Belgaum Salah — Admin Portal</h2>
-<div>Private administration</div>
+  <h2>🔐 Belgaum Salah — Admin Portal</h2>
+  <div>Masjid and Imam Administration</div>
 </header>
+
 <main>
-<section id="loginCard" class="card">
-<h2>Admin Sign In</h2>
-<p class="small">Only an account with an approved admin profile can use this portal.</p>
-<div id="loginMessage" class="status hidden"></div>
-<form id="loginForm">
-<label>Email</label><input id="email" type="email" required autocomplete="username">
-<label>Password</label><input id="password" type="password" required autocomplete="current-password">
-<button type="submit">Sign In</button>
-</form>
+<section id="authCard" class="card">
+  <div id="authMessage" class="status hidden" role="status"></div>
+
+  <section id="loginSection">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+      <label for="loginEmail">Email</label>
+      <input id="loginEmail" type="email" required autocomplete="username">
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password" required autocomplete="current-password">
+      <button id="loginBtn" type="submit">Sign In</button>
+    </form>
+    <button class="light" id="showSignup" type="button">Sign Up</button>
+    <button class="light" id="showForgot" type="button">Forgot Password?</button>
+    <a class="btn light" href="./index.html">← Back Home</a>
+  </section>
+
+  <section id="signupSection" class="hidden">
+    <h2>Create Account</h2>
+    <p class="small">Creating an account does not grant admin access. An authorised admin profile is required.</p>
+    <form id="signupForm">
+      <label for="signupEmail">Email</label>
+      <input id="signupEmail" type="email" required autocomplete="email">
+      <label for="signupPassword">Password (minimum 8 characters)</label>
+      <input id="signupPassword" type="password" minlength="8" required autocomplete="new-password">
+      <label for="signupConfirm">Confirm Password</label>
+      <input id="signupConfirm" type="password" minlength="8" required autocomplete="new-password">
+      <button type="submit" id="signupBtn">Create Account</button>
+    </form>
+    <button class="light" id="backLogin1" type="button">Back to Login</button>
+  </section>
+
+  <section id="forgotSection" class="hidden">
+    <h2>Forgot Password</h2>
+    <p class="small">We'll request a password-reset email for the address you enter.</p>
+    <form id="forgotForm">
+      <label for="forgotEmail">Account Email</label>
+      <input id="forgotEmail" type="email" required autocomplete="email">
+      <button type="submit" id="forgotBtn">Send Reset Email</button>
+    </form>
+    <button class="light" id="backLogin2" type="button">Back to Login</button>
+  </section>
+
+  <section id="resetSection" class="hidden">
+    <h2>Set New Password</h2>
+    <form id="resetForm">
+      <label for="newPassword">New Password</label>
+      <input id="newPassword" type="password" minlength="8" required autocomplete="new-password">
+      <label for="confirmNewPassword">Confirm New Password</label>
+      <input id="confirmNewPassword" type="password" minlength="8" required autocomplete="new-password">
+      <button type="submit" id="resetBtn">Save New Password</button>
+    </form>
+  </section>
 </section>
 
 <section id="adminPanel" class="hidden">
-<div class="card">
-<button id="refreshBtn" class="light">Refresh Data</button>
-<button id="logoutBtn">Sign Out</button>
-<div id="mainMessage" class="status">Loading admin data...</div>
-</div>
+  <div class="card">
+    <h2>Admin Dashboard</h2>
+    <button id="refreshBtn" class="light" type="button">Refresh Data</button>
+    <button id="logoutBtn" type="button">Sign Out</button>
+    <div id="mainMessage" class="status">Loading...</div>
+  </div>
 
-<div class="card">
-<h2>Pending Imam Applications</h2>
-<p class="small">Select a masjid before approving an Imam. A masjid should be assigned to only one Imam at a time.</p>
-<div id="requests">Loading requests...</div>
-</div>
+  <div class="card">
+    <h2>Pending Imam Applications</h2>
+    <div id="requests">Loading applications...</div>
+  </div>
 
-<div class="card">
-<h2>Masjid Management</h2>
-<h3>Add Masjid</h3>
-<form id="addMasjidForm">
-<div class="grid">
-<div><label>Masjid name *</label><input id="newName" required maxlength="150"></div>
-<div><label>Area *</label><input id="newArea" required maxlength="120"></div>
-<div><label>Address</label><input id="newAddress" maxlength="250"></div>
-<div><label>Google Maps link (optional)</label><input id="newMap" type="url" placeholder="https://..."></div>
-</div>
-<button type="submit">Add Masjid</button>
-</form>
-<hr>
-<h3>Existing Masjids & Timings</h3>
-<div id="masjidAdminList">Loading masjids...</div>
-</div>
+  <div class="card">
+    <h2>Add Masjid</h2>
+    <form id="addMasjidForm">
+      <div class="grid">
+        <div><label for="newName">Masjid Name *</label><input id="newName" required maxlength="150"></div>
+        <div><label for="newArea">Area *</label><input id="newArea" required maxlength="120"></div>
+        <div><label for="newAddress">Address</label><input id="newAddress" maxlength="250"></div>
+        <div><label for="newMap">Google Maps URL</label><input id="newMap" type="url" placeholder="https://..."></div>
+      </div>
+      <button type="submit">Add Masjid</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>All Masjids — Details and Timings</h2>
+    <div id="masjidList">Loading masjids...</div>
+  </div>
 </section>
 </main>
 
 <script>
 "use strict";
-const URL="https://ziewfvsoktvawskimwqb.supabase.co";
-const KEY="sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
-const db=window.supabase.createClient(URL,KEY);
+
+const SUPABASE_URL="https://ziewfvsoktvawskimwqb.supabase.co";
+const SUPABASE_KEY="sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
-let currentUser=null, masjids=[];
 
-function note(id,msg,error=false){
-  $(id).textContent=msg;
-  $(id).classList.remove("hidden");
-  if(error) $(id).style.background="#ffeded";
-  else $(id).style.background="#fff5db";
+let currentUser=null;
+let masjids=[];
+
+function showMessage(id,text,isError=false){
+  const box=$(id);
+  box.textContent=text;
+  box.classList.remove("hidden");
+  box.style.background=isError?"#ffeded":"#fff5db";
 }
-function el(tag,text="",cls=""){
-  const n=document.createElement(tag);n.textContent=text;
-  if(cls)n.className=cls;return n;
+function element(tag,text="",cls=""){
+  const n=document.createElement(tag);
+  n.textContent=text;
+  if(cls)n.className=cls;
+  return n;
 }
-function field(label,id,value,type="text"){
-  const wrap=el("label",label);
+function showAuthSection(section){
+  ["loginSection","signupSection","forgotSection","resetSection"].forEach(id=>{
+    $(id).classList.toggle("hidden",id!==section);
+  });
+  $("authMessage").classList.add("hidden");
+}
+function showLogin(){
+  $("adminPanel").classList.add("hidden");
+  $("authCard").classList.remove("hidden");
+  showAuthSection("loginSection");
+}
+function makeField(label,id,value,type="text"){
+  const wrap=element("label",label);
   const input=document.createElement("input");
-  input.id=id;input.value=value??"";input.type=type;
-  wrap.appendChild(input);return wrap;
+  input.id=id;
+  input.type=type;
+  input.value=value??"";
+  wrap.appendChild(input);
+  return wrap;
 }
-function timeInput(label,id,value){
-  const wrap=el("label",label);
+function makeTime(label,id,value){
+  const wrap=element("label",label);
   const input=document.createElement("input");
-  input.id=id;input.type="time";
+  input.id=id;
+  input.type="time";
   input.value=value?String(value).slice(0,5):"";
-  wrap.appendChild(input);return wrap;
+  wrap.appendChild(input);
+  return wrap;
 }
 
+/* Only an existing, authorised admin can enter the dashboard. */
 async function verifyAdmin(){
   const {data,error}=await db.auth.getUser();
-  if(error||!data.user)throw new Error("Please sign in.");
-  const {data:profile,error:pe}=await db.from("profiles")
-    .select("role,approved").eq("id",data.user.id).maybeSingle();
-  if(pe)throw pe;
-  if(profile?.role!=="admin"||profile.approved!==true)
-    throw new Error("Access denied. This account is not an approved admin.");
+  if(error)throw error;
+  if(!data.user)throw new Error("Please sign in.");
+
+  const {data:profile,error:profileError}=await db
+    .from("profiles")
+    .select("role,approved")
+    .eq("id",data.user.id)
+    .maybeSingle();
+
+  if(profileError)throw profileError;
+
+  if(profile?.role!=="admin"||profile.approved!==true){
+    throw new Error("Access denied. Your profile must have role=admin and approved=true.");
+  }
   currentUser=data.user;
+  return currentUser;
 }
 
+async function enterAdmin(){
+  await verifyAdmin();
+  $("authCard").classList.add("hidden");
+  $("adminPanel").classList.remove("hidden");
+  showMessage("mainMessage","Admin verified. Loading data...");
+  await refreshAll();
+}
+
+/* Login */
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const btn=$("loginBtn");
+  btn.disabled=true;
+  try{
+    const {error}=await db.auth.signInWithPassword({
+      email:$("loginEmail").value.trim(),
+      password:$("loginPassword").value
+    });
+    if(error)throw error;
+    await enterAdmin();
+  }catch(error){
+    await db.auth.signOut();
+    showMessage("authMessage",error.message,true);
+  }finally{
+    btn.disabled=false;
+  }
+});
+
+/* Signup: never grants admin role automatically. */
+$("showSignup").onclick=()=>showAuthSection("signupSection");
+$("backLogin1").onclick=()=>showAuthSection("loginSection");
+$("showForgot").onclick=()=>{
+  $("forgotEmail").value=$("loginEmail").value.trim();
+  showAuthSection("forgotSection");
+};
+$("backLogin2").onclick=()=>showAuthSection("loginSection");
+
+$("signupForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if($("signupPassword").value!==$("signupConfirm").value){
+    showMessage("authMessage","Passwords do not match.",true);
+    return;
+  }
+  const btn=$("signupBtn");
+  btn.disabled=true;
+  try{
+    const {error}=await db.auth.signUp({
+      email:$("signupEmail").value.trim(),
+      password:$("signupPassword").value,
+      options:{emailRedirectTo:location.origin+location.pathname}
+    });
+    if(error)throw error;
+    $("signupForm").reset();
+    showMessage("authMessage",
+      "Account signup requested. Email confirmation may be required. An authorised admin profile must be assigned separately before this account can access admin features.");
+  }catch(error){
+    showMessage("authMessage",error.message,true);
+  }finally{
+    btn.disabled=false;
+  }
+});
+
+/* Forgot password */
+$("forgotForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const btn=$("forgotBtn");
+  btn.disabled=true;
+  try{
+    const redirect=location.origin+location.pathname+"?mode=reset";
+    const {error}=await db.auth.resetPasswordForEmail(
+      $("forgotEmail").value.trim(),
+      {redirectTo:redirect}
+    );
+    if(error)throw error;
+    showMessage("authMessage",
+      "If the account exists, a password-reset email will be sent. Open its link in this browser to set your new password.");
+  }catch(error){
+    showMessage("authMessage",error.message,true);
+  }finally{
+    btn.disabled=false;
+  }
+});
+
+/* Set new password after a valid Supabase recovery link. */
+$("resetForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if($("newPassword").value!==$("confirmNewPassword").value){
+    showMessage("authMessage","New passwords do not match.",true);
+    return;
+  }
+  const btn=$("resetBtn");
+  btn.disabled=true;
+  try{
+    const {data,error:sessionError}=await db.auth.getSession();
+    if(sessionError)throw sessionError;
+    if(!data.session){
+      throw new Error("Password-reset session missing. Open the latest reset link from your email again.");
+    }
+    const {error}=await db.auth.updateUser({
+      password:$("newPassword").value
+    });
+    if(error)throw error;
+    await db.auth.signOut();
+    $("resetForm").reset();
+    showLogin();
+    showMessage("authMessage","Password updated. Sign in using your new password.");
+  }catch(error){
+    showMessage("authMessage",error.message,true);
+  }finally{
+    btn.disabled=false;
+  }
+});
+
+db.auth.onAuthStateChange((event)=>{
+  if(event==="PASSWORD_RECOVERY"){
+    $("authCard").classList.remove("hidden");
+    $("adminPanel").classList.add("hidden");
+    showAuthSection("resetSection");
+    showMessage("authMessage","Set a new password for your account.");
+  }
+});
+
+/* Pending Imam requests */
 async function loadRequests(){
   const {data,error}=await db.from("imam_signup_requests")
-    .select("*").eq("status","pending").order("created_at",{ascending:true});
+    .select("*").eq("status","pending")
+    .order("created_at",{ascending:true});
   if(error)throw error;
-  const root=$("requests");root.replaceChildren();
-  if(!data?.length){root.append(el("p","No pending applications."));return;}
+
+  const root=$("requests");
+  root.replaceChildren();
+  if(!data?.length){
+    root.append(element("p","No pending applications."));
+    return;
+  }
+
   data.forEach(r=>{
-    const box=el("div","","item");
-    box.append(el("h3",r.imam_name||r.full_name||"Imam application"));
-    box.append(el("p","Email: "+(r.email||"See signup metadata")));
-    box.append(el("p","Phone: "+(r.phone||"—")));
-    box.append(el("p","Requested masjid: "+(r.masjid_name||"—")));
-    box.append(el("p","Area: "+(r.area||"—")));
-    box.append(el("p","Address: "+(r.address||"—")));
-    box.append(el("p","User ID: "+(r.user_id||"—"),"small"));
+    const box=element("div","","item");
+    box.append(element("h3",r.imam_name||r.full_name||"Imam application"));
+    box.append(element("p","Email: "+(r.email||"Not stored in request table")));
+    box.append(element("p","Phone: "+(r.phone||"—")));
+    box.append(element("p","Requested masjid: "+(r.masjid_name||"—")));
+    box.append(element("p","Area: "+(r.area||"—")));
+    box.append(element("p","Address: "+(r.address||"—")));
 
     const select=document.createElement("select");
-    select.append(new Option("Select a masjid to assign",""));
-    masjids.filter(m=>!m.imam_id||m.imam_id===r.user_id).forEach(m=>{
-      select.append(new Option(m.name+" — "+(m.area||""),m.id));
-    });
-    box.append(el("label","Assign masjid:"));box.append(select);
+    select.append(new Option("Choose masjid to assign",""));
+    masjids.filter(m=>!m.imam_id||m.imam_id===r.user_id)
+      .forEach(m=>select.append(new Option(
+        m.name+" — "+(m.area||""),String(m.id)
+      )));
+    box.append(element("label","Assign masjid:"));
+    box.append(select);
 
-    const approve=el("button","Approve & Assign");
+    const approve=element("button","Approve & Assign");
     approve.onclick=async()=>{
-      if(!select.value){alert("Please select a masjid first.");return;}
+      if(!select.value){alert("Select a masjid first.");return;}
       if(!confirm("Approve this Imam and assign the selected masjid?"))return;
+      approve.disabled=true;
       try{
+        await verifyAdmin();
         const {error}=await db.rpc("admin_approve_imam_request",{
-          p_request_id:r.id,p_masjid_id:select.value
+          p_request_id:r.id,
+          p_masjid_id:select.value
         });
         if(error)throw error;
-        note("mainMessage","Imam approved and assigned.");
+        showMessage("mainMessage","Imam approved and assigned.");
         await refreshAll();
-      }catch(e){note("mainMessage","Approval failed: "+e.message,true);}
+      }catch(error){
+        showMessage("mainMessage","Approval failed: "+error.message,true);
+      }finally{approve.disabled=false;}
     };
-    const reject=el("button","Reject","danger");
+
+    const reject=element("button","Reject","danger");
     reject.onclick=async()=>{
       const reason=prompt("Reason for rejection (optional):")||"";
       if(!confirm("Reject this application?"))return;
+      reject.disabled=true;
       try{
+        await verifyAdmin();
         const {error}=await db.rpc("admin_reject_imam_request",{
           p_request_id:r.id,p_note:reason
         });
         if(error)throw error;
-        note("mainMessage","Application rejected.");
+        showMessage("mainMessage","Application rejected.");
         await refreshAll();
-      }catch(e){note("mainMessage","Rejection failed: "+e.message,true);}
+      }catch(error){
+        showMessage("mainMessage","Rejection failed: "+error.message,true);
+      }finally{reject.disabled=false;}
     };
-    box.append(approve,reject);root.append(box);
+    box.append(approve,reject);
+    root.append(box);
   });
 }
 
+/* Masjid management */
 async function loadMasjids(){
-  const {data,error}=await db.from("Masjids").select("*").order("name");
+  const {data,error}=await db.from("Masjids")
+    .select("*").order("name",{ascending:true});
   if(error)throw error;
   masjids=data||[];
   renderMasjids();
 }
 function renderMasjids(){
-  const root=$("masjidAdminList");root.replaceChildren();
-  if(!masjids.length){root.append(el("p","No masjids found."));return;}
+  const root=$("masjidList");
+  root.replaceChildren();
+  if(!masjids.length){
+    root.append(element("p","No masjids found."));
+    return;
+  }
+
+  const rows=[
+    ["Fajr","fajr_azaan","fajr_jamaat"],
+    ["Zuhr","zuhr_azaan","zuhr_jamaat"],
+    ["Asr","asr_azaan","asr_jamaat"],
+    ["Maghrib","maghrib_azaan","maghrib_jamaat"],
+    ["Isha","isha_azaan","isha_jamaat"]
+  ];
+
   masjids.forEach(m=>{
-    const box=el("div","","item");
-    box.append(el("h3",m.name||"Masjid"));
-    box.append(el("p","Area: "+(m.area||"—")+" | Assigned Imam ID: "+(m.imam_id||"Not assigned"),"small"));
-    const grid=el("div","","grid");
-    grid.append(field("Masjid name","name_"+m.id,m.name));
-    grid.append(field("Area","area_"+m.id,m.area));
-    grid.append(field("Address","address_"+m.id,m.address));
-    grid.append(field("Google Maps URL","map_"+m.id,m.map_link||m.google_maps_link||"","url"));
-    const rows=[
-      ["Fajr","fajr_azaan","fajr_jamaat"],["Zuhr","zuhr_azaan","zuhr_jamaat"],
-      ["Asr","asr_azaan","asr_jamaat"],["Maghrib","maghrib_azaan","maghrib_jamaat"],
-      ["Isha","isha_azaan","isha_jamaat"]
-    ];
+    const box=element("div","","item");
+    box.append(element("h3",m.name||"Masjid"));
+    box.append(element("p","Area: "+(m.area||"—")+" | Imam ID: "+(m.imam_id||"Not assigned"),"small"));
+
+    const grid=element("div","","grid");
+    grid.append(makeField("Masjid Name","name_"+m.id,m.name));
+    grid.append(makeField("Area","area_"+m.id,m.area));
+    grid.append(makeField("Address","address_"+m.id,m.address));
+    grid.append(makeField("Maps URL","map_"+m.id,m.map_link||m.google_maps_link||"","url"));
+
     rows.forEach(([name,a,j])=>{
-      grid.append(timeInput(name+" Azaan",a+"_"+m.id,m[a]));
-      grid.append(timeInput(name+" Jamaat",j+"_"+m.id,m[j]));
+      grid.append(makeTime(name+" Azaan",a+"_"+m.id,m[a]));
+      grid.append(makeTime(name+" Jamaat",j+"_"+m.id,m[j]));
     });
     box.append(grid);
-    const save=el("button","Save Details & Timings");
+
+    const save=element("button","Save Details & Timings");
     save.onclick=async()=>{
       const patch={
         name:$("name_"+m.id).value.trim(),
         area:$("area_"+m.id).value.trim(),
-        address:$("address_"+m.id).value.trim(),
+        address:$("address_"+m.id).value.trim()||null,
         map_link:$("map_"+m.id).value.trim()||null
       };
-      rows.forEach(([n,a,j])=>{
+      rows.forEach(([name,a,j])=>{
         patch[a]=$(`${a}_${m.id}`).value||null;
         patch[j]=$(`${j}_${m.id}`).value||null;
       });
+      save.disabled=true;
       try{
-        const {error}=await db.from("Masjids").update(patch).eq("id",m.id);
+        await verifyAdmin();
+        const {error}=await db.from("Masjids")
+          .update(patch).eq("id",m.id);
         if(error)throw error;
-        note("mainMessage","Masjid details and timings saved.");
+        showMessage("mainMessage","Masjid details and timings saved.");
         await loadMasjids();
-      }catch(e){note("mainMessage","Save failed: "+e.message,true);}
+      }catch(error){
+        showMessage("mainMessage","Save failed: "+error.message,true);
+      }finally{save.disabled=false;}
     };
-    const del=el("button","Delete Masjid","danger");
+
+    const del=element("button","Delete Masjid","danger");
     del.onclick=async()=>{
-      if(m.imam_id){alert("This masjid is assigned to an Imam. Unassign the Imam first.");return;}
-      if(!confirm("Permanently delete "+m.name+"? This cannot be undone."))return;
+      if(m.imam_id){
+        alert("This masjid is assigned to an Imam. Unassign it securely before deletion.");
+        return;
+      }
+      if(!confirm("Permanently delete "+m.name+"?"))return;
+      del.disabled=true;
       try{
+        await verifyAdmin();
         const {error}=await db.from("Masjids").delete().eq("id",m.id);
         if(error)throw error;
-        note("mainMessage","Masjid deleted.");await refreshAll();
-      }catch(e){note("mainMessage","Delete failed: "+e.message,true);}
+        showMessage("mainMessage","Masjid deleted.");
+        await refreshAll();
+      }catch(error){
+        showMessage("mainMessage","Delete failed: "+error.message,true);
+      }finally{del.disabled=false;}
     };
-    box.append(save,del);root.append(box);
+    box.append(save,del);
+    root.append(box);
   });
 }
 
 async function refreshAll(){
   await verifyAdmin();
-  await Promise.all([loadMasjids(),loadRequests()]);
+  showMessage("mainMessage","Loading admin data...");
+  await Promise.all([loadRequests(),loadMasjids()]);
+  showMessage("mainMessage","Admin data loaded.");
 }
-$("loginForm").addEventListener("submit",async e=>{
-  e.preventDefault();const btn=e.submitter;btn.disabled=true;
-  try{
-    const {error}=await db.auth.signInWithPassword({
-      email:$("email").value.trim(),password:$("password").value
-    });
-    if(error)throw error;
-    await verifyAdmin();
-    $("loginCard").classList.add("hidden");
-    $("adminPanel").classList.remove("hidden");
-    note("mainMessage","Admin signed in.");
-    await refreshAll();
-  }catch(e){note("loginMessage",e.message,true);}
-  finally{btn.disabled=false;}
-});
-$("refreshBtn").onclick=()=>refreshAll().catch(e=>note("mainMessage",e.message,true));
+$("refreshBtn").onclick=()=>refreshAll().catch(error=>
+  showMessage("mainMessage",error.message,true)
+);
 $("logoutBtn").onclick=async()=>{
-  await db.auth.signOut();location.reload();
+  await db.auth.signOut();
+  location.href="./admin.html";
 };
+
 $("addMasjidForm").addEventListener("submit",async e=>{
   e.preventDefault();
+  const btn=e.submitter;
+  btn.disabled=true;
   try{
     await verifyAdmin();
     const row={
@@ -263,18 +509,28 @@ $("addMasjidForm").addEventListener("submit",async e=>{
     const {error}=await db.from("Masjids").insert(row);
     if(error)throw error;
     $("addMasjidForm").reset();
-    note("mainMessage","Masjid added.");await refreshAll();
-  }catch(e){note("mainMessage","Add masjid failed: "+e.message,true);}
+    showMessage("mainMessage","Masjid added.");
+    await refreshAll();
+  }catch(error){
+    showMessage("mainMessage","Could not add masjid: "+error.message,true);
+  }finally{btn.disabled=false;}
 });
+
+/* On returning from the password-reset email */
 (async()=>{
-  const {data}=await db.auth.getSession();
+  if(new URLSearchParams(location.search).get("mode")==="reset"){
+    showAuthSection("resetSection");
+    return;
+  }
+  const {data,error}=await db.auth.getSession();
+  if(error)return;
   if(data.session){
-    try{
-      await verifyAdmin();
-      $("loginCard").classList.add("hidden");
-      $("adminPanel").classList.remove("hidden");
-      await refreshAll();
-    }catch(e){note("loginMessage",e.message,true);}
+    try{await enterAdmin();}
+    catch(error){
+      await db.auth.signOut();
+      showLogin();
+      showMessage("authMessage",error.message,true);
+    }
   }
 })();
 </script>
