@@ -4,50 +4,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Imam Approval Admin | Belgaum Salah</title>
+<title>Private Admin | Belgaum Salah</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{margin:0;background:#f3f7f4;color:#18362e;font-family:Arial,sans-serif}
-header{background:#043d32;color:white;padding:20px}
-main{max-width:1000px;margin:25px auto;padding:16px}
-.card,.request{background:white;border:1px solid #dce8e0;border-radius:14px;padding:20px;margin:14px 0}
-input,select{font:inherit;padding:12px;border:1px solid #ccdcd1;border-radius:8px;width:100%;box-sizing:border-box;margin:7px 0 12px}
-button{padding:12px 15px;border:0;border-radius:8px;background:#075b49;color:white;font-weight:bold;cursor:pointer;margin:5px 5px 5px 0}
-.secondary{background:#e8f1eb;color:#075b49}
+*{box-sizing:border-box}
+body{margin:0;background:#f1f6f2;color:#19392e;font-family:Arial,sans-serif}
+header{background:#063e30;color:white;padding:22px}
+header h2{margin:0}
+main{max-width:1050px;margin:24px auto;padding:14px}
+.card,.request{background:white;border:1px solid #d9e6dd;border-radius:15px;padding:20px;margin:15px 0}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cbd9d0;border-radius:8px;margin:8px 0 14px;font:inherit}
+button{border:0;border-radius:8px;padding:12px 15px;margin:5px 5px 5px 0;background:#075b47;color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.secondary{background:#e7f0ea;color:#075b47}
 .danger{background:#a52b25}
-.muted{color:#687d74;white-space:pre-wrap;line-height:1.6}
-.status{background:#fff7e5;padding:12px;border-radius:8px;white-space:pre-wrap}
+.status{background:#fff6df;padding:13px;border-radius:8px;white-space:pre-wrap;line-height:1.5}
+.details{white-space:pre-wrap;line-height:1.7;color:#50665b}
 .hidden{display:none!important}
+small{color:#687d74}
 </style>
 </head>
 <body>
 <header>
-  <h2>🕌 Belgaum Salah — Admin Approvals</h2>
+<h2>🕌 Belgaum Salah — Admin</h2>
+<p>Private Imam Applications & Masjid Assignment</p>
 </header>
-
 <main>
-<section id="login" class="card">
-  <h2>Admin Sign In</h2>
-  <p class="muted">Use your existing approved administrator account.</p>
-  <form id="loginForm">
-    <label>Email</label>
-    <input id="email" type="email" required>
-    <label>Password</label>
-    <input id="password" type="password" required>
-    <button type="submit">Sign In</button>
-  </form>
-  <p id="loginStatus" class="status hidden"></p>
+<section id="loginCard" class="card">
+<h2>Admin Sign In</h2>
+<p>Use your existing approved admin account.</p>
+<form id="loginForm">
+<label>Admin Email</label>
+<input id="email" type="email" autocomplete="username" required>
+<label>Password</label>
+<input id="password" type="password" autocomplete="current-password" required>
+<button id="loginBtn" type="submit">Secure Sign In</button>
+</form>
+<div id="loginMessage" class="status hidden"></div>
 </section>
 
-<section id="panel" class="hidden">
-  <div class="card">
-    <h2>Pending Imam Applications</h2>
-    <p class="muted">This page checks for requests every 20 seconds while open.</p>
-    <div id="status" class="status">Loading...</div>
-    <button id="refresh" type="button">Refresh Requests</button>
-    <button id="logout" class="secondary" type="button">Sign Out</button>
-  </div>
-  <div id="requests"></div>
+<section id="adminPanel" class="hidden">
+<div class="card">
+<h2>Imam Signup Requests</h2>
+<p><small>Pending applications are refreshed every 20 seconds while this page is open.</small></p>
+<div id="status" class="status">Loading...</div>
+<button id="refreshBtn" type="button">Refresh Requests</button>
+<button id="logoutBtn" class="secondary" type="button">Sign Out</button>
+</div>
+<div id="requestList"></div>
 </section>
 </main>
 
@@ -56,62 +60,80 @@ const SUPABASE_URL='https://ziewfvsoktvawskimwqb.supabase.co';
 const SUPABASE_KEY='sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
-let timer=null;
+let refreshTimer=null;
+let busy=false;
+
+function showLoginError(message){
+  $('loginMessage').textContent=message;
+  $('loginMessage').classList.remove('hidden');
+}
+
+async function verifyAdmin(user){
+  const {data:profile,error}=await db.from('profiles')
+    .select('role,approved')
+    .eq('id',user.id)
+    .maybeSingle();
+
+  if(error)throw error;
+  if(profile?.role!=='admin'||profile?.approved!==true){
+    await db.auth.signOut();
+    throw new Error('Access denied. An approved admin account is required.');
+  }
+}
+
+async function enterAdmin(user){
+  await verifyAdmin(user);
+  $('loginCard').classList.add('hidden');
+  $('adminPanel').classList.remove('hidden');
+  await loadRequests();
+  if(refreshTimer)clearInterval(refreshTimer);
+  refreshTimer=setInterval(loadRequests,20000);
+}
 
 $('loginForm').addEventListener('submit',async event=>{
   event.preventDefault();
-  $('loginStatus').classList.add('hidden');
+  $('loginBtn').disabled=true;
+  $('loginMessage').classList.add('hidden');
 
   try{
     const {data,error}=await db.auth.signInWithPassword({
       email:$('email').value.trim(),
       password:$('password').value
     });
-    if(error) throw error;
-
-    const {data:profile,error:profileError}=await db
-      .from('profiles')
-      .select('role,approved')
-      .eq('id',data.user.id)
-      .maybeSingle();
-
-    if(profileError) throw profileError;
-
-    if(profile?.role!=='admin'||profile?.approved!==true){
-      await db.auth.signOut();
-      throw new Error('This account is not an approved admin.');
-    }
-
-    $('login').classList.add('hidden');
-    $('panel').classList.remove('hidden');
-    await loadRequests();
-    timer=setInterval(loadRequests,20000);
+    if(error)throw error;
+    await enterAdmin(data.user);
   }catch(error){
-    $('loginStatus').textContent=error.message;
-    $('loginStatus').classList.remove('hidden');
+    showLoginError(error.message);
+  }finally{
+    $('loginBtn').disabled=false;
   }
 });
 
 async function loadRequests(){
-  $('status').textContent='Loading requests...';
+  if(busy)return;
+  busy=true;
+  $('status').textContent='Loading applications...';
 
   try{
-    const {data:requests,error}=await db
-      .from('imam_signup_requests')
-      .select('*')
+    const {data:authData,error:authError}=await db.auth.getUser();
+    if(authError)throw authError;
+    if(!authData.user)throw new Error('Session expired. Please sign in again.');
+    await verifyAdmin(authData.user);
+
+    const {data:requests,error}=await db.from('imam_signup_requests')
+      .select('id,user_id,imam_name,phone,masjid_name,area,address,email,status,created_at')
       .eq('status','pending')
       .order('created_at',{ascending:true});
-    if(error) throw error;
+    if(error)throw error;
 
-    const {data:masjids,error:masjidError}=await db
-      .from('Masjids')
-      .select('id,name,area,address,imam_id')
+    const {data:masjids,error:masjidError}=await db.from('Masjids')
+      .select('id,name,area,imam_id')
       .order('name');
-    if(masjidError) throw masjidError;
+    if(masjidError)throw masjidError;
 
-    $('requests').replaceChildren();
+    $('requestList').replaceChildren();
     $('status').textContent=requests.length
-      ?requests.length+' pending application(s).'
+      ?requests.length+' pending application(s) found.'
       :'No pending applications.';
 
     for(const r of requests){
@@ -119,91 +141,122 @@ async function loadRequests(){
       card.className='request';
 
       const title=document.createElement('h3');
-      title.textContent=r.imam_name+' — '+r.masjid_name;
+      title.textContent=r.imam_name||'Imam name not provided';
 
       const details=document.createElement('p');
-      details.className='muted';
+      details.className='details';
       details.textContent=
-        'Phone: '+r.phone+
-        '\nEmail: '+(r.email||'Not available')+
-        '\nArea: '+r.area+
-        '\nAddress: '+r.address+
-        '\nSubmitted: '+new Date(r.created_at).toLocaleString('en-IN');
+        'Requested Masjid: '+(r.masjid_name||'Not provided')+
+        '\nPhone: '+(r.phone||'Not provided')+
+        '\nEmail: '+(r.email||'Not provided')+
+        '\nArea: '+(r.area||'Not provided')+
+        '\nAddress: '+(r.address||'Not provided')+
+        '\nSubmitted: '+(r.created_at?new Date(r.created_at).toLocaleString('en-IN'):'Unknown');
+
+      const label=document.createElement('label');
+      label.textContent='Assign an available masjid';
 
       const select=document.createElement('select');
       const first=document.createElement('option');
       first.value='';
-      first.textContent='Select masjid to assign...';
+      first.textContent='Choose masjid...';
       select.append(first);
 
       for(const m of masjids){
         const option=document.createElement('option');
         option.value=m.id;
-        option.textContent=m.name+' — '+(m.area||'')+
-          (m.imam_id?' (already assigned)':'');
-        if(m.imam_id) option.disabled=true;
+        option.textContent=(m.name||'Unnamed Masjid')+
+          (m.area?' — '+m.area:'')+
+          (m.imam_id?' (Already assigned)':'');
+        if(m.imam_id)option.disabled=true;
         select.append(option);
       }
 
       const approve=document.createElement('button');
-      approve.textContent='Approve & Assign Masjid';
-      approve.onclick=async()=>{
-        if(!select.value){
-          alert('Please select an available masjid.');
-          return;
-        }
-        if(!confirm('Approve this Imam and assign the selected masjid?'))return;
-        approve.disabled=true;
-
-        try{
-          const {error}=await db.rpc('admin_approve_imam_request',{
-            p_request_id:r.id,
-            p_masjid_id:select.value
-          });
-          if(error) throw error;
-          alert('Imam approved and masjid assigned.');
-          await loadRequests();
-        }catch(error){
-          alert('Approval failed: '+error.message);
-        }finally{
-          approve.disabled=false;
-        }
-      };
+      approve.textContent='Approve & Assign';
+      approve.onclick=()=>approveRequest(r.id,select.value,approve);
 
       const reject=document.createElement('button');
-      reject.textContent='Reject Application';
+      reject.textContent='Reject Request';
       reject.className='danger';
-      reject.onclick=async()=>{
-        const note=prompt('Reason (optional):')||'';
-        if(!confirm('Reject this application?'))return;
-        try{
-          const {error}=await db.rpc('admin_reject_imam_request',{
-            p_request_id:r.id,
-            p_note:note
-          });
-          if(error) throw error;
-          await loadRequests();
-        }catch(error){
-          alert('Reject failed: '+error.message);
-        }
-      };
+      reject.onclick=()=>rejectRequest(r.id,reject);
 
-      card.append(title,details,select,approve,reject);
-      $('requests').append(card);
+      card.append(title,details,label,select,approve,reject);
+      $('requestList').append(card);
     }
   }catch(error){
-    $('status').textContent=
-      'Could not load applications: '+error.message+
-      '\nCheck SQL setup, table permissions and admin role.';
+    $('status').textContent='Could not load requests: '+error.message;
+  }finally{
+    busy=false;
+  }
+}
+</script>
+
+<script>
+async function approveRequest(requestId,masjidId,button){
+  if(!masjidId){
+    alert('Please select an available masjid.');
+    return;
+  }
+  if(!confirm('Approve this Imam and assign the selected masjid?'))return;
+
+  button.disabled=true;
+  try{
+    const {error}=await db.rpc('admin_approve_imam_request',{
+      p_request_id:requestId,
+      p_masjid_id:masjidId
+    });
+    if(error)throw error;
+    alert('Imam approved and masjid assigned successfully.');
+    await loadRequests();
+  }catch(error){
+    alert('Approval failed: '+error.message+
+      '\nCheck that the required Supabase SQL functions exist.');
+  }finally{
+    button.disabled=false;
   }
 }
 
-$('refresh').onclick=loadRequests;
-$('logout').onclick=async()=>{
-  if(timer)clearInterval(timer);
+async function rejectRequest(requestId,button){
+  if(!confirm('Are you sure you want to reject this application?'))return;
+  const note=prompt('Reason for rejection (optional):')||'';
+
+  button.disabled=true;
+  try{
+    const {error}=await db.rpc('admin_reject_imam_request',{
+      p_request_id:requestId,
+      p_note:note
+    });
+    if(error)throw error;
+    alert('Application rejected.');
+    await loadRequests();
+  }catch(error){
+    alert('Rejection failed: '+error.message+
+      '\nCheck that the required Supabase SQL functions exist.');
+  }finally{
+    button.disabled=false;
+  }
+}
+
+$('refreshBtn').onclick=loadRequests;
+
+$('logoutBtn').onclick=async()=>{
+  if(refreshTimer)clearInterval(refreshTimer);
   await db.auth.signOut();
   location.reload();
 };
+
+(async()=>{
+  try{
+    const {data,error}=await db.auth.getSession();
+    if(error)throw error;
+    if(data.session){
+      await enterAdmin(data.session.user);
+    }
+  }catch(error){
+    showLoginError(error.message);
+  }
+})();
 </script>
 </body>
 </html>
