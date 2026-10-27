@@ -1,370 +1,203 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Imam Dashboard | Belgaum Salah</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root {
-  --green: #064e3b;
-  --green-dark: #043b2e;
-  --gold: #d9ad52;
-  --bg: #f3f7f4;
-  --white: #ffffff;
-  --text: #18352b;
-  --muted: #6b7e75;
-  --border: #dce7df;
-  --red: #b42318;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
-}
-header {
-  background: var(--green-dark);
-  color: white;
-  padding: 19px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.brand { font-size: 21px; font-weight: 800; }
-.brand small {
-  display: block;
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: #d7e9df;
-  margin-top: 5px;
-}
-.header-actions { display: flex; gap: 10px; align-items: center; }
-main { max-width: 1050px; margin: 28px auto; padding: 0 16px; }
-.welcome { margin-bottom: 22px; }
-h1 { font-size: 27px; margin: 0 0 8px; }
-h2 { font-size: 19px; margin: 0 0 7px; }
-p { line-height: 1.5; }
-.muted { color: var(--muted); font-size: 14px; }
-.card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 22px;
-  margin-bottom: 18px;
-  box-shadow: 0 5px 20px rgba(20,60,40,.035);
-}
-.notice {
-  padding: 13px 15px;
-  border-radius: 10px;
-  background: #fff7e6;
-  border: 1px solid #f0d79e;
-  color: #805614;
-  margin-bottom: 18px;
-  font-size: 14px;
-}
-.status {
-  padding: 12px 14px;
-  border-radius: 9px;
-  margin: 12px 0;
-  font-size: 14px;
-  display: none;
-  overflow-wrap: anywhere;
-}
-.status.error { display: block; color: var(--red); background: #fff0ef; }
-.status.success { display: block; color: #086342; background: #e9f8ef; }
-.masjid-name { color: var(--green); font-size: 23px; font-weight: 800; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-.field { display: flex; flex-direction: column; gap: 7px; }
-label { font-size: 13px; font-weight: 700; }
-input {
-  width: 100%;
-  border: 1px solid #ccdcd1;
-  border-radius: 9px;
-  padding: 12px;
-  background: white;
-  font: inherit;
-  color: var(--text);
-}
-input:focus {
-  outline: 2px solid #b3d8c2;
-  border-color: var(--green);
-}
-.btn {
-  border: 0;
-  background: var(--green);
-  color: white;
-  border-radius: 9px;
-  padding: 12px 16px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 14px;
-}
-.btn:hover { background: var(--green-dark); }
-.btn:disabled { opacity: .55; cursor: not-allowed; }
-.btn.secondary { background: #e8f1eb; color: var(--green); }
-.btn.gold { background: var(--gold); color: #26371e; }
-.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
-.prayer {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  margin-top: 14px;
-}
-.prayer h3 { margin: 0 0 14px; color: var(--green); }
-.hidden { display: none !important; }
-#loginCard { max-width: 460px; margin: 45px auto; }
-footer { text-align: center; color: var(--muted); padding: 25px; font-size: 12px; }
-@media (max-width: 620px) {
-  .grid { grid-template-columns: 1fr; }
-  header { padding: 16px; }
-  main { margin-top: 18px; }
-  .card { padding: 17px; }
-  h1 { font-size: 23px; }
-}
+body{margin:0;background:#f3f7f4;color:#18352b;font-family:Arial,sans-serif}
+header{background:#043b2e;color:white;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+main{max-width:950px;margin:25px auto;padding:16px}
+.card{background:white;border:1px solid #dce7df;border-radius:14px;padding:22px;margin-bottom:18px}
+input{padding:12px;border:1px solid #ccdcd1;border-radius:8px;width:100%;box-sizing:border-box;font:inherit}
+label{font-weight:bold;font-size:13px}
+.field{display:flex;flex-direction:column;gap:7px;margin:14px 0}
+button{padding:12px 16px;border:0;border-radius:8px;background:#064e3b;color:white;font-weight:bold;cursor:pointer;margin:5px 5px 5px 0}
+.secondary{background:#e8f1eb;color:#064e3b}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.prayer{border:1px solid #dce7df;border-radius:12px;padding:16px;margin:12px 0}
+.muted{color:#6b7e75;line-height:1.5}
+.status{padding:12px;border-radius:8px;margin:12px 0;white-space:pre-wrap}
+.error{background:#fff0ef;color:#b42318}
+.success{background:#e9f8ef;color:#086342}
+.hidden{display:none!important}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
 <header>
-  <div class="brand">
-    🕌 Belgaum Salah
-    <small>IMAM DASHBOARD</small>
-  </div>
-  <div class="header-actions">
-    <a href="./" style="color:white;text-decoration:none;font-size:13px">
-      Public Website
-    </a>
-    <button id="logoutBtn" class="btn gold hidden" type="button">
-      Sign out
-    </button>
-  </div>
+  <div><h2>🕌 Belgaum Salah</h2>IMAM DASHBOARD</div>
+  <button id="logoutBtn" class="secondary hidden" type="button">Sign Out</button>
 </header>
 
 <main>
-  <section id="loginCard" class="card hidden">
-    <h1>Imam Sign In</h1>
-    <p class="muted">Sign in with your approved Imam account.</p>
-    <div id="loginStatus" class="status"></div>
+<section id="loginCard" class="card">
+  <h2>Imam Sign In</h2>
+  <p class="muted">Only approved Imam accounts can access this dashboard.</p>
+  <p id="loginStatus" class="status hidden"></p>
+  <form id="loginForm">
+    <div class="field">
+      <label>Email</label>
+      <input id="email" type="email" required>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input id="password" type="password" required>
+    </div>
+    <button id="loginBtn" type="submit">Sign In</button>
+  </form>
+  <p><a href="./imam.html">New Imam? Register here</a></p>
+</section>
 
-    <form id="loginForm">
-      <div class="field" style="margin:17px 0">
-        <label for="email">Email address</label>
-        <input id="email" type="email" autocomplete="username"
-               required placeholder="imam@example.com">
-      </div>
-      <div class="field" style="margin:17px 0">
-        <label for="password">Password</label>
-        <input id="password" type="password"
-               autocomplete="current-password" required>
-      </div>
-      <button id="loginBtn" class="btn" type="submit" style="width:100%">
-        Sign in
-      </button>
+<section id="dashboard" class="hidden">
+  <div class="card">
+    <h2 id="masjidName">Loading Masjid...</h2>
+    <p id="masjidAddress" class="muted"></p>
+    <p id="masjidArea" class="muted"></p>
+    <p id="pageStatus" class="status hidden"></p>
+  </div>
+
+  <div class="card">
+    <h2>Prayer Timings</h2>
+    <p class="muted">Enter azaan and jamaat times, then save.</p>
+    <form id="timingForm">
+      <div id="prayerFields"></div>
+      <button id="saveBtn" type="submit">Save Timings</button>
+      <button id="reloadBtn" class="secondary" type="button">Reload Timings</button>
     </form>
-  </section>
+  </div>
+</section>
 
-  <section id="dashboard" class="hidden">
-    <div class="welcome">
-      <h1>Assalamu Alaikum</h1>
-      <p class="muted">
-        View your assigned masjid and manage its prayer timings.
-      </p>
-    </div>
-
-    <div class="notice">
-      You can edit timings only for the masjid assigned to your approved
-      Imam account. Please verify every change before saving.
-    </div>
-
-    <div id="pageStatus" class="status"></div>
-
-    <section class="card">
-      <p class="muted">YOUR ASSIGNED MASJID</p>
-      <div id="masjidName" class="masjid-name">Loading...</div>
-      <p id="masjidAddress" class="muted"></p>
-      <p id="masjidArea" class="muted"></p>
-    </section>
-
-    <section class="card">
-      <h2>Prayer Timings</h2>
-      <p class="muted">
-        Enter the local time for azaan and jamaat for each prayer.
-      </p>
-
-      <form id="timingForm">
-        <div id="prayerFields"></div>
-        <div class="actions">
-          <button id="saveBtn" class="btn" type="submit">
-            Save prayer timings
-          </button>
-          <button id="reloadBtn" class="btn secondary" type="button">
-            Reload timings
-          </button>
-        </div>
-      </form>
-    </section>
-  </section>
-
-  <section id="noAssignment" class="card hidden">
-    <h2>No masjid assigned yet</h2>
-    <p>
-      Your account is approved, but the administrator has not assigned
-      a masjid to you. Please contact the Belgaum Salah administrator.
-    </p>
-  </section>
+<section id="noAssignment" class="card hidden">
+  <h2>No Masjid Assigned</h2>
+  <p>Please contact the administrator to assign your masjid.</p>
+</section>
 </main>
 
-<footer>Belgaum Salah · Imam Portal</footer>
-
 <script>
-  const SUPABASE_URL = "https://ziewfvsoktvawskimwqb.supabase.co";
-const SUPABASE_KEY =
-  "sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu";
+const SUPABASE_URL='https://ziewfvsoktvawskimwqb.supabase.co';
+const SUPABASE_KEY='sb_publishable_pM2LZYu9qZmHfAJE2OSf1Q_-PTtzuHu';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-const $ = (id) => document.getElementById(id);
-
-const prayers = [
-  { key: "fajr", label: "Fajr" },
-  { key: "zuhr", label: "Zuhr" },
-  { key: "asr", label: "Asr" },
-  { key: "maghrib", label: "Maghrib" },
-  { key: "isha", label: "Isha" }
+const prayers=[
+  {key:'fajr',label:'Fajr'},
+  {key:'zuhr',label:'Zuhr'},
+  {key:'asr',label:'Asr'},
+  {key:'maghrib',label:'Maghrib'},
+  {key:'isha',label:'Isha'}
 ];
 
-let currentUser = null;
-let assignedMasjid = null;
-let loadingTimings = false;
+let currentUser=null;
+let assignedMasjid=null;
 
-function showStatus(id, message, type = "error") {
-  const el = $(id);
-  el.textContent = message;
-  el.className = "status " + type;
+function status(id,message,type='error'){
+  const el=$(id);
+  el.textContent=message;
+  el.className='status '+type;
+}
+function hideStatus(id){
+  $(id).textContent='';
+  $(id).className='status hidden';
+}
+function showLogin(message=''){
+  $('loginCard').classList.remove('hidden');
+  $('dashboard').classList.add('hidden');
+  $('noAssignment').classList.add('hidden');
+  $('logoutBtn').classList.add('hidden');
+  if(message)status('loginStatus',message);
+}
+function showDashboard(){
+  $('loginCard').classList.add('hidden');
+  $('dashboard').classList.remove('hidden');
+  $('noAssignment').classList.add('hidden');
+  $('logoutBtn').classList.remove('hidden');
 }
 
-function clearStatus(id) {
-  const el = $(id);
-  el.textContent = "";
-  el.className = "status";
+function timeValue(value){
+  if(!value)return '';
+  const match=String(value).match(/^(\d{1,2}):(\d{2})/);
+  return match?match[1].padStart(2,'0')+':'+match[2]:'';
 }
 
-function showLogin(message = "") {
-  $("loginCard").classList.remove("hidden");
-  $("dashboard").classList.add("hidden");
-  $("noAssignment").classList.add("hidden");
-  $("logoutBtn").classList.add("hidden");
+function renderFields(row){
+  $('prayerFields').replaceChildren();
 
-  if (message) showStatus("loginStatus", message);
+  for(const prayer of prayers){
+    const section=document.createElement('div');
+    section.className='prayer';
+
+    const heading=document.createElement('h3');
+    heading.textContent=prayer.label;
+    section.append(heading);
+
+    const grid=document.createElement('div');
+    grid.className='grid';
+
+    for(const type of ['azaan','jamaat']){
+      const key=prayer.key+'_'+type;
+      const field=document.createElement('div');
+      field.className='field';
+
+      const label=document.createElement('label');
+      label.textContent=prayer.label+' '+type;
+      label.htmlFor=key;
+
+      const input=document.createElement('input');
+      input.type='time';
+      input.id=key;
+      input.required=true;
+      input.value=timeValue(row[key]);
+
+      field.append(label,input);
+      grid.append(field);
+    }
+    section.append(grid);
+    $('prayerFields').append(section);
+  }
 }
 
-function showDashboard() {
-  $("loginCard").classList.add("hidden");
-  $("dashboard").classList.remove("hidden");
-  $("noAssignment").classList.add("hidden");
-  $("logoutBtn").classList.remove("hidden");
-}
+async function loadAssignedMasjid(){
+  const {data,error}=await db.from('Masjids')
+    .select('id,name,area,address,imam_id,fajr_azaan,fajr_jamaat,zuhr_azaan,zuhr_jamaat,asr_azaan,asr_jamaat,maghrib_azaan,maghrib_jamaat,isha_azaan,isha_jamaat')
+    .eq('imam_id',currentUser.id);
 
-function timeToInput(value) {
-  if (!value) return "";
+  if(error)throw error;
 
-  const text = String(value).trim();
-
-  // Supports values such as 05:30 or 05:30:00.
-  let match = text.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
-  if (match) {
-    return match[1].padStart(2, "0") + ":" + match[2];
+  if(!data||data.length===0){
+    assignedMasjid=null;
+    $('dashboard').classList.add('hidden');
+    $('noAssignment').classList.remove('hidden');
+    return;
   }
 
-  // Also supports values such as 5:30 AM or 6:45 PM.
-  match = text.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-  if (match) {
-    let hours = Number(match[1]);
-    const minutes = match[2];
-    const suffix = match[3].toUpperCase();
-
-    if (hours < 1 || hours > 12) return "";
-
-    if (suffix === "AM" && hours === 12) hours = 0;
-    if (suffix === "PM" && hours !== 12) hours += 12;
-
-    return String(hours).padStart(2, "0") + ":" + minutes;
+  if(data.length!==1){
+    throw new Error('Your account has multiple masjid assignments. Contact admin.');
   }
 
-  return "";
+  assignedMasjid=data[0];
+  $('masjidName').textContent=assignedMasjid.name||'Masjid';
+  $('masjidAddress').textContent=assignedMasjid.address||'';
+  $('masjidArea').textContent=assignedMasjid.area?'Area: '+assignedMasjid.area:'';
+  renderFields(assignedMasjid);
 }
 
-function renderPrayerFields(row) {
-  $("prayerFields").innerHTML = prayers.map(prayer => {
-    const azaanKey = prayer.key + "_azaan";
-    const jamaatKey = prayer.key + "_jamaat";
+async function checkAccess(user){
+  currentUser=user;
 
-    return `
-      <div class="prayer">
-        <h3>${prayer.label}</h3>
-        <div class="grid">
-          <div class="field">
-            <label for="${azaanKey}">${prayer.label} Azaan</label>
-            <input
-              id="${azaanKey}"
-              name="${azaanKey}"
-              type="time"
-              value="${timeToInput(row[azaanKey])}"
-              required>
-          </div>
-          <div class="field">
-            <label for="${jamaatKey}">${prayer.label} Jamaat</label>
-            <input
-              id="${jamaatKey}"
-              name="${jamaatKey}"
-              type="time"
-              value="${timeToInput(row[jamaatKey])}"
-              required>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-async function checkImamAccess(user) {
-  currentUser = user;
-
-  const { data: profile, error: profileError } = await db
-    .from("profiles")
-    .select("id, role, approved")
-    .eq("id", user.id)
+  const {data:profile,error}=await db.from('profiles')
+    .select('id,role,approved')
+    .eq('id',user.id)
     .maybeSingle();
 
-  if (profileError) {
-    throw new Error(
-      "Profile check failed. Check profiles table permissions and columns."
-    );
-  }
+  if(error)throw error;
 
-  if (
-    !profile ||
-    profile.role !== "imam" ||
-    profile.approved !== true
-  ) {
+  if(!profile||profile.role!=='imam'||profile.approved!==true){
     await db.auth.signOut();
-    currentUser = null;
-    showLogin(
-      "Access denied. Your account must be approved with the Imam role."
-    );
+    currentUser=null;
+    showLogin('Access denied. Your Imam account is not approved yet.');
     return;
   }
 
@@ -372,224 +205,94 @@ async function checkImamAccess(user) {
   await loadAssignedMasjid();
 }
 
-async function loadAssignedMasjid() {
-  if (!currentUser) return;
-
-  clearStatus("pageStatus");
-  $("masjidName").textContent = "Loading...";
-  $("masjidAddress").textContent = "";
-  $("masjidArea").textContent = "";
-
-  const { data, error } = await db
-    .from("Masjids")
-    .select(
-      "id, name, area, address, imam_id, " +
-      "fajr_azaan, fajr_jamaat, " +
-      "zuhr_azaan, zuhr_jamaat, " +
-      "asr_azaan, asr_jamaat, " +
-      "maghrib_azaan, maghrib_jamaat, " +
-      "isha_azaan, isha_jamaat"
-    )
-    .eq("imam_id", currentUser.id);
-
-  if (error) {
-    throw new Error(
-      "Could not load your masjid. Check the Masjids table columns and RLS policies."
-    );
-  }
-
-  if (!data || data.length === 0) {
-    assignedMasjid = null;
-    $("dashboard").classList.add("hidden");
-    $("noAssignment").classList.remove("hidden");
-    return;
-  }
-
-  // One Imam account should be assigned to one masjid.
-  if (data.length !== 1) {
-    assignedMasjid = null;
-    throw new Error(
-      "Your account has multiple masjid assignments. Ask the administrator to correct them."
-    );
-  }
-
-  assignedMasjid = data[0];
-
-  $("masjidName").textContent = assignedMasjid.name || "Unnamed Masjid";
-  $("masjidAddress").textContent = assignedMasjid.address || "";
-  $("masjidArea").textContent = assignedMasjid.area
-    ? "Area: " + assignedMasjid.area
-    : "";
-
-  renderPrayerFields(assignedMasjid);
-}
-
-async function handleLogin(event) {
+$('loginForm').addEventListener('submit',async event=>{
   event.preventDefault();
-  clearStatus("loginStatus");
+  hideStatus('loginStatus');
+  $('loginBtn').disabled=true;
 
-  const email = $("email").value.trim();
-  const password = $("password").value;
-  const button = $("loginBtn");
-
-  button.disabled = true;
-  button.textContent = "Signing in...";
-
-  try {
-    const { data, error } = await db.auth.signInWithPassword({
-      email,
-      password
+  try{
+    const {data,error}=await db.auth.signInWithPassword({
+      email:$('email').value.trim(),
+      password:$('password').value
     });
-
-    if (error) throw error;
-    await checkImamAccess(data.user);
-  } catch (error) {
-    showLogin(
-      error.message || "Sign in failed. Please try again."
-    );
-  } finally {
-    button.disabled = false;
-    button.textContent = "Sign in";
-  }
-}
-  async function savePrayerTimings(event) {
-  event.preventDefault();
-  clearStatus("pageStatus");
-
-  if (!currentUser || !assignedMasjid) {
-    showStatus("pageStatus", "No assigned masjid found.");
-    return;
-  }
-
-  if (loadingTimings) return;
-
-  const saveButton = $("saveBtn");
-  saveButton.disabled = true;
-  saveButton.textContent = "Saving...";
-
-  try {
-    // Send only the ten prayer timing fields.
-    const updates = {};
-
-    for (const prayer of prayers) {
-      for (const type of ["azaan", "jamaat"]) {
-        const key = prayer.key + "_" + type;
-        const value = $(key).value;
-
-        if (!value) {
-          throw new Error(
-            "Please enter both azaan and jamaat times for every prayer."
-          );
-        }
-
-        // HTML time inputs return HH:mm.
-        updates[key] = value;
-      }
-    }
-
-    // Restrict the update query to this Imam's assigned masjid.
-    const { data, error } = await db
-      .from("Masjids")
-      .update(updates)
-      .eq("id", assignedMasjid.id)
-      .eq("imam_id", currentUser.id)
-      .select("id");
-
-    if (error) throw error;
-
-    if (!data || data.length !== 1) {
-      throw new Error(
-        "No masjid was updated. Check your assignment and database UPDATE policy."
-      );
-    }
-
-    showStatus(
-      "pageStatus",
-      "Prayer timings saved successfully.",
-      "success"
-    );
-
-    // Reload the saved values from the database.
-    await loadAssignedMasjid();
-
-  } catch (error) {
-    showStatus(
-      "pageStatus",
-      error.message || "Could not save timings."
-    );
-  } finally {
-    saveButton.disabled = false;
-    saveButton.textContent = "Save prayer timings";
-  }
-}
-
-async function reloadTimings() {
-  const button = $("reloadBtn");
-  button.disabled = true;
-
-  try {
-    await loadAssignedMasjid();
-    showStatus(
-      "pageStatus",
-      "Timings reloaded from the database.",
-      "success"
-    );
-  } catch (error) {
-    showStatus(
-      "pageStatus",
-      error.message || "Could not reload timings."
-    );
-  } finally {
-    button.disabled = false;
-  }
-}
-
-async function logout() {
-  const { error } = await db.auth.signOut();
-
-  if (error) {
-    showStatus("pageStatus", "Sign out failed. Please try again.");
-    return;
-  }
-
-  currentUser = null;
-  assignedMasjid = null;
-  $("loginForm").reset();
-  showLogin();
-}
-
-$("loginForm").addEventListener("submit", handleLogin);
-$("timingForm").addEventListener("submit", savePrayerTimings);
-$("reloadBtn").addEventListener("click", reloadTimings);
-$("logoutBtn").addEventListener("click", logout);
-
-async function startDashboard() {
-  try {
-    const { data, error } = await db.auth.getSession();
-
-    if (error) throw error;
-
-    if (data.session) {
-      await checkImamAccess(data.session.user);
-    } else {
-      showLogin();
-    }
-  } catch (error) {
-    showLogin(
-      error.message || "Could not verify your login. Please refresh the page."
-    );
-  }
-}
-
-db.auth.onAuthStateChange((event, session) => {
-  if (event === "SIGNED_OUT") {
-    currentUser = null;
-    assignedMasjid = null;
-    showLogin();
+    if(error)throw error;
+    await checkAccess(data.user);
+  }catch(error){
+    showLogin(error.message);
+  }finally{
+    $('loginBtn').disabled=false;
   }
 });
 
-startDashboard();
+$('timingForm').addEventListener('submit',async event=>{
+  event.preventDefault();
+  hideStatus('pageStatus');
+
+  if(!currentUser||!assignedMasjid){
+    status('pageStatus','No assigned masjid found.');
+    return;
+  }
+
+  $('saveBtn').disabled=true;
+
+  try{
+    const updates={};
+
+    for(const prayer of prayers){
+      for(const type of ['azaan','jamaat']){
+        const key=prayer.key+'_'+type;
+        const value=$(key).value;
+        if(!value)throw new Error('Enter every azaan and jamaat time.');
+        updates[key]=value;
+      }
+    }
+
+    const {data,error}=await db.from('Masjids')
+      .update(updates)
+      .eq('id',assignedMasjid.id)
+      .eq('imam_id',currentUser.id)
+      .select('id');
+
+    if(error)throw error;
+    if(!data||data.length!==1){
+      throw new Error('No row updated. Check your masjid assignment and database policies.');
+    }
+
+    status('pageStatus','Prayer timings saved successfully.','success');
+    await loadAssignedMasjid();
+  }catch(error){
+    status('pageStatus',error.message);
+  }finally{
+    $('saveBtn').disabled=false;
+  }
+});
+
+$('reloadBtn').onclick=async()=>{
+  try{
+    await loadAssignedMasjid();
+    status('pageStatus','Timings reloaded.','success');
+  }catch(error){
+    status('pageStatus',error.message);
+  }
+};
+
+$('logoutBtn').onclick=async()=>{
+  await db.auth.signOut();
+  currentUser=null;
+  assignedMasjid=null;
+  showLogin();
+};
+
+(async()=>{
+  try{
+    const {data,error}=await db.auth.getSession();
+    if(error)throw error;
+    if(data.session)await checkAccess(data.session.user);
+    else showLogin();
+  }catch(error){
+    showLogin(error.message);
+  }
+})();
 </script>
 </body>
 </html>
