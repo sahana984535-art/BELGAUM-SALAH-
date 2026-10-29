@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,6 +39,7 @@ hr{border:0;border-top:1px solid var(--line);margin:20px 0}
 </style>
 </head>
 <body>
+
 <header>
   <h1>🕌 Belgaum Salah</h1>
   <p>Admin Control Panel · Imam approvals · Masjid timings</p>
@@ -50,11 +50,14 @@ hr{border:0;border-top:1px solid var(--line);margin:20px 0}
   <h2>Admin Sign In</h2>
   <p class="section-note">Sirf authorised admin account se login karein.</p>
   <div id="loginMessage" class="message hidden" role="status"></div>
+
   <form id="loginForm">
     <label for="email">Email address</label>
     <input id="email" type="email" autocomplete="username" required>
+
     <label for="password">Password</label>
     <input id="password" type="password" autocomplete="current-password" required>
+
     <button id="loginButton" type="submit">Sign In</button>
     <a class="btn secondary" href="./index.html">Back to Home</a>
   </form>
@@ -70,7 +73,9 @@ hr{border:0;border-top:1px solid var(--line);margin:20px 0}
       <button id="refreshButton" class="secondary" type="button">↻ Refresh</button>
       <button id="logoutButton" class="danger" type="button">Sign Out</button>
     </div>
+
     <div id="mainMessage" class="message">Loading dashboard...</div>
+
     <div class="nav">
       <a class="btn secondary" href="#pendingSection">Pending Applications</a>
       <a class="btn secondary" href="#imamsSection">Existing Imams</a>
@@ -81,7 +86,7 @@ hr{border:0;border-top:1px solid var(--line);margin:20px 0}
 
   <div class="card" id="pendingSection">
     <h2>📥 Pending Imam Applications</h2>
-    <p class="section-note">Application approve karte waqt Imam ko masjid assign karna zaroori hai.</p>
+    <p class="section-note">Approve karne se pehle Imam ke liye masjid select karein.</p>
     <div id="pendingList">Loading applications...</div>
   </div>
 
@@ -98,9 +103,18 @@ hr{border:0;border-top:1px solid var(--line);margin:20px 0}
     <h2>➕ Add New Masjid</h2>
     <form id="addMasjidForm">
       <div class="grid">
-        <div><label for="newName">Masjid name *</label><input id="newName" required maxlength="150"></div>
-        <div><label for="newArea">Area *</label><input id="newArea" required maxlength="120"></div>
-        <div><label for="newAddress">Address</label><input id="newAddress" maxlength="250"></div>
+        <div>
+          <label for="newName">Masjid name *</label>
+          <input id="newName" required maxlength="150">
+        </div>
+        <div>
+          <label for="newArea">Area *</label>
+          <input id="newArea" required maxlength="120">
+        </div>
+        <div>
+          <label for="newAddress">Address</label>
+          <input id="newAddress" maxlength="250">
+        </div>
       </div>
       <button type="submit">Add Masjid</button>
     </form>
@@ -136,18 +150,21 @@ function msg(id, text, error = false) {
   el.classList.remove("hidden");
   el.style.background = error ? "#ffebeb" : "#fff2d5";
 }
+
 function node(tag, text = "", cls = "") {
   const el = document.createElement(tag);
   el.textContent = text;
   if (cls) el.className = cls;
   return el;
 }
+
 function button(text, cls, action) {
   const el = node("button", text, cls || "");
   el.type = "button";
   el.addEventListener("click", action);
   return el;
 }
+
 function field(label, id, value, type = "text") {
   const wrap = node("div");
   const lab = node("label", label);
@@ -159,14 +176,16 @@ function field(label, id, value, type = "text") {
   wrap.append(lab, input);
   return wrap;
 }
+
 function timeField(label, id, value) {
   return field(label, id, value ? String(value).slice(0, 5) : "", "time");
 }
+
 function safeError(error) {
   return error?.message || String(error || "Unknown error");
 }
 
-/* The database profile, not the visible page, determines admin access. */
+/* Verify admin permission from the database. */
 async function verifyAdmin() {
   const { data, error } = await db.auth.getUser();
   if (error) throw error;
@@ -179,9 +198,11 @@ async function verifyAdmin() {
     .maybeSingle();
 
   if (pError) throw pError;
+
   if (profile?.role !== "admin" || profile.approved !== true) {
     throw new Error("Admin access denied. Check profiles: role=admin and approved=TRUE.");
   }
+
   currentUser = data.user;
   return data.user;
 }
@@ -195,19 +216,23 @@ async function enterDashboard() {
 }
 
 $("loginForm").addEventListener("submit", async e => {
-  e.preventDefault();
+    e.preventDefault();
   const btn = $("loginButton");
   btn.disabled = true;
+
   try {
     const { error } = await db.auth.signInWithPassword({
       email: $("email").value.trim(),
       password: $("password").value
     });
+
     if (error) throw error;
     await enterDashboard();
+
   } catch (error) {
     await db.auth.signOut();
     msg("loginMessage", safeError(error), true);
+
   } finally {
     btn.disabled = false;
   }
@@ -218,38 +243,68 @@ $("logoutButton").onclick = async () => {
   location.reload();
 };
 
-$("refreshButton").onclick = () => refreshAll().catch(e => msg("mainMessage", safeError(e), true));
-$("reloadImams").onclick = () => loadImams().catch(e => msg("mainMessage", safeError(e), true));
-$("reloadMasjids").onclick = () => loadMasjids().catch(e => msg("mainMessage", safeError(e), true));
+$("refreshButton").onclick = () =>
+  refreshAll().catch(e => msg("mainMessage", safeError(e), true));
+
+$("reloadImams").onclick = () =>
+  loadImams().catch(e => msg("mainMessage", safeError(e), true));
+
+$("reloadMasjids").onclick = () =>
+  loadMasjids().catch(e => msg("mainMessage", safeError(e), true));
+
 $("imamSearch").addEventListener("input", renderImams);
 $("masjidSearch").addEventListener("input", renderMasjids);
 
 /* Load masjids and applications. */
 async function loadMasjids() {
-  const { data, error } = await db.from("Masjids").select("*").order("name");
+  const { data, error } = await db
+    .from("Masjids")
+    .select("*")
+    .order("name");
+
   if (error) throw error;
+
   masjids = data || [];
   renderMasjids();
 }
+
 async function loadRequests() {
-  const { data, error } = await db.from("imam_signup_requests")
-    .select("*").eq("status", "pending").order("created_at");
+  const { data, error } = await db
+    .from("imam_signup_requests")
+    .select("*")
+    .eq("status", "pending")
+    .order("created_at");
+
   if (error) throw error;
+
   requests = data || [];
   renderRequests();
 }
+
 async function loadImams() {
-  const { data, error } = await db.from("profiles")
+  const { data, error } = await db
+    .from("profiles")
     .select("id,email,role,approved,created_at")
-    .eq("role", "imam").order("email");
+    .eq("role", "imam")
+    .order("email");
+
   if (error) throw error;
+
   profiles = data || [];
   renderImams();
 }
+
 async function refreshAll() {
   await verifyAdmin();
+
   msg("mainMessage", "Refreshing admin data...");
-  await Promise.all([loadMasjids(), loadRequests(), loadImams()]);
+
+  await Promise.all([
+    loadMasjids(),
+    loadRequests(),
+    loadImams()
+  ]);
+
   msg("mainMessage", "Dashboard updated successfully.");
 }
 
@@ -265,6 +320,7 @@ function renderRequests() {
 
   requests.forEach(r => {
     const box = node("div", "", "item");
+
     box.append(node("h3", r.imam_name || r.full_name || "Imam application"));
     box.append(node("p", "Email: " + (r.email || "Not recorded in request")));
     box.append(node("p", "Phone: " + (r.phone || "—")));
@@ -274,10 +330,16 @@ function renderRequests() {
 
     const select = document.createElement("select");
     select.append(new Option("Select a masjid to assign", ""));
-    masjids.filter(m => !m.imam_id || m.imam_id === r.user_id)
-      .forEach(m => select.append(new Option(
-        `${m.name} — ${m.area || ""}`, String(m.id)
-      )));
+
+    masjids
+      .filter(m => !m.imam_id || m.imam_id === r.user_id)
+      .forEach(m => {
+        select.append(new Option(
+          `${m.name} — ${m.area || ""}`,
+          String(m.id)
+        ));
+      });
+
     box.append(node("label", "Assign Masjid"), select);
 
     const approve = button("✓ Approve & Assign", "", async () => {
@@ -285,39 +347,57 @@ function renderRequests() {
         alert("This request has no user_id. Check the request table before approving.");
         return;
       }
+
       if (!select.value) {
         alert("Please select a masjid first.");
         return;
       }
+
       if (!confirm("Approve this Imam and assign the selected masjid?")) return;
 
       approve.disabled = true;
+
       try {
         await verifyAdmin();
         const masjidId = select.value;
 
-        /* First release any existing masjid assigned to this Imam. */
-        const { error: unassignError } = await db.from("Masjids")
-          .update({ imam_id: null }).eq("imam_id", r.user_id);
+        const { error: unassignError } = await db
+          .from("Masjids")
+          .update({ imam_id: null })
+          .eq("imam_id", r.user_id);
+
         if (unassignError) throw unassignError;
 
-        const { error: assignError } = await db.from("Masjids")
-          .update({ imam_id: r.user_id }).eq("id", masjidId);
+        const { error: assignError } = await db
+          .from("Masjids")
+          .update({ imam_id: r.user_id })
+          .eq("id", masjidId);
+
         if (assignError) throw assignError;
 
-        const { error: profileError } = await db.from("profiles")
-          .update({ role: "imam", approved: true }).eq("id", r.user_id);
+        const { error: profileError } = await db
+          .from("profiles")
+          .update({ role: "imam", approved: true })
+          .eq("id", r.user_id);
+
         if (profileError) throw profileError;
 
-        const { error: requestError } = await db.from("imam_signup_requests")
-          .update({ status: "approved", assigned_masjid_id: masjidId })
+        const { error: requestError } = await db
+          .from("imam_signup_requests")
+          .update({
+            status: "approved",
+            assigned_masjid_id: masjidId
+          })
           .eq("id", r.id);
+
         if (requestError) throw requestError;
 
         msg("mainMessage", "Imam approved and assigned successfully.");
         await refreshAll();
+
       } catch (error) {
         msg("mainMessage", "Approval/assignment failed: " + safeError(error), true);
+
       } finally {
         approve.disabled = false;
       }
@@ -325,16 +405,25 @@ function renderRequests() {
 
     const reject = button("Reject Application", "danger", async () => {
       if (!confirm("Reject this Imam application?")) return;
+
       reject.disabled = true;
+
       try {
         await verifyAdmin();
-        const { error } = await db.from("imam_signup_requests")
-          .update({ status: "rejected" }).eq("id", r.id);
+
+        const { error } = await db
+          .from("imam_signup_requests")
+          .update({ status: "rejected" })
+          .eq("id", r.id);
+
         if (error) throw error;
+
         msg("mainMessage", "Application rejected.");
         await refreshAll();
+
       } catch (error) {
         msg("mainMessage", "Reject failed: " + safeError(error), true);
+
       } finally {
         reject.disabled = false;
       }
@@ -351,6 +440,7 @@ function renderImams() {
   root.replaceChildren();
 
   const query = $("imamSearch").value.trim().toLowerCase();
+
   const visible = profiles.filter(p =>
     String(p.email || "").toLowerCase().includes(query) ||
     String(p.id || "").toLowerCase().includes(query)
@@ -363,20 +453,35 @@ function renderImams() {
 
   visible.forEach(p => {
     const box = node("div", "", "item");
+
     box.append(node("h3", p.email || "Imam account"));
     box.append(node("p", "User ID: " + p.id, "small"));
 
     const assigned = masjids.find(m => m.imam_id === p.id);
-    box.append(node("p", "Assigned Masjid: " + (assigned?.name || "Not assigned")));
-    box.append(node("p", "Approval: " + (p.approved ? "Approved" : "Not approved"),
-      "badge"));
+
+    box.append(node(
+      "p",
+      "Assigned Masjid: " + (assigned?.name || "Not assigned")
+    ));
+
+    box.append(node(
+      "p",
+      "Approval: " + (p.approved ? "Approved" : "Not approved"),
+      "badge"
+    ));
 
     const select = document.createElement("select");
     select.append(new Option("Select masjid to assign", ""));
-    masjids.filter(m => !m.imam_id || m.imam_id === p.id)
-      .forEach(m => select.append(new Option(
-        `${m.name} — ${m.area || ""}`, String(m.id)
-      )));
+
+    masjids
+      .filter(m => !m.imam_id || m.imam_id === p.id)
+      .forEach(m => {
+        select.append(new Option(
+          `${m.name} — ${m.area || ""}`,
+          String(m.id)
+        ));
+      });
+
     box.append(node("label", "Assign / Change Masjid"), select);
 
     const assign = button("Assign Masjid", "", async () => {
@@ -384,27 +489,40 @@ function renderImams() {
         alert("Select a masjid first.");
         return;
       }
+
       if (!confirm(`Assign ${p.email} to the selected masjid?`)) return;
 
       assign.disabled = true;
+
       try {
         await verifyAdmin();
-        const { error: clearError } = await db.from("Masjids")
-          .update({ imam_id: null }).eq("imam_id", p.id);
-        if (clearError) throw clearError;
 
-        const { error: assignError } = await db.from("Masjids")
-          .update({ imam_id: p.id }).eq("id", select.value);
+        const { error: clearError } = await db
+          .from("Masjids")
+          .update({ imam_id: null })
+          .eq("imam_id", p.id);
+
+        if (clearError) throw clearError;
+                const { error: assignError } = await db
+          .from("Masjids")
+          .update({ imam_id: p.id })
+          .eq("id", select.value);
+
         if (assignError) throw assignError;
 
-        const { error: profileError } = await db.from("profiles")
-          .update({ role: "imam", approved: true }).eq("id", p.id);
+        const { error: profileError } = await db
+          .from("profiles")
+          .update({ role: "imam", approved: true })
+          .eq("id", p.id);
+
         if (profileError) throw profileError;
 
         msg("mainMessage", "Masjid assigned successfully.");
         await refreshAll();
+
       } catch (error) {
         msg("mainMessage", "Assignment failed: " + safeError(error), true);
+
       } finally {
         assign.disabled = false;
       }
@@ -416,24 +534,34 @@ function renderImams() {
         "This will unassign their masjid and set approved=false. " +
         "The Supabase login account will NOT be deleted."
       );
+
       if (!confirmed) return;
 
       remove.disabled = true;
+
       try {
         await verifyAdmin();
 
-        const { error: clearError } = await db.from("Masjids")
-          .update({ imam_id: null }).eq("imam_id", p.id);
+        const { error: clearError } = await db
+          .from("Masjids")
+          .update({ imam_id: null })
+          .eq("imam_id", p.id);
+
         if (clearError) throw clearError;
 
-        const { error: profileError } = await db.from("profiles")
-          .update({ approved: false }).eq("id", p.id);
+        const { error: profileError } = await db
+          .from("profiles")
+          .update({ approved: false })
+          .eq("id", p.id);
+
         if (profileError) throw profileError;
 
         msg("mainMessage", "Imam access revoked and masjid unassigned.");
         await refreshAll();
+
       } catch (error) {
         msg("mainMessage", "Remove failed: " + safeError(error), true);
+
       } finally {
         remove.disabled = false;
       }
@@ -447,8 +575,10 @@ function renderImams() {
 /* Add a new masjid. */
 $("addMasjidForm").addEventListener("submit", async e => {
   e.preventDefault();
+
   const btn = e.submitter;
   btn.disabled = true;
+
   try {
     await verifyAdmin();
 
@@ -458,22 +588,27 @@ $("addMasjidForm").addEventListener("submit", async e => {
       address: $("newAddress").value.trim() || null
     };
 
-    if (!row.name || !row.area) throw new Error("Masjid name and area are required.");
+    if (!row.name || !row.area) {
+      throw new Error("Masjid name and area are required.");
+    }
 
     const { error } = await db.from("Masjids").insert(row);
     if (error) throw error;
 
     $("addMasjidForm").reset();
+
     msg("mainMessage", "Masjid added successfully.");
     await refreshAll();
+
   } catch (error) {
     msg("mainMessage", "Add Masjid failed: " + safeError(error), true);
+
   } finally {
     btn.disabled = false;
   }
 });
 
-/* Edit masjid details and prayer timings. */
+/* Prayer timing fields. */
 const prayerRows = [
   ["Fajr", "fajr_azaan", "fajr_jamaat"],
   ["Zuhr", "zuhr_azaan", "zuhr_jamaat"],
@@ -482,11 +617,13 @@ const prayerRows = [
   ["Isha", "isha_azaan", "isha_jamaat"]
 ];
 
+/* Show and edit all masjids. */
 function renderMasjids() {
   const root = $("masjidList");
   root.replaceChildren();
 
   const query = $("masjidSearch").value.trim().toLowerCase();
+
   const visible = masjids.filter(m =>
     String(m.name || "").toLowerCase().includes(query) ||
     String(m.area || "").toLowerCase().includes(query)
@@ -499,20 +636,37 @@ function renderMasjids() {
 
   visible.forEach(m => {
     const box = node("div", "", "item");
+
     box.append(node("h3", m.name || "Masjid"));
+
     const assignedProfile = profiles.find(p => p.id === m.imam_id);
+
     box.append(node("p", "Area: " + (m.area || "—")));
-    box.append(node("p", "Assigned Imam: " + (assignedProfile?.email || "Not assigned")));
+    box.append(node(
+      "p",
+      "Assigned Imam: " + (assignedProfile?.email || "Not assigned")
+    ));
 
     const grid = node("div", "", "grid");
+
     grid.append(field("Masjid Name", `name_${m.id}`, m.name));
     grid.append(field("Area", `area_${m.id}`, m.area));
     grid.append(field("Address", `address_${m.id}`, m.address));
 
     const times = node("div", "", "timegrid");
+
     prayerRows.forEach(([name, azaan, jamaat]) => {
-      times.append(timeField(name + " Azaan", `${azaan}_${m.id}`, m[azaan]));
-      times.append(timeField(name + " Jamaat", `${jamaat}_${m.id}`, m[jamaat]));
+      times.append(timeField(
+        name + " Azaan",
+        `${azaan}_${m.id}`,
+        m[azaan]
+      ));
+
+      times.append(timeField(
+        name + " Jamaat",
+        `${jamaat}_${m.id}`,
+        m[jamaat]
+      ));
     });
 
     box.append(grid, node("h3", "Prayer Timings"), times);
@@ -535,14 +689,23 @@ function renderMasjids() {
       });
 
       save.disabled = true;
+
       try {
         await verifyAdmin();
-        const { error } = await db.from("Masjids").update(patch).eq("id", m.id);
+
+        const { error } = await db
+          .from("Masjids")
+          .update(patch)
+          .eq("id", m.id);
+
         if (error) throw error;
+
         msg("mainMessage", "Masjid details and timings saved.");
         await refreshAll();
+
       } catch (error) {
         msg("mainMessage", "Save failed: " + safeError(error), true);
+
       } finally {
         save.disabled = false;
       }
@@ -553,17 +716,27 @@ function renderMasjids() {
         alert("Remove the assigned Imam first, then delete this masjid.");
         return;
       }
+
       if (!confirm(`Permanently delete ${m.name}?`)) return;
 
       del.disabled = true;
+
       try {
         await verifyAdmin();
-        const { error } = await db.from("Masjids").delete().eq("id", m.id);
+
+        const { error } = await db
+          .from("Masjids")
+          .delete()
+          .eq("id", m.id);
+
         if (error) throw error;
+
         msg("mainMessage", "Masjid deleted.");
         await refreshAll();
+
       } catch (error) {
         msg("mainMessage", "Delete failed: " + safeError(error), true);
+
       } finally {
         del.disabled = false;
       }
@@ -574,12 +747,17 @@ function renderMasjids() {
   });
 }
 
-/* Restore an existing Supabase session if one exists. */
+/* Restore an existing Supabase session. */
 (async () => {
   try {
     const { data, error } = await db.auth.getSession();
+
     if (error) throw error;
-    if (data.session) await enterDashboard();
+
+    if (data.session) {
+      await enterDashboard();
+    }
+
   } catch (error) {
     $("dashboard").classList.add("hidden");
     $("loginCard").classList.remove("hidden");
