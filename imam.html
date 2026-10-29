@@ -1,107 +1,238 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Imam Portal | Belgaum Salah</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belgaum Salah - Imam Portal</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--green:#064b40;--deep:#032f29;--gold:#e3b65d}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;color:#18362e;background:#f2f6f2}
-header{padding:15px 5%;background:var(--deep);color:white;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-header h2{margin:0}
-.home{background:#fff;color:var(--deep);text-decoration:none;padding:10px 15px;border-radius:9px;font-weight:bold}
-.hero{padding:45px 16px;background:linear-gradient(#032f29a8,#032f29d9),url('https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1800&q=85') center/cover;color:white;text-align:center}
-.hero h1{font-size:clamp(28px,5vw,42px);margin:5px}
-.hero p{line-height:1.7}
-main{max-width:760px;margin:24px auto;padding:0 14px 35px}
-.card{background:white;border:1px solid #dce8e0;border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:0 6px 22px #18362e0b}
-h2{margin-top:0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.field{display:flex;flex-direction:column;gap:7px}
-.full{grid-column:1/-1}
-input{width:100%;padding:12px;border:1px solid #ccdcd1;border-radius:9px;font:inherit}
-button{padding:12px 16px;border:0;border-radius:9px;background:var(--green);color:white;font-weight:bold;cursor:pointer;margin:10px 7px 0 0}
-button:disabled{opacity:.55;cursor:wait}
-.secondary{background:#e8f1eb;color:var(--green)}
-.status{padding:13px;margin:14px 0;border-radius:9px;background:#fff7e5;white-space:pre-wrap;line-height:1.6}
-.success{background:#e8f6ec;color:#14532d}
-.error{background:#ffeded;color:#8a2020}
-.muted{color:#687d74;line-height:1.7}
-.hidden{display:none!important}
-hr{border:0;border-top:1px solid #dce8e0;margin:25px 0}
-footer{text-align:center;background:var(--deep);color:white;padding:18px;font-size:12px}
-@media(max-width:580px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.card{padding:17px}}
+:root {
+  --green: #075b49;
+  --dark: #07372e;
+  --bg: #f3f7f4;
+  --line: #dce7df;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #20382f;
+  font-family: Arial, sans-serif;
+}
+header {
+  background: var(--dark);
+  color: white;
+  padding: 18px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+header h2 { margin: 0 0 5px; }
+.home {
+  background: white;
+  color: var(--dark);
+  padding: 10px 13px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.hero {
+  padding: 38px 16px;
+  text-align: center;
+  color: white;
+  background: linear-gradient(#032f29bb,#032f29e8),
+  url('https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1600&q=80') center/cover;
+}
+.hero h1 { font-size: clamp(27px,5vw,40px); }
+main {
+  max-width: 800px;
+  margin: 24px auto;
+  padding: 0 14px 35px;
+}
+.card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 18px #1231;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 13px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.full { grid-column: 1/-1; }
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd9d0;
+  border-radius: 8px;
+  font: inherit;
+}
+button {
+  padding: 12px 15px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--green);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 7px 0 0;
+}
+.secondary {
+  background: #e8f1eb;
+  color: var(--green);
+}
+.notice {
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff4d8;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  margin: 12px 0;
+}
+.success { background: #e8f7ed; color: #14532d; }
+.error { background: #ffeded; color: #8a2020; }
+.muted { color: #64786e; line-height: 1.6; }
+.hidden { display: none !important; }
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 23px 0;
+}
+footer {
+  text-align: center;
+  background: var(--dark);
+  color: white;
+  padding: 17px;
+  font-size: 12px;
+}
+@media(max-width:580px) {
+  .grid { grid-template-columns: 1fr; }
+  .full { grid-column: auto; }
+  .card { padding: 16px; }
+}
 </style>
 </head>
 <body>
+
 <header>
-  <div><h2>🕌 Belgaum Salah</h2><small>IMAM PORTAL</small></div>
-  <a class="home" href="./index.html">← Back to Home</a>
+  <div>
+    <h2>🕌 Belgaum Salah</h2>
+    <small>IMAM PORTAL</small>
+  </div>
+  <a class="home" href="./index.html">← Home</a>
 </header>
 
 <section class="hero">
   <h1>Imam Registration Portal</h1>
-  <p>Register your masjid details, submit your application<br>
-  and wait for administrator approval.</p>
+  <p>Register your details and wait for administrator approval.</p>
 </section>
 
 <main>
-<section id="authCard" class="card">
-  <div id="message" class="status hidden" role="status"></div>
+  <section id="authCard" class="card">
+    <div id="message" class="notice hidden"></div>
 
-  <div id="signupSection">
-    <h2>📝 New Imam Registration</h2>
-    <p class="muted">Enter your correct details. Your account must be approved and a masjid assigned before you can edit prayer timings.</p>
-    <form id="signupForm">
-      <div class="grid">
-        <div class="field">
-          <label for="imamName">Full Imam Name *</label>
-          <input id="imamName" required maxlength="100" autocomplete="name">
-        </div>
-        <div class="field">
-          <label for="phone">Phone Number *</label>
-          <input id="phone" type="tel" required maxlength="20" autocomplete="tel">
-        </div>
-        <div class="field full">
-          <label for="masjidName">Requested Masjid Name *</label>
-          <input id="masjidName" required maxlength="150">
-        </div>
-        <div class="field">
-          <label for="area">Area / Locality *</label>
-          <input id="area" required maxlength="120">
-        </div>
-        <div class="field">
-          <label for="address">Full Address *</label>
-          <input id="address" required maxlength="250">
-        </div>
-        <div class="field full">
-          <label for="email">Email Address *</label>
-          <input id="email" type="email" required autocomplete="email">
-        </div>
-        <div class="field full">
-          <label for="password">Create Password (minimum 8 characters) *</label>
-          <input id="password" type="password" minlength="8" required autocomplete="new-password">
-        </div>
-      </div>
-      <button id="signupBtn" type="submit">Submit Registration</button>
-    </form>
-  </div>
+    <div id="signupSection">
+      <h2>📝 New Imam Registration</h2>
+      <p class="muted">
+        Registration ke baad admin aapki application approve karega
+        aur aapko masjid assign karega.
+      </p>
 
-  <hr>
+      <form id="signupForm">
+        <div class="grid">
+          <div class="field">
+            <label for="imamName">Full Name *</label>
+            <input id="imamName" required maxlength="100">
+          </div>
 
-  <div id="loginSection">
-    <h2>🔐 Already Registered? Sign In</h2>
-    <p class="muted">Using another mobile? Sign in with the same email and password. Do not create another account.</p>
-    <form id="loginForm">
-      <div class="field">
-        <label for="loginEmail">Email Address</label>
-        <input id="loginEmail" type="email" required autocomplete="username">
-      </div>
-      <div class="field" style="margin-top:12px">
-        <label for="loginPassword">Password</label>
+          <div class="field">
+            <label for="phone">Phone Number *</label>
+            <input id="phone" type="tel" required maxlength="20">
+          </div>
+
+          <div class="field full">
+            <label for="masjidName">Requested Masjid *</label>
+            <input id="masjidName" required maxlength="150">
+          </div>
+
+          <div class="field">
+            <label for="area">Area / Locality *</label>
+            <input id="area" required maxlength="120">
+          </div>
+
+          <div class="field">
+            <label for="address">Full Address *</label>
+            <input id="address" required maxlength="250">
+          </div>
+
+          <div class="field full">
+            <label for="email">Email *</label>
+            <input id="email" type="email" required>
+          </div>
+
+          <div class="field full">
+            <label for="password">Password (minimum 8 characters) *</label>
+            <input id="password" type="password" minlength="8" required>
+          </div>
+        </div>
+
+        <button id="signupBtn" type="submit">
+          Submit Registration
+        </button>
+      </form>
+    </div>
+
+    <hr>
+
+    <div id="loginSection">
+      <h2>🔐 Imam Login</h2>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" required>
+        </div>
+
+        <div class="field" style="margin-top:12px">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" required>
+        </div>
+
+        <button id="loginBtn" type="submit">
+          Sign In / Check Status
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <section id="statusCard" class="card hidden">
+    <h2>📋 Application Status</h2>
+    <div id="applicationMessage" class="notice">
+      Checking your application...
+    </div>
+
+    <button id="checkBtn" class="secondary" type="button">
+      Refresh Status
+    </button>
+
+    <button id="dashboardBtn" class="hidden" type="button">
+      Open Imam Dashboard
+    </button>
+
+    <button id="signOutBtn" class="secondary" type="button">
+      Sign Out
+    </button>
+  </section>        <label for="loginPassword">Password</label>
         <input id="loginPassword" type="password" required autocomplete="current-password">
       </div>
       <button id="loginBtn" type="submit">Sign In / Check Application</button>
@@ -153,6 +284,7 @@ async function checkApplication(){
   try{
     const {data:userData,error:userError}=await db.auth.getUser();
     if(userError) throw userError;
+
     const user=userData.user;
     if(!user) throw new Error("Please sign in again.");
 
@@ -178,21 +310,26 @@ async function checkApplication(){
         "Approved! Your masjid has been assigned. You can open your dashboard.";
       $("applicationMessage").className="status success";
       $("dashboardBtn").classList.remove("hidden");
+
     }else if(request?.status==="rejected"){
       $("applicationMessage").textContent=
         "Your application was not approved. "+
         (request.admin_note||"Please contact the administrator.");
       $("applicationMessage").className="status error";
+
     }else if(request?.status==="approved"){
       $("applicationMessage").textContent=
         "Your application is approved, but your access or masjid assignment is not complete yet. Please contact the administrator.";
+
     }else if(request){
       $("applicationMessage").textContent=
         "Registration submitted successfully. Please wait for admin approval and masjid assignment.";
+
     }else{
       $("applicationMessage").textContent=
         "No application record was found. Please contact the administrator.";
     }
+
   }catch(err){
     $("applicationMessage").textContent=
       "Could not check status: "+err.message;
@@ -203,7 +340,7 @@ async function checkApplication(){
 $("signupForm").addEventListener("submit",async event=>{
   event.preventDefault();
   const btn=$("signupBtn");
-  btn.disabled=true;
+    btn.disabled=true;
   btn.textContent="Submitting...";
 
   try{
@@ -215,8 +352,10 @@ $("signupForm").addEventListener("submit",async event=>{
       address:$("address").value.trim()
     };
 
+    const email=$("email").value.trim().toLowerCase();
+
     const {data,error}=await db.auth.signUp({
-      email:$("email").value.trim(),
+      email:email,
       password:$("password").value,
       options:{data:metadata}
     });
@@ -228,14 +367,52 @@ $("signupForm").addEventListener("submit",async event=>{
     showStatusPage();
 
     if(data.session){
+      const {error:profileError}=await db.from("profiles").upsert(
+        {
+          id:data.user.id,
+          email:email,
+          role:"pending",
+          approved:false
+        },
+        {onConflict:"id"}
+      );
+
+      if(profileError){
+        throw new Error(
+          "Account created, but profile setup failed: "+profileError.message
+        );
+      }
+
+      const {error:requestError}=await db.from("imam_signup_requests").insert({
+        user_id:data.user.id,
+        email:email,
+        imam_name:metadata.imam_name,
+        phone:metadata.phone,
+        masjid_name:metadata.masjid_name,
+        area:metadata.area,
+        address:metadata.address,
+        status:"pending"
+      });
+
+      if(requestError){
+        throw new Error(
+          "Account created, but the application could not be saved: "+
+          requestError.message+
+          ". Ask the administrator to check the imam_signup_requests table and its INSERT policy."
+        );
+      }
+
       await checkApplication();
+
     }else{
       $("applicationMessage").textContent=
-        "Registration submitted to account creation. If email confirmation is enabled, check your email, confirm your address, then sign in here to check your application. If no application appears, contact the administrator.";
+        "Account created. Confirm your email if requested, then sign in. If the application does not appear, the administrator must check the application table setup.";
       $("applicationMessage").className="status success";
     }
+
   }catch(err){
     message(err.message,"error");
+
   }finally{
     btn.disabled=false;
     btn.textContent="Submit Registration";
@@ -244,6 +421,7 @@ $("signupForm").addEventListener("submit",async event=>{
 
 $("loginForm").addEventListener("submit",async event=>{
   event.preventDefault();
+
   const btn=$("loginBtn");
   btn.disabled=true;
   btn.textContent="Signing in...";
@@ -253,10 +431,14 @@ $("loginForm").addEventListener("submit",async event=>{
       email:$("loginEmail").value.trim(),
       password:$("loginPassword").value
     });
+
     if(error) throw error;
+
     await checkApplication();
+
   }catch(err){
     message(err.message,"error");
+
   }finally{
     btn.disabled=false;
     btn.textContent="Sign In / Check Application";
@@ -271,19 +453,23 @@ $("dashboardBtn").addEventListener("click",()=>{
 
 $("signOutBtn").addEventListener("click",async()=>{
   const {error}=await db.auth.signOut();
+
   if(error){
     $("applicationMessage").textContent="Sign out failed: "+error.message;
     return;
   }
+
   showAuthPage();
 });
 
 (async()=>{
   const {data,error}=await db.auth.getSession();
+
   if(error){
     message("Could not check existing login: "+error.message,"error");
     return;
   }
+
   if(data.session) await checkApplication();
 })();
 </script>
